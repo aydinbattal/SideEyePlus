@@ -13,6 +13,20 @@
         android:theme="@style/Theme.SideEye"
         tools:targetApi="31">
         <activity
+            android:name=".HomeCompanyActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".HomeDriverActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".SignupActivity"
             android:exported="false">
             <meta-data
