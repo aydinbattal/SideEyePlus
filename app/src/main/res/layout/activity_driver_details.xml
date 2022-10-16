@@ -98,7 +98,7 @@
         android:id="@+id/btnRemove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#E80404"
+        android:backgroundTint="@android:color/holo_red_dark"
         android:text="Remove Driver"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -115,37 +115,38 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView18"
+        android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="TextView"
+        android:text="John Doe"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/tvColumnName"
         app:layout_constraintTop_toBottomOf="@+id/tvTitleDriverDetails" />
 
     <TextView
-        android:id="@+id/textView20"
+        android:id="@+id/tvStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="TextView"
+        android:text="Active"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/tvColumnStatus"
-        app:layout_constraintTop_toBottomOf="@+id/textView18" />
+        app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
     <TextView
-        android:id="@+id/textView21"
+        android:id="@+id/tvTest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:text="TextView"
+        android:text="PASSED"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/tvColumnTestResult"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPhone" />
+        app:layout_constraintTop_toBottomOf="@+id/edtPhone"
+        />
 
     <TextView
         android:id="@+id/textView22"
@@ -153,13 +154,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="TextView"
+        android:text="NORMAL"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/tvColumnHeartRate"
-        app:layout_constraintTop_toBottomOf="@+id/textView21" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTest" />
 
     <EditText
-        android:id="@+id/editTextTextEmailAddress"
+        android:id="@+id/edtEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -168,10 +169,10 @@
         android:inputType="textEmailAddress"
         android:textSize="10sp"
         app:layout_constraintStart_toEndOf="@+id/tvColumnEmail"
-        app:layout_constraintTop_toBottomOf="@+id/textView20" />
+        app:layout_constraintTop_toBottomOf="@+id/tvStatus" />
 
     <EditText
-        android:id="@+id/editTextPhone"
+        android:id="@+id/edtPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -180,6 +181,6 @@
         android:inputType="phone"
         android:textSize="10sp"
         app:layout_constraintStart_toEndOf="@+id/tvColumnPhone"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
+        app:layout_constraintTop_toBottomOf="@+id/edtEmail" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
