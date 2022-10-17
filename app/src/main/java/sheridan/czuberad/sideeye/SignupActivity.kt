@@ -14,12 +14,12 @@ class SignupActivity : AppCompatActivity() {
         setContentView(R.layout.activity_signup)
 
         var isCompany = false
-        var toggle:Switch = findViewById(R.id.signup_switch)
+        var toggle:Switch = findViewById(R.id.switch_signup)
         toggle.setOnCheckedChangeListener { _, isChecked ->
             isCompany = isChecked
         }
 
-        val homeClick = findViewById<Button>(R.id.signupHome_button)
+        val homeClick = findViewById<Button>(R.id.button_signup)
         homeClick.setOnClickListener{
 
             if (isCompany){
