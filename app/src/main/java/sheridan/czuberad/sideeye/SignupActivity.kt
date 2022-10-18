@@ -26,6 +26,7 @@ class SignupActivity : AppCompatActivity() {
                 val intent = Intent(this, HomeCompanyActivity::class.java)
                 startActivity(intent)
             }
+
             else{
                 val intent = Intent(this, HomeDriverActivity::class.java)
                 startActivity(intent)
