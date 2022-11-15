@@ -10,15 +10,20 @@ import android.widget.Switch
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import sheridan.czuberad.sideeye.Services.FirebaseAdministration
+import sheridan.czuberad.sideeye.Domain.Company
+import sheridan.czuberad.sideeye.Domain.Driver
 
 class SignupActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-    private var admin = FirebaseAdministration()
+    //private var admin = FirebaseAdministration()
+    private lateinit var uid: String
+    private lateinit var db: FirebaseFirestore
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
+
         auth = FirebaseAuth.getInstance()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
@@ -41,6 +46,17 @@ class SignupActivity : AppCompatActivity() {
             if (isCompany){
                 auth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener{
                     if(it.isSuccessful){
+                        val currentUser = Firebase.auth.currentUser
+                        currentUser?.let {
+                            uid = currentUser.uid
+                        }
+                        val company = Company("test")
+                        db = FirebaseFirestore.getInstance()
+                        db.collection("Owners").document(uid).set(company).addOnSuccessListener {
+                            Toast.makeText(baseContext, "Data success",Toast.LENGTH_SHORT).show()
+                        }.addOnFailureListener {
+                            Toast.makeText(baseContext, "Data Fail",Toast.LENGTH_SHORT).show()
+                        }
                         val intent = Intent(this, HomeCompanyActivity::class.java)
                         startActivity(intent)
                     }
@@ -54,11 +70,22 @@ class SignupActivity : AppCompatActivity() {
             else{
                 auth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener{
                     if(it.isSuccessful){
+                        val currentUser = Firebase.auth.currentUser
+                        currentUser?.let {
+                            uid = currentUser.uid
+                        }
+                        val driver = Driver("test")
+                        db = FirebaseFirestore.getInstance()
+                        db.collection("Drivers").document(uid).set(driver).addOnSuccessListener {
+                            Toast.makeText(baseContext, "Data success",Toast.LENGTH_SHORT).show()
+                        }.addOnFailureListener {
+                            Toast.makeText(baseContext, "Data Fail",Toast.LENGTH_SHORT).show()
+                        }
                         val intent = Intent(this, HomeDriverActivity::class.java)
                         startActivity(intent)
                     }
                     else{
-                        Toast.makeText(baseContext, "UNABLE TO SIGNUP - COMPANY",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(baseContext, "UNABLE TO SIGNUP - DRIVER",Toast.LENGTH_SHORT).show()
                     }
                 }
 //                admin.signupDriver(emailText, passwordText, auth)
