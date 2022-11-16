@@ -1,4 +1,5 @@
 package sheridan.czuberad.sideeye.Domain
 
-class Alert {
-}
+data class Alert(
+    var alertType: String? = null
+)
