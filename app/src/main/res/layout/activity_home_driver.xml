@@ -34,7 +34,7 @@
                 android:visibility="visible" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/textView_driver_home_name"
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:layout_marginTop="10dp"
