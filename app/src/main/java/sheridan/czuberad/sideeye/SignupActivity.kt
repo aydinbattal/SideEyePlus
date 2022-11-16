@@ -50,7 +50,7 @@ class SignupActivity : AppCompatActivity() {
                         currentUser?.let {
                             uid = currentUser.uid
                         }
-                        val company = Company("test")
+                        val company = Company("test", emailText)
                         db = FirebaseFirestore.getInstance()
                         db.collection("Owners").document(uid).set(company).addOnSuccessListener {
                             Toast.makeText(baseContext, "Data success",Toast.LENGTH_SHORT).show()
@@ -74,7 +74,7 @@ class SignupActivity : AppCompatActivity() {
                         currentUser?.let {
                             uid = currentUser.uid
                         }
-                        val driver = Driver("test")
+                        val driver = Driver("test", emailText)
                         db = FirebaseFirestore.getInstance()
                         db.collection("Drivers").document(uid).set(driver).addOnSuccessListener {
                             Toast.makeText(baseContext, "Data success",Toast.LENGTH_SHORT).show()
