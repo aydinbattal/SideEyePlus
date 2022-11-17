@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import sheridan.czuberad.sideeye.Domain.Company
 import sheridan.czuberad.sideeye.Domain.Driver
+import sheridan.czuberad.sideeye.Prompts.SignupPrompts
 
 class SignupActivity : AppCompatActivity() {
 
@@ -27,7 +28,6 @@ class SignupActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
-
 
         var isCompany = false
         var toggle:Switch = findViewById(R.id.switch_signup)
@@ -50,6 +50,7 @@ class SignupActivity : AppCompatActivity() {
                         currentUser?.let {
                             uid = currentUser.uid
                         }
+
                         val company = Company("test", emailText)
                         db = FirebaseFirestore.getInstance()
                         db.collection("Owners").document(uid).set(company).addOnSuccessListener {
@@ -75,6 +76,10 @@ class SignupActivity : AppCompatActivity() {
                             uid = currentUser.uid
                         }
                         val driver = Driver("test", emailText)
+
+//                        val prompt = SignupPrompts()
+//                        val name = prompt.signupDriverPrompt(this)
+
                         db = FirebaseFirestore.getInstance()
                         db.collection("Drivers").document(uid).set(driver).addOnSuccessListener {
                             Toast.makeText(baseContext, "Data success",Toast.LENGTH_SHORT).show()
