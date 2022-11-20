@@ -1,31 +1,22 @@
 package sheridan.czuberad.sideeye.Services
 
+import android.content.Intent
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import sheridan.czuberad.sideeye.HomeDriverActivity
 
 class FirebaseAdministration {
 
-    var sign: Boolean = false
-    fun signupDriver(email: String, password: String, auth: FirebaseAuth){
-
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener{
-            if(it.isComplete){
-                if(it.isSuccessful){
-                    signupSuccess()
-                }
-                else{
-                    signupFail()
-                }
-            }
-
-
-        }
-
+    fun loginDriver(
+        auth: FirebaseAuth,
+        emailText: String,
+        passwordText: String,
+        db: FirebaseFirestore,
+        intent: Intent
+    ) {
     }
 
-    private fun signupSuccess() {
-        sign = true
-    }
-    private fun signupFail(){
-        sign = false
-    }
+
+
 }

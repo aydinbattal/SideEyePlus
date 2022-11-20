@@ -75,7 +75,7 @@ class SignupActivity : AppCompatActivity() {
                         currentUser?.let {
                             uid = currentUser.uid
                         }
-                        val driver = Driver("test", emailText)
+                        val driver = Driver("test", emailText,"99999999",false,"")
 
 //                        val prompt = SignupPrompts()
 //                        val name = prompt.signupDriverPrompt(this)
@@ -93,6 +93,7 @@ class SignupActivity : AppCompatActivity() {
                         Toast.makeText(baseContext, "UNABLE TO SIGNUP - DRIVER",Toast.LENGTH_SHORT).show()
                     }
                 }
+
 //                admin.signupDriver(emailText, passwordText, auth)
 //                if(admin.sign){
 //                    val intent = Intent(this, HomeDriverActivity::class.java)
