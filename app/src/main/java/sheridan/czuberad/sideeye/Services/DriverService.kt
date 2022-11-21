@@ -7,17 +7,6 @@ import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.Domain.Session
 
 class DriverService {
-
-    fun getDriverData(db: FirebaseFirestore, currentUser: FirebaseUser?) {
-        if (currentUser != null) {
-
-            db.collection("Drivers").document(currentUser.uid).get()
-                .addOnSuccessListener { document ->
-                   var driverData = document.toObject(Driver::class.java) ?: Driver()
-                }
-        }
-    }
-
     fun addAlertToSessionById(
         currentUser: FirebaseUser?,
         db: FirebaseFirestore,

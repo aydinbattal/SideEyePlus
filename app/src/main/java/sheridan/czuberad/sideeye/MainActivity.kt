@@ -7,8 +7,8 @@ import android.os.Bundle
 import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.Services.FirebaseAdministration
+import sheridan.czuberad.sideeye.Services.OwnerService
 
 class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         var firebaseAdmin = FirebaseAdministration()
+        var ownerService = OwnerService()
         var isCompany: Boolean = false
         var toggle:Switch = findViewById(R.id.switch_login)
         toggle.setOnCheckedChangeListener { _, isChecked ->
@@ -31,25 +32,41 @@ class MainActivity : AppCompatActivity() {
             var emailText = findViewById<EditText>(R.id.text_email_login).text.toString().trim()
             var passwordText = findViewById<EditText>(R.id.text_password_login).text.toString().trim()
             if (isCompany){
-                auth.signInWithEmailAndPassword(emailText,passwordText).addOnCompleteListener{ it ->
-                    if(it.isSuccessful){
-
-                        db = FirebaseFirestore.getInstance()
-                        db.collection("Owners").whereEqualTo("email", emailText).get()
-                            .addOnSuccessListener { documents ->
-                                for(document in documents){
-                                    if (document.data["email"] == emailText){
-                                        val intent = Intent(this, HomeCompanyActivity::class.java)
-                                        startActivity(intent)
-                                    }
+                firebaseAdmin.loginIn(emailText,passwordText).addOnCompleteListener { it ->
+                    if (it.isSuccessful){
+                        ownerService.checkIsCompanyInDB(emailText).addOnSuccessListener { documents ->
+                            for(document in documents){
+                                if (document.data["email"] == emailText){
+                                    val intent = Intent(this, HomeCompanyActivity::class.java)
+                                    startActivity(intent)
                                 }
                             }
-
+                        }
                     }
                     else{
                         Toast.makeText(baseContext, "UNABLE TO LOGIN - COMPANY", Toast.LENGTH_SHORT).show()
                     }
+
                 }
+//                auth.signInWithEmailAndPassword(emailText,passwordText).addOnCompleteListener{ it ->
+//                    if(it.isSuccessful){
+//
+//                        db = FirebaseFirestore.getInstance()
+//                        db.collection("Owners").whereEqualTo("email", emailText).get()
+//                            .addOnSuccessListener { documents ->
+//                                for(document in documents){
+//                                    if (document.data["email"] == emailText){
+//                                        val intent = Intent(this, HomeCompanyActivity::class.java)
+//                                        startActivity(intent)
+//                                    }
+//                                }
+//                            }
+//
+//                    }
+//                    else{
+//                        Toast.makeText(baseContext, "UNABLE TO LOGIN - COMPANY", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
 
             }
             else{
