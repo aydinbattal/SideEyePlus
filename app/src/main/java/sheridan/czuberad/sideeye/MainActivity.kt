@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import sheridan.czuberad.sideeye.Services.DriverService
 import sheridan.czuberad.sideeye.Services.FirebaseAdministration
 import sheridan.czuberad.sideeye.Services.OwnerService
 
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         var firebaseAdmin = FirebaseAdministration()
         var ownerService = OwnerService()
+        var driverService = DriverService()
         var isCompany: Boolean = false
         var toggle:Switch = findViewById(R.id.switch_login)
         toggle.setOnCheckedChangeListener { _, isChecked ->
@@ -46,46 +48,19 @@ class MainActivity : AppCompatActivity() {
                     else{
                         Toast.makeText(baseContext, "UNABLE TO LOGIN - COMPANY", Toast.LENGTH_SHORT).show()
                     }
-
                 }
-//                auth.signInWithEmailAndPassword(emailText,passwordText).addOnCompleteListener{ it ->
-//                    if(it.isSuccessful){
-//
-//                        db = FirebaseFirestore.getInstance()
-//                        db.collection("Owners").whereEqualTo("email", emailText).get()
-//                            .addOnSuccessListener { documents ->
-//                                for(document in documents){
-//                                    if (document.data["email"] == emailText){
-//                                        val intent = Intent(this, HomeCompanyActivity::class.java)
-//                                        startActivity(intent)
-//                                    }
-//                                }
-//                            }
-//
-//                    }
-//                    else{
-//                        Toast.makeText(baseContext, "UNABLE TO LOGIN - COMPANY", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-
             }
             else{
-                //firebaseAdmin.loginDriver(auth,emailText, passwordText, db, Intent(this, HomeDriverActivity::class.java))
-                auth.signInWithEmailAndPassword(emailText, passwordText).addOnCompleteListener{
+                firebaseAdmin.loginIn(emailText, passwordText).addOnCompleteListener { it->
                     if(it.isSuccessful){
-                        db = FirebaseFirestore.getInstance()
-                        db.collection("Drivers").get().addOnSuccessListener { documents ->
-
-                        }
-                        db.collection("Drivers").whereEqualTo("email",emailText).get()
-                            .addOnSuccessListener { documents ->
-                                for(document in documents){
-                                    if(document.data["email"] == emailText){
-                                        val intent = Intent(this, HomeDriverActivity::class.java)
-                                        startActivity(intent)
-                                    }
+                        driverService.checkIsDriverInDB(emailText).addOnSuccessListener { documents ->
+                            for (document in documents){
+                                if(document.data["email"] == emailText){
+                                    val intent = Intent(this, HomeDriverActivity::class.java)
+                                    startActivity(intent)
                                 }
                             }
+                        }
                     }
                     else{
                         Toast.makeText(baseContext, "UNABLE TO LOGIN - DRIVER", Toast.LENGTH_SHORT).show()

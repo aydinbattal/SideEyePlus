@@ -1,12 +1,15 @@
 package sheridan.czuberad.sideeye.Services
 
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import sheridan.czuberad.sideeye.Domain.Alert
 import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.Domain.Session
 
 class DriverService {
+    private var db = FirebaseFirestore.getInstance()
     fun addAlertToSessionById(
         currentUser: FirebaseUser?,
         db: FirebaseFirestore,
@@ -25,6 +28,12 @@ class DriverService {
                 }
             }
         }
+
+    }
+
+    fun checkIsDriverInDB(emailText: String): Task<QuerySnapshot> {
+
+        return db.collection("Drivers").whereEqualTo("email",emailText).get()
 
     }
 
