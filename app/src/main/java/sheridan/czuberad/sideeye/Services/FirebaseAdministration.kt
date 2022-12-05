@@ -1,31 +1,17 @@
 package sheridan.czuberad.sideeye.Services
 
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 
 class FirebaseAdministration {
 
-    var sign: Boolean = false
-    fun signupDriver(email: String, password: String, auth: FirebaseAuth){
+    private var auth = FirebaseAuth.getInstance()
+    fun loginIn(emailText: String, passwordText: String): Task<AuthResult> {
 
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener{
-            if(it.isComplete){
-                if(it.isSuccessful){
-                    signupSuccess()
-                }
-                else{
-                    signupFail()
-                }
-            }
-
-
-        }
-
+        return auth.signInWithEmailAndPassword(emailText,passwordText)
     }
 
-    private fun signupSuccess() {
-        sign = true
-    }
-    private fun signupFail(){
-        sign = false
-    }
+
+
 }
