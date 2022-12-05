@@ -29,7 +29,7 @@ class CompanyService(val db: FirebaseFirestore) {
         //db = FirebaseFirestore.getInstance()
         val driversFromDb:ArrayList<Driver> = arrayListOf()
         val currentUser = Firebase.auth.currentUser
-        var company = "Sheridan"
+        //var company = ""
 
         db.collection("Owners").document(currentUser!!.uid).addSnapshotListener(object : EventListener<DocumentSnapshot> {
             override fun onEvent(value: DocumentSnapshot?, error: FirebaseFirestoreException?) {
@@ -39,35 +39,31 @@ class CompanyService(val db: FirebaseFirestore) {
                 }
 
                 //todo: this gets data but doesnt assign to company variable
-                company = value!!.data!!["companyName"].toString()
+                //company = value!!.data!!["companyName"].toString()
 
+                db.collection("Drivers").whereEqualTo("companyName",value!!.data!!["companyName"].toString()).addSnapshotListener(object : EventListener<QuerySnapshot> {
+                    override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+                        if (error != null){
+                            Log.e("firestore error", error.message.toString())
+                            return
+                        }
 
-//            .addOnSuccessListener { document ->
-//                val currentOwner = document.toObject(Company::class.java) ?: Company()
-//                company = currentOwner.companyName!!
-//            }
+                        for (dc: DocumentChange in value?.documentChanges!!){
+                            if(dc.type == DocumentChange.Type.ADDED){
+                                driversFromDb.add(dc.document.toObject(Driver::class.java))
+                                //Log.d("CHECK THIS", driversFromDb.toString())
+                                driversList.postValue(driversFromDb)
+                                Log.d("CHECK THIS AFTER", "${driversList.value}")
+                            }
+                        }
+                    }
+
+                })
             }
             })
-        Log.d("companyName", company)
+        //Log.d("companyName", company)
 
-        db.collection("Drivers").whereEqualTo("companyName",company).addSnapshotListener(object : EventListener<QuerySnapshot> {
-            override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-                if (error != null){
-                    Log.e("firestore error", error.message.toString())
-                    return
-                }
 
-                for (dc: DocumentChange in value?.documentChanges!!){
-                    if(dc.type == DocumentChange.Type.ADDED){
-                        driversFromDb.add(dc.document.toObject(Driver::class.java))
-                        //Log.d("CHECK THIS", driversFromDb.toString())
-                        driversList.postValue(driversFromDb)
-                        Log.d("CHECK THIS AFTER", "${driversList.value}")
-                    }
-                }
-            }
-
-        })
 
 
 
