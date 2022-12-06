@@ -27,7 +27,6 @@ class HomeCompanyActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var driversList:ArrayList<Driver>
     //private lateinit var driversAdapter:DriversAdapter
-    private lateinit var db: FirebaseFirestore
     private lateinit var binding: ActivityHomeCompanyBinding
 
     private lateinit var companyService:CompanyService
@@ -41,9 +40,7 @@ class HomeCompanyActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        db = FirebaseFirestore.getInstance()
-        //driversAdapter = DriversAdapter()
-        companyService = CompanyService(db)
+        companyService = CompanyService()
 
         val driversAdapter = DriversAdapter()
 
@@ -52,7 +49,11 @@ class HomeCompanyActivity : AppCompatActivity() {
         // associate the rv with the adapter we created
         binding.rvDriversList.adapter = driversAdapter
 
+        binding.btnAddNewDriver.setOnClickListener{
+            var dialog = AddDriverDialogFragment()
 
+            dialog.show(supportFragmentManager, "addDriverDialog")
+        }
 
         companyService.getAllDrivers()
 
@@ -65,27 +66,4 @@ class HomeCompanyActivity : AppCompatActivity() {
 
     }
 
-//    private fun getAllDrivers(){
-//        db = FirebaseFirestore.getInstance()
-//
-//        db.collection("Drivers").addSnapshotListener(object : EventListener<QuerySnapshot>{
-//            override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-//                if (error != null){
-//                    Log.e("firestore error", error.message.toString())
-//                    return
-//                }
-//
-//                for (dc:DocumentChange in value?.documentChanges!!){
-//                    if(dc.type == DocumentChange.Type.ADDED){
-//                        driversList.add(dc.document.toObject(Driver::class.java))
-//                        Log.e("CHECK THIS", driversList.toString())
-//
-//                    }
-//                }
-//            }
-//
-//        })
-//
-//
-//    }
 }

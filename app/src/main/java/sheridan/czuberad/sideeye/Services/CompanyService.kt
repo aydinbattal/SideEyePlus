@@ -1,5 +1,6 @@
 package sheridan.czuberad.sideeye.Services
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import sheridan.czuberad.sideeye.Domain.Company
 import sheridan.czuberad.sideeye.Domain.Driver
+import java.security.acl.Owner
 
 
 /**
@@ -16,19 +18,51 @@ import sheridan.czuberad.sideeye.Domain.Driver
  * on 2022-11-18 */
 
 
-class CompanyService(val db: FirebaseFirestore) {
+class CompanyService() {
 
+    private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     val driversList: MutableLiveData<List<Driver>> = MutableLiveData<List<Driver>>(listOf())
+    private val currentUser = Firebase.auth.currentUser
 
     init {
         Log.d("ABC", "vm is initializing")
     }
 
 
+    fun addNewDriver(email: String){
+        var company = ""
+        db.collection("Owners").document(currentUser!!.uid).get().addOnSuccessListener { document ->
+            if (document != null) {
+                val owner = document.toObject(Company::class.java)
+                company = owner!!.companyName.toString()
+                Log.d(TAG, "DocumentSnapshot data: ${document.data}")
+            } else {
+                Log.d(TAG, "No such document")
+            }
+        }.addOnFailureListener { exception ->
+            Log.d(TAG, "get failed with ", exception)
+        }
+
+        db.collection("Drivers").whereEqualTo("email",email).get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val driver = document.toObject(Driver::class.java)
+                    driver.companyName = company
+                    db.collection("Drivers").document(document.id).update("companyName", company)
+                    Log.d("addNewDriver", "${company}")
+                    Log.d("addNewDriver", "${document.id} => ${document.data}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("addNewDriver", "Error getting documents: ", exception)
+            }
+
+    }
+
     fun getAllDrivers(){
         //db = FirebaseFirestore.getInstance()
         val driversFromDb:ArrayList<Driver> = arrayListOf()
-        val currentUser = Firebase.auth.currentUser
+        //val currentUser = Firebase.auth.currentUser
         //var company = ""
 
         db.collection("Owners").document(currentUser!!.uid).addSnapshotListener(object : EventListener<DocumentSnapshot> {
@@ -38,10 +72,9 @@ class CompanyService(val db: FirebaseFirestore) {
                     return
                 }
 
-                //todo: this gets data but doesnt assign to company variable
-                //company = value!!.data!!["companyName"].toString()
+                val company = value!!.data!!["companyName"].toString()
 
-                db.collection("Drivers").whereEqualTo("companyName",value!!.data!!["companyName"].toString()).addSnapshotListener(object : EventListener<QuerySnapshot> {
+                db.collection("Drivers").whereEqualTo("companyName",company).addSnapshotListener(object : EventListener<QuerySnapshot> {
                     override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
                         if (error != null){
                             Log.e("firestore error", error.message.toString())
