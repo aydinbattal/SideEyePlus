@@ -6,17 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".EyeDetectionActivity">
 
-    <TextView
-        android:id="@+id/textView_eye_detection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="133dp"
-        android:layout_marginTop="239dp"
-        android:layout_marginEnd="133dp"
-        android:text="Camera Access Denied"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView18" />
+<!--    <TextView-->
+<!--        android:id="@+id/textView_eye_detection"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="133dp"-->
+<!--        android:layout_marginTop="239dp"-->
+<!--        android:layout_marginEnd="133dp"-->
+<!--        android:text="Camera Access Denied"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textView18" />-->
 
     <TextView
         android:id="@+id/textView18"
@@ -31,6 +31,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="46dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.camera.view.PreviewView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:scaleType="fillCenter" />
+
+
+    </FrameLayout>
 
 
     <LinearLayout

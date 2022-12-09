@@ -25,6 +25,9 @@ class EyeDetectionActivity : AppCompatActivity() {
 
         val detectOnclick = findViewById<Button>(R.id.button_eye_detection)
 
+
+
+
         detectOnclick.setOnClickListener {
 
             //val timestamp = Timestamp(System.currentTimeMillis())
