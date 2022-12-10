@@ -9,6 +9,7 @@ import android.widget.Toast
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import sheridan.czuberad.sideeye.Camera.CameraXUtils
 import sheridan.czuberad.sideeye.Domain.Session
 import sheridan.czuberad.sideeye.Services.DriverService
 import sheridan.czuberad.sideeye.`Application Logic`.EyeDetectionLogic
@@ -16,6 +17,8 @@ import java.util.UUID
 
 class EyeDetectionActivity : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
+
+    private lateinit var cameraXUtils: CameraXUtils
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

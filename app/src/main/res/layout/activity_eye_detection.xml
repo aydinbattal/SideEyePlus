@@ -42,6 +42,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.camera.view.PreviewView
+            android:id="@+id/cameraXpreview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:scaleType="fillCenter" />
