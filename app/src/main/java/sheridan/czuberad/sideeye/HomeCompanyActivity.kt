@@ -7,15 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.ktx.Firebase
 import sheridan.czuberad.sideeye.Domain.Driver
-import sheridan.czuberad.sideeye.DriversAdapter
-import sheridan.czuberad.sideeye.R
 import sheridan.czuberad.sideeye.Services.CompanyService
 import sheridan.czuberad.sideeye.databinding.ActivityHomeCompanyBinding
 
@@ -31,6 +23,8 @@ class HomeCompanyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeCompanyBinding
 
     private lateinit var companyService:CompanyService
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
