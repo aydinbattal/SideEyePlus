@@ -12,6 +12,7 @@ class EyeDetectionUtils :ImageAnalyzer<List<Face>>() {
 
     private val realTimeOpts = FaceDetectorOptions.Builder()
         .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
+        .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
         .setContourMode(FaceDetectorOptions.CONTOUR_MODE_NONE)
         .build()
 
@@ -23,7 +24,7 @@ class EyeDetectionUtils :ImageAnalyzer<List<Face>>() {
 
     override fun onSuccess(results: List<Face>){
         results.forEach {
-            Log.d(TAG,it.rightEyeOpenProbability.toString())
+            Log.d(TAG,"YOO" + it.rightEyeOpenProbability.toString())
         }
     }
 }
