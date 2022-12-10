@@ -28,6 +28,20 @@ class CompanyService() {
         Log.d("ABC", "vm is initializing")
     }
 
+    fun removeDriverFromCompany(email: String)
+    {
+        db.collection("Drivers").whereEqualTo("email",email).get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    db.collection("Drivers").document(document.id).update("companyName", "")
+                    Log.d("removeDriverFromCompany", "${document.id} => ${document.data}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("removeDriverFromCompany", "Error getting documents: ", exception)
+            }
+    }
+
     fun updateDriverData(email: String, newEmail: String, newPhone: String){
         db.collection("Drivers").whereEqualTo("email",email).get()
             .addOnSuccessListener { documents ->

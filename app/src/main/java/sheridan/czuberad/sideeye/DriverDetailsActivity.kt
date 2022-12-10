@@ -44,6 +44,12 @@ class DriverDetailsActivity : AppCompatActivity() {
             }
         }
 
+        binding.btnRemove.setOnClickListener{
+            var dialog = RemoveDriverDialogFragment(email)
+
+            dialog.show(supportFragmentManager, "removeDriverDialog")
+        }
+
 
     }
 
