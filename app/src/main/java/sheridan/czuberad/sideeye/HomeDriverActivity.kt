@@ -1,15 +1,20 @@
 package sheridan.czuberad.sideeye
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import sheridan.czuberad.sideeye.Domain.Driver
+import sheridan.czuberad.sideeye.HomeDriverActivity.Companion.REQUEST_CODE_PERMISSIONS
+import sheridan.czuberad.sideeye.HomeDriverActivity.Companion.REQUIRED_PERMISSIONS
 
 class HomeDriverActivity : AppCompatActivity() {
     private lateinit var uid: String
@@ -18,6 +23,7 @@ class HomeDriverActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_driver)
+        checkPermissions()
         val currentUser = Firebase.auth.currentUser
 
         val nameText = findViewById<TextView>(R.id.textView_driver_home_name)
@@ -40,6 +46,18 @@ class HomeDriverActivity : AppCompatActivity() {
         }
 
     }
+    private fun isPermissionsAllowed() = HomeDriverActivity.REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(baseContext,it) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun checkPermissions(){
+        if(!isPermissionsAllowed()){
+            ActivityCompat.requestPermissions(this,
+                HomeDriverActivity.REQUIRED_PERMISSIONS,
+                HomeDriverActivity.REQUEST_CODE_PERMISSIONS
+            )
+        }
+    }
     private fun getDriverData(currentUser: FirebaseUser?, nameText: TextView) {
         if (currentUser != null) {
             this.db.collection("Drivers").document(currentUser.uid).get()
@@ -50,4 +68,9 @@ class HomeDriverActivity : AppCompatActivity() {
         }
 
     }
+    companion object {
+        private const val REQUEST_CODE_PERMISSIONS = 10
+        private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA)
+    }
+
 }

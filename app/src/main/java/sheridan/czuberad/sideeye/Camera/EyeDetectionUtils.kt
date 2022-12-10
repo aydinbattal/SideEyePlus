@@ -1,14 +1,20 @@
 package sheridan.czuberad.sideeye.Camera
 import android.content.ContentValues.TAG
-import android.nfc.Tag
 import android.util.Log
+import android.widget.Button
+import android.widget.TextView
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 
-class EyeDetectionUtils :ImageAnalyzer<List<Face>>() {
+class EyeDetectionUtils(
+    eyeDetectionText: TextView,
+    endSessionOnClick: Button,
+    startSessionOnClick: Button
+) :ImageAnalyzer<List<Face>>() {
+    private var counter = 0
 
     private val realTimeOpts = FaceDetectorOptions.Builder()
         .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
@@ -17,14 +23,37 @@ class EyeDetectionUtils :ImageAnalyzer<List<Face>>() {
         .build()
 
     private val det = FaceDetection.getClient(realTimeOpts)
-
+    private var text = eyeDetectionText
+    private var endSession = endSessionOnClick
     override fun detectFace(image: InputImage): Task<List<Face>> {
         return det.process(image)
     }
 
     override fun onSuccess(results: List<Face>){
+        endSession.setOnClickListener {
+            text.text = "button pressed"
+        }
+        Log.d(TAG, "YOO " + "BEGINNING")
         results.forEach {
-            Log.d(TAG,"YOO" + it.rightEyeOpenProbability.toString())
+//            if((it.leftEyeOpenProbability!! < 0.5) && (it.rightEyeOpenProbability!! < 0.5)){
+//                counter++
+//                text.text = "EYES NOT DETECTED"
+//                text.setTextColor(Color.parseColor("#FF0000"))
+//
+//            }
+//            else if((it.leftEyeOpenProbability!! > 0.5) && (it.rightEyeOpenProbability!! > 0.5)){
+//                counter = 0
+//                text.text = "EYES DETECTED"
+//                text.setTextColor(Color.parseColor("#00FF0A"))
+//            }
+//            else{
+//                counter = 0
+//                text.text = "EYES DETECTED"
+//                text.setTextColor(Color.parseColor("#00FF0A"))
+//            }
+//            Log.d(TAG, "YOO COUNTER: $counter")
+//            Log.d(TAG,"YOO LEFT EYE" + it.rightEyeOpenProbability.toString())
+//            Log.d(TAG,"YOO RIGHT EYE" + it.leftEyeOpenProbability.toString())
         }
     }
 }
