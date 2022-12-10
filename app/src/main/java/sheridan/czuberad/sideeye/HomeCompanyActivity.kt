@@ -1,5 +1,6 @@
 package sheridan.czuberad.sideeye
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -62,6 +63,20 @@ class HomeCompanyActivity : AppCompatActivity() {
             Log.d("ABC", "Observed a change in the game list")
             Log.d("ABCDE", it.toString())
             driversAdapter.submitList(it)
+        })
+
+        driversAdapter.setOnItemClickListener(object : DriversAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                val intent = Intent(this@HomeCompanyActivity, DriverDetailsActivity::class.java)
+                intent.putExtra("driverName", driversAdapter.currentList[position].name)
+                intent.putExtra("driverEmail", driversAdapter.currentList[position].email)
+                intent.putExtra("driverCompany", driversAdapter.currentList[position].companyName)
+                intent.putExtra("driverPhone", driversAdapter.currentList[position].phoneNumber)
+                intent.putExtra("driverStatus", driversAdapter.currentList[position].status)
+
+                startActivity(intent)
+            }
+
         })
 
     }

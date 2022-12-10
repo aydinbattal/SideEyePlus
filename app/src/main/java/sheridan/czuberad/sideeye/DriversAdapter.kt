@@ -18,7 +18,24 @@ import sheridan.czuberad.sideeye.databinding.CustomRowLayoutBinding
  * on 2022-11-19 */
 class DriversAdapter : ListAdapter<Driver, DriversAdapter.DriversViewHolder>(DriversAdapter.CompanyDriversAdapter()) {
 
-    inner class DriversViewHolder(val binding: CustomRowLayoutBinding): RecyclerView.ViewHolder(binding.root) {}
+    //var onItemClick : ((Driver) -> Unit)? = null
+    private lateinit var mListener: onItemClickListener
+
+    interface onItemClickListener{
+        fun onItemClick(position: Int)
+    }
+
+    fun setOnItemClickListener(clickListener: onItemClickListener){
+        mListener = clickListener
+    }
+
+    inner class DriversViewHolder(val binding: CustomRowLayoutBinding, clickListener: onItemClickListener): RecyclerView.ViewHolder(binding.root) {
+        init {
+            itemView.setOnClickListener{
+                clickListener.onItemClick(adapterPosition)
+            }
+        }
+    }
 
     class CompanyDriversAdapter: DiffUtil.ItemCallback<Driver>() {
         override fun areItemsTheSame(oldItem: Driver, newItem: Driver): Boolean {
@@ -36,7 +53,7 @@ class DriversAdapter : ListAdapter<Driver, DriversAdapter.DriversViewHolder>(Dri
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DriversAdapter.DriversViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = CustomRowLayoutBinding.inflate(layoutInflater, parent, false)
-        return DriversViewHolder(binding)
+        return DriversViewHolder(binding, mListener)
     }
 
     // specify what data should be placed in each UI element of the custom row layout
@@ -48,7 +65,9 @@ class DriversAdapter : ListAdapter<Driver, DriversAdapter.DriversViewHolder>(Dri
 
         holder.binding.tvDriverName.text = item.name.toString()
 
-
+//        holder.itemView.setOnClickListener{
+//            onItemClick?.invoke(item)
+//        }
 
     }
 

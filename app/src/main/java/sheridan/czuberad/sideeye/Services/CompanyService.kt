@@ -28,6 +28,18 @@ class CompanyService() {
         Log.d("ABC", "vm is initializing")
     }
 
+//    fun getDriverByEmail(email: String): Driver {
+//        db.collection("Drivers").whereEqualTo("email",email).get()
+//            .addOnSuccessListener { documents ->
+//                for (document in documents) {
+//                    val driver = document.toObject(Driver::class.java)
+//                    return driver
+//                }
+//            }
+//            .addOnFailureListener { exception ->
+//                Log.w("getDriverByEmail", "Error getting documents: ", exception)
+//            }
+//    }
 
     fun addNewDriver(email: String){
         var company = ""
@@ -46,8 +58,8 @@ class CompanyService() {
         db.collection("Drivers").whereEqualTo("email",email).get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
-                    val driver = document.toObject(Driver::class.java)
-                    driver.companyName = company
+//                    val driver = document.toObject(Driver::class.java)
+//                    driver.companyName = company
                     db.collection("Drivers").document(document.id).update("companyName", company)
                     Log.d("addNewDriver", "${company}")
                     Log.d("addNewDriver", "${document.id} => ${document.data}")
