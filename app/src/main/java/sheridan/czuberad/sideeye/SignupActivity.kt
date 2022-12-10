@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Switch
 import android.widget.Toast
+import androidx.core.view.isVisible
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,11 +30,17 @@ class SignupActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
-
+        var companyText = findViewById<EditText>(R.id.text_company_signup)
         var isCompany = false
         var toggle:Switch = findViewById(R.id.switch_signup)
         toggle.setOnCheckedChangeListener { _, isChecked ->
             isCompany = isChecked
+            companyText.visibility = if(companyText.visibility == View.VISIBLE){
+                View.INVISIBLE
+            }
+            else{
+                View.VISIBLE
+            }
         }
 
 
@@ -40,9 +48,10 @@ class SignupActivity : AppCompatActivity() {
 
         val homeClick = findViewById<Button>(R.id.button_signup)
         homeClick.setOnClickListener{
+
+
             var emailText = findViewById<EditText>(R.id.text_email_signup).text.toString().trim()
             var passwordText = findViewById<EditText>(R.id.text_password_signup).text.toString().trim()
-
             if (isCompany){
                 auth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener{
                     if(it.isSuccessful){
@@ -108,3 +117,4 @@ class SignupActivity : AppCompatActivity() {
         }
     }
 }
+

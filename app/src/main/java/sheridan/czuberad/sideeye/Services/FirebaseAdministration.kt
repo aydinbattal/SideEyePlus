@@ -12,6 +12,10 @@ class FirebaseAdministration {
         return auth.signInWithEmailAndPassword(emailText,passwordText)
     }
 
+    fun signUp(emailText: String, passwordText: String): Task<AuthResult> {
+        return auth.createUserWithEmailAndPassword(emailText,passwordText)
+    }
+
 
 
 }
