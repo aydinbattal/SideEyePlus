@@ -10,6 +10,7 @@ import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 import sheridan.czuberad.sideeye.Domain.Alert
+import sheridan.czuberad.sideeye.`Application Logic`.EyeDetectionLogic
 import java.sql.Timestamp
 
 class EyeDetectionUtils(
@@ -27,6 +28,8 @@ class EyeDetectionUtils(
 
     private val det = FaceDetection.getClient(realTimeOpts)
     private var text = eyeDetectionText
+    private var isSessionStart = false
+    private var isSessionEnd = false
     private var endSession = endSessionOnClick
     private var startSession = startSessionOnClick
     private var alertList = arrayListOf<Alert>()
@@ -36,13 +39,20 @@ class EyeDetectionUtils(
 
     override fun onSuccess(results: List<Face>){
         startSession.setOnClickListener {
-
+            alertList.clear()
+            isSessionStart = true
+            isSessionEnd = false
             val timestamp = Timestamp(System.currentTimeMillis())
             Log.d(TAG, " POP: Start press$timestamp")
 
             endSession.setOnClickListener {
-                Log.d(TAG, "POP: End press$timestamp")
-                Log.d(TAG, "ALERTEND $alertList")
+                if(isSessionEnd == false){
+                    //Log.d(TAG, "POP: End press$timestamp")
+                    Log.d(TAG, "ALERTEND $alertList")
+                }
+
+                isSessionStart = false
+                isSessionEnd = true
 
 
             }
@@ -64,11 +74,16 @@ class EyeDetectionUtils(
                 text.text = "EYES DETECTED"
                 text.setTextColor(Color.parseColor("#00FF0A"))
             }
-            if(counter>=50){
-                alertList.add(Alert(alertType = "face"))
-                counter = 0
-                Log.d(TAG, "ALERT:$alertList")
+            if(isSessionStart){
+                if(counter>=50){
+                    var eyeLogic = EyeDetectionLogic()
+
+                    alertList.add(Alert(alertSeverity = "low",eyeLogic.getTimeStamp()))
+                    counter = 0
+                    Log.d(TAG, "ALERT:$alertList")
+                }
             }
+
 
             Log.d(TAG, "YOO COUNTER: $counter")
             Log.d(TAG,"YOO LEFT EYE" + it.rightEyeOpenProbability.toString())
