@@ -1,6 +1,7 @@
 package sheridan.czuberad.sideeye
 
 import android.annotation.SuppressLint
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -21,13 +22,14 @@ class EyeDetectionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_eye_detection)
         var eyeDetectionLogic = EyeDetectionLogic()
         var driverService = DriverService()
+        var media = MediaPlayer.create(this,R.raw.warningsound)
         val previewCameraX = findViewById<PreviewView>(R.id.cameraXpreview)
         var eyeDetectionText = findViewById<TextView>(R.id.eyedetectionText)
         val startSessionOnClick = findViewById<Button>(R.id.button_eye_detection)
         val endSessionOnClick = findViewById<Button>(R.id.button_eye_detection_end)
         cameraXUtils = CameraXUtils(this,previewCameraX,this)
         //checkPermissions()
-        cameraXUtils.openCameraPreview(eyeDetectionText, endSessionOnClick, startSessionOnClick)
+        cameraXUtils.openCameraPreview(eyeDetectionText, endSessionOnClick, startSessionOnClick, media)
 
 
 
