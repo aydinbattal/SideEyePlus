@@ -2,7 +2,10 @@ package sheridan.czuberad.sideeye.Camera
 
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.media.MediaPlayer
 import android.util.Log
+import android.widget.Button
+import android.widget.TextView
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 
@@ -29,7 +32,12 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
         executorService = Executors.newSingleThreadExecutor()
     }
 
-    fun openCameraPreview(){
+    fun openCameraPreview(
+        eyeDetectionText: TextView,
+        endSessionOnClick: Button,
+        startSessionOnClick: Button,
+        media: MediaPlayer
+    ) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
         cameraProviderFuture.addListener(
             Runnable {
@@ -39,7 +47,7 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
                 imageAnalysis = ImageAnalysis.Builder().setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                     .build()
                     .also {
-                        it.setAnalyzer(executorService,analyzer())
+                        it.setAnalyzer(executorService,analyzer(eyeDetectionText, endSessionOnClick, startSessionOnClick, media))
                     }
                 val cameraS = CameraSelector.Builder().requireLensFacing(cameraSelector).build()
                 configCamera(processcameraProvider,cameraS)
@@ -48,8 +56,13 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
         )
     }
 
-    private fun analyzer(): ImageAnalysis.Analyzer {
-        return EyeDetectionUtils()
+    private fun analyzer(
+        eyeDetectionText: TextView,
+        endSessionOnClick: Button,
+        startSessionOnClick: Button,
+        media: MediaPlayer
+    ): ImageAnalysis.Analyzer {
+        return EyeDetectionUtils(eyeDetectionText, endSessionOnClick, startSessionOnClick, media)
     }
     private fun configCamera(processCameraProvider: ProcessCameraProvider?,cameraSelector: CameraSelector){
         try{
