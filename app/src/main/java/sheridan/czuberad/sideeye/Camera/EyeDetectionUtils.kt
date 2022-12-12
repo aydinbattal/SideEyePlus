@@ -1,6 +1,7 @@
 package sheridan.czuberad.sideeye.Camera
 import android.content.ContentValues.TAG
 import android.graphics.Color
+import android.media.MediaPlayer
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
@@ -16,7 +17,8 @@ import java.sql.Timestamp
 class EyeDetectionUtils(
     eyeDetectionText: TextView,
     endSessionOnClick: Button,
-    startSessionOnClick: Button
+    startSessionOnClick: Button,
+    media: MediaPlayer
 ) :ImageAnalyzer<List<Face>>() {
     private var counter = 0
 
@@ -32,6 +34,7 @@ class EyeDetectionUtils(
     private var isSessionEnd = false
     private var endSession = endSessionOnClick
     private var startSession = startSessionOnClick
+    private var mediaPlayer = media
     private var alertList = arrayListOf<Alert>()
     override fun detectFace(image: InputImage): Task<List<Face>> {
         return det.process(image)
@@ -42,6 +45,7 @@ class EyeDetectionUtils(
             alertList.clear()
             isSessionStart = true
             isSessionEnd = false
+
             val timestamp = Timestamp(System.currentTimeMillis())
             Log.d(TAG, " POP: Start press$timestamp")
 
@@ -79,6 +83,7 @@ class EyeDetectionUtils(
                     var eyeLogic = EyeDetectionLogic()
 
                     alertList.add(Alert(alertSeverity = "low",eyeLogic.getTimeStamp()))
+                    mediaPlayer.start()
                     counter = 0
                     Log.d(TAG, "ALERT:$alertList")
                 }
