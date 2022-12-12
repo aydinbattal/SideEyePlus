@@ -21,11 +21,12 @@ import java.security.acl.Owner
 class CompanyService() {
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    val driversList: MutableLiveData<List<Driver>> = MutableLiveData<List<Driver>>(listOf())
+    val driversList = MutableLiveData<MutableList<Driver>>()
     private val currentUser = Firebase.auth.currentUser
 
     init {
         Log.d("ABC", "vm is initializing")
+        driversList.value = ArrayList()
     }
 
     fun removeDriverFromCompany(email: String)
@@ -86,11 +87,13 @@ class CompanyService() {
         db.collection("Drivers").whereEqualTo("email",email).get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
-//                    val driver = document.toObject(Driver::class.java)
+                    val driver = document.toObject(Driver::class.java)
 //                    driver.companyName = company
                     db.collection("Drivers").document(document.id).update("companyName", company)
                     Log.d("addNewDriver", "${company}")
                     Log.d("addNewDriver", "${document.id} => ${document.data}")
+                    driversList.value?.add(driver)
+                    driversList.value = driversList.value
                 }
             }
             .addOnFailureListener { exception ->
