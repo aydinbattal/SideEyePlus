@@ -36,7 +36,9 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
         eyeDetectionText: TextView,
         endSessionOnClick: Button,
         startSessionOnClick: Button,
-        media: MediaPlayer
+        media: MediaPlayer,
+        sessionText: TextView,
+        sessionToast: Unit
     ) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
         cameraProviderFuture.addListener(
@@ -47,7 +49,7 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
                 imageAnalysis = ImageAnalysis.Builder().setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                     .build()
                     .also {
-                        it.setAnalyzer(executorService,analyzer(eyeDetectionText, endSessionOnClick, startSessionOnClick, media))
+                        it.setAnalyzer(executorService,analyzer(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast))
                     }
                 val cameraS = CameraSelector.Builder().requireLensFacing(cameraSelector).build()
                 configCamera(processcameraProvider,cameraS)
@@ -60,9 +62,11 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
         eyeDetectionText: TextView,
         endSessionOnClick: Button,
         startSessionOnClick: Button,
-        media: MediaPlayer
+        media: MediaPlayer,
+        sessionText: TextView,
+        sessionToast: Unit
     ): ImageAnalysis.Analyzer {
-        return EyeDetectionUtils(eyeDetectionText, endSessionOnClick, startSessionOnClick, media)
+        return EyeDetectionUtils(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast)
     }
     private fun configCamera(processCameraProvider: ProcessCameraProvider?,cameraSelector: CameraSelector){
         try{

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.camera.view.PreviewView
 import com.google.firebase.firestore.FirebaseFirestore
 import sheridan.czuberad.sideeye.Camera.CameraXUtils
@@ -22,14 +23,16 @@ class EyeDetectionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_eye_detection)
         var eyeDetectionLogic = EyeDetectionLogic()
         var driverService = DriverService()
+        var sessionToast = Toast.makeText(baseContext, "Session Has Been Added", Toast.LENGTH_SHORT).show()
         var media = MediaPlayer.create(this,R.raw.warningsound)
         val previewCameraX = findViewById<PreviewView>(R.id.cameraXpreview)
         var eyeDetectionText = findViewById<TextView>(R.id.eyedetectionText)
+        var sessionText = findViewById<TextView>(R.id.sessionTextView)
         val startSessionOnClick = findViewById<Button>(R.id.button_eye_detection)
         val endSessionOnClick = findViewById<Button>(R.id.button_eye_detection_end)
         cameraXUtils = CameraXUtils(this,previewCameraX,this)
         //checkPermissions()
-        cameraXUtils.openCameraPreview(eyeDetectionText, endSessionOnClick, startSessionOnClick, media)
+        cameraXUtils.openCameraPreview(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast)
 
 
 
