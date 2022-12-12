@@ -24,7 +24,8 @@ class HomeCompanyActivity : AppCompatActivity() {
 
     private lateinit var companyService:CompanyService
 
-
+    //todo: update recyclerview asap
+    //todo: figure out why cant do multiple updates without changing screen
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -57,6 +58,7 @@ class HomeCompanyActivity : AppCompatActivity() {
             Log.d("ABC", "Observed a change in the game list")
             Log.d("ABCDE", it.toString())
             driversAdapter.submitList(it)
+            driversAdapter.notifyDataSetChanged()
         })
 
         driversAdapter.setOnItemClickListener(object : DriversAdapter.onItemClickListener{

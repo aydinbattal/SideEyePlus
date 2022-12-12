@@ -42,6 +42,7 @@ class DriverDetailsActivity : AppCompatActivity() {
                 companyService.updateDriverData(email, newEmail, newPhone)
 
             }
+            email = newEmail
         }
 
         binding.btnRemove.setOnClickListener{
