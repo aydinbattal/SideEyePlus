@@ -27,7 +27,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:scaleType="fillCenter" />
+        app:scaleType="fillCenter" >
+
+
+
+    </androidx.camera.view.PreviewView>
+
+    <TextView
+        android:id="@+id/sessionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="95dp"
+        android:layout_marginTop="557dp"
+        android:layout_marginEnd="90dp"
+        android:layout_marginBottom="8dp"
+        android:text="Press Start Button To Start Session"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eyedetectionText"
+        app:layout_constraintVertical_bias="0.0" />
+
     <TextView
         android:id="@+id/eyedetectionText"
         android:layout_width="wrap_content"
@@ -41,7 +63,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="412dp"
         android:layout_height="66dp"
         android:layout_marginBottom="3dp"

@@ -18,7 +18,9 @@ class EyeDetectionUtils(
     eyeDetectionText: TextView,
     endSessionOnClick: Button,
     startSessionOnClick: Button,
-    media: MediaPlayer
+    media: MediaPlayer,
+    sessionText: TextView,
+    sessionToast: Unit
 ) :ImageAnalyzer<List<Face>>() {
     private var counter = 0
 
@@ -30,8 +32,10 @@ class EyeDetectionUtils(
 
     private val det = FaceDetection.getClient(realTimeOpts)
     private var text = eyeDetectionText
+    private var sessionT = sessionText
     private var isSessionStart = false
     private var isSessionEnd = false
+    private var sessionEndToast = sessionToast
     private var endSession = endSessionOnClick
     private var startSession = startSessionOnClick
     private var mediaPlayer = media
@@ -42,6 +46,7 @@ class EyeDetectionUtils(
 
     override fun onSuccess(results: List<Face>){
         startSession.setOnClickListener {
+            sessionT.text = "Press End Session to End Session"
             alertList.clear()
             isSessionStart = true
             isSessionEnd = false
@@ -51,6 +56,7 @@ class EyeDetectionUtils(
 
             endSession.setOnClickListener {
                 if(isSessionEnd == false){
+                    sessionT.text = "Press Start To Start Session"
                     //Log.d(TAG, "POP: End press$timestamp")
                     Log.d(TAG, "ALERTEND $alertList")
                 }
