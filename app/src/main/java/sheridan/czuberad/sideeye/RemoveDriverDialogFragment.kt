@@ -1,5 +1,6 @@
 package sheridan.czuberad.sideeye
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,13 +13,12 @@ import sheridan.czuberad.sideeye.databinding.FragmentAddDriverDialogBinding
 import sheridan.czuberad.sideeye.databinding.FragmentRemoveDriverDialogBinding
 
 
-class RemoveDriverDialogFragment(email: String) : DialogFragment() {
+class RemoveDriverDialogFragment(private val email: String) : DialogFragment() {
     private var _binding: FragmentRemoveDriverDialogBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
     private var companyService: CompanyService = CompanyService()
-    private val email = email
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,8 +34,12 @@ class RemoveDriverDialogFragment(email: String) : DialogFragment() {
 
         binding.btnRemoveDriver.setOnClickListener{
             companyService.removeDriverFromCompany(email)
+            val driversAdapter = DriversAdapter()
+            driversAdapter.notifyDataSetChanged()
             Toast.makeText(context, "Successfully removed!", Toast.LENGTH_LONG).show()
             dismiss()
+            val intent = Intent(context, HomeCompanyActivity::class.java)
+            startActivity(intent)
         }
 
         return view

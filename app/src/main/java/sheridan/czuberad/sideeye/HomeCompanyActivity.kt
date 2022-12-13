@@ -24,6 +24,15 @@ class HomeCompanyActivity : AppCompatActivity() {
 
     private lateinit var companyService:CompanyService
 
+//    override fun onResume(){
+//        super.onResume()
+//        companyService.driversList.observe(this, Observer {
+//            Log.d("ABC", "Observed a change in the drivers list")
+//            Log.d("ABCDE", it.toString())
+//            driversAdapter.submitList(it)
+//            driversAdapter.notifyDataSetChanged()
+//        })
+//    }
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -52,7 +61,7 @@ class HomeCompanyActivity : AppCompatActivity() {
 
         // observer on the vm's games List
         companyService.driversList.observe(this, Observer {
-            Log.d("ABC", "Observed a change in the game list")
+            Log.d("ABC", "Observed a change in the drivers list")
             Log.d("ABCDE", it.toString())
             driversAdapter.submitList(it)
             driversAdapter.notifyDataSetChanged()

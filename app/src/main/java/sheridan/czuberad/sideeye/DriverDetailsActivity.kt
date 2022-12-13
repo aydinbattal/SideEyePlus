@@ -1,5 +1,6 @@
 package sheridan.czuberad.sideeye
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -59,6 +60,7 @@ class DriverDetailsActivity : AppCompatActivity() {
             var dialog = RemoveDriverDialogFragment(email)
 
             dialog.show(supportFragmentManager, "removeDriverDialog")
+
         }
 
 

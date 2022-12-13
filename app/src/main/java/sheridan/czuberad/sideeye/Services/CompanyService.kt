@@ -39,11 +39,15 @@ class CompanyService() {
                 for (document in documents) {
                     db.collection("Drivers").document(document.id).collection("Sessions").get().addOnSuccessListener { sessions ->
                         sessions.query.orderBy("endSession", Query.Direction.DESCENDING).limit(1).get().addOnSuccessListener { session ->
-                            val lastAlert = session.documents[0].data?.get("endSession") as com.google.firebase.Timestamp
+                            if(session.documents.isNotEmpty())
+                            {
+                                val lastAlert = session.documents[0]?.data?.get("endSession") as com.google.firebase.Timestamp
 
-                            alertsFromDb.add(lastAlert.toDate().toString())
-                            alertTimes.postValue(alertsFromDb)
-                            Log.d("lastAlert", "${lastAlert}")
+                                alertsFromDb.add(lastAlert.toDate().toString())
+                                alertTimes.postValue(alertsFromDb)
+                                Log.d("lastAlert", "${lastAlert}")
+                            }
+
 //                            db.collection("Drivers").document(document.id).collection("Sessions").document(session.documents[0].id).get().addOnSuccessListener { alerts ->
 //                                Log.d("lastAlert", "${alerts.data["time"]}")
 //
@@ -72,6 +76,11 @@ class CompanyService() {
                 for (document in documents) {
                     db.collection("Drivers").document(document.id).update("companyName", "")
                     Log.d("removeDriverFromCompany", "${document.id} => ${document.data}")
+                    val driver = document.toObject(Driver::class.java)
+                    driversList.value?.remove(driver)
+                    driversList.value = driversList.value
+                    Log.d("removeDriverFromCompany", "${driversList.value} ")
+
                 }
             }
             .addOnFailureListener { exception ->
