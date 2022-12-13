@@ -76,23 +76,23 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:text="Most Recent Test"
+        android:text="Most Recent Alert"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvColumnPhone" />
 
-    <TextView
-        android:id="@+id/tvColumnHeartRate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Most Recent Heart Rate"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvColumnTestResult" />
+<!--    <TextView-->
+<!--        android:id="@+id/tvColumnHeartRate"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Most Recent Heart Rate"-->
+<!--        android:textSize="20sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tvColumnTestResult" />-->
 
     <Button
         android:id="@+id/btnRemove"
@@ -142,22 +142,22 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:text="PASSED"
+        android:text="Timestamp"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/tvColumnTestResult"
         app:layout_constraintTop_toBottomOf="@+id/edtPhone"
         />
 
-    <TextView
-        android:id="@+id/textView22"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="NORMAL"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/tvColumnHeartRate"
-        app:layout_constraintTop_toBottomOf="@+id/tvTest" />
+<!--    <TextView-->
+<!--        android:id="@+id/tvHeartRate"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="NORMAL"-->
+<!--        android:textSize="20sp"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/tvColumnHeartRate"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tvTest" />-->
 
     <EditText
         android:id="@+id/edtEmail"

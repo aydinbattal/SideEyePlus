@@ -24,9 +24,6 @@ class HomeCompanyActivity : AppCompatActivity() {
 
     private lateinit var companyService:CompanyService
 
-    //todo: update recyclerview asap
-    //todo: figure out why cant do multiple updates without changing screen
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)

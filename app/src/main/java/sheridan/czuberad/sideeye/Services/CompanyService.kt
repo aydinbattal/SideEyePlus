@@ -23,10 +23,46 @@ class CompanyService() {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     val driversList = MutableLiveData<MutableList<Driver>>()
     private val currentUser = Firebase.auth.currentUser
+    val alertTimes = MutableLiveData<MutableList<String>>()
+
 
     init {
         Log.d("ABC", "vm is initializing")
         driversList.value = ArrayList()
+    }
+
+    fun getDriverSessions(email: String) {
+        val alertsFromDb:ArrayList<String> = arrayListOf()
+
+        db.collection("Drivers").whereEqualTo("email",email).get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    db.collection("Drivers").document(document.id).collection("Sessions").get().addOnSuccessListener { sessions ->
+                        sessions.query.orderBy("endSession", Query.Direction.DESCENDING).limit(1).get().addOnSuccessListener { session ->
+                            val lastAlert = session.documents[0].data?.get("endSession") as com.google.firebase.Timestamp
+
+                            alertsFromDb.add(lastAlert.toDate().toString())
+                            alertTimes.postValue(alertsFromDb)
+                            Log.d("lastAlert", "${lastAlert}")
+//                            db.collection("Drivers").document(document.id).collection("Sessions").document(session.documents[0].id).get().addOnSuccessListener { alerts ->
+//                                Log.d("lastAlert", "${alerts.data["time"]}")
+//
+//                            }
+                        }
+
+
+//                        for (session in sessions) {
+//                            session.data["endSession"]
+//                        }
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("getDriverSessions", "Error getting documents: ", exception)
+            }
+
+        //return alertTimes
+
     }
 
     fun removeDriverFromCompany(email: String)

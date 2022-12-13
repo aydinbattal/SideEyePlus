@@ -2,6 +2,8 @@ package sheridan.czuberad.sideeye
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.lifecycle.Observer
 import sheridan.czuberad.sideeye.Services.CompanyService
 import sheridan.czuberad.sideeye.databinding.ActivityDriverDetailsBinding
 import sheridan.czuberad.sideeye.databinding.ActivityHomeCompanyBinding
@@ -31,6 +33,14 @@ class DriverDetailsActivity : AppCompatActivity() {
         binding.tvName.text = name
         binding.edtPhone.setText(phone)
         binding.tvStatus.text = status
+
+        companyService.getDriverSessions(email)
+
+        companyService.alertTimes.observe(this, Observer {
+            Log.d("ABC", "Observed a change in the alerts list")
+            Log.d("ABCDE", it.toString())
+            binding.tvTest.text = it[0]
+        })
 
         //todo: send driver object instead of individual parameters
         //val driver = Driver(name, email, phone, true)
