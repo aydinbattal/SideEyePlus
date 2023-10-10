@@ -1,5 +1,6 @@
 package sheridan.czuberad.sideeye.UI
 
+import android.content.Intent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -35,11 +36,15 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.core.content.ContextCompat.startActivity
+import sheridan.czuberad.sideeye.EyeDetectionActivity
 import sheridan.czuberad.sideeye.R
+import sheridan.czuberad.sideeye.ReactionTestActivity
 import kotlin.math.roundToInt
 
 
@@ -63,6 +68,7 @@ fun DriverHome() {
         Pair(20, 111.85)
     )
     val configuration = LocalConfiguration.current
+    val context = LocalContext.current
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
     Column(
@@ -109,7 +115,11 @@ fun DriverHome() {
                 modifier = Modifier.weight(1f),
                 shape = RectangleShape,
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF39AFEA)),
-                onClick = { /* TODO: Handle button click */ }) {
+                onClick = {
+                    val intent = Intent(context, EyeDetectionActivity::class.java)
+                    context.startActivity(intent)
+
+                }) {
                 Text("Session Tracking")
             }
             Spacer(modifier = Modifier.width(5.dp))
@@ -118,7 +128,10 @@ fun DriverHome() {
                 shape = RectangleShape,
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF39AFEA)),
-                onClick = { /* TODO: Handle button click */ }) {
+                onClick = {
+                    val intent = Intent(context, ReactionTestActivity::class.java)
+                    context.startActivity(intent)
+                }) {
                 Text("Reaction Test")
             }
             
