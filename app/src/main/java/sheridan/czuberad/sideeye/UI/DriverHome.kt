@@ -1,5 +1,6 @@
 package sheridan.czuberad.sideeye.UI
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -7,8 +8,11 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,9 +29,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
@@ -35,7 +42,11 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import sheridan.czuberad.sideeye.`Application Logic`.IndependentDriverLogic
 import sheridan.czuberad.sideeye.Domain.Driver
@@ -48,21 +59,17 @@ import kotlin.math.roundToInt
 @Composable
 fun DriverHome() {
     val data = listOf(
-        Pair(6, 111.45),
-        Pair(7, 111.0),
-        Pair(8, 113.45),
-        Pair(9, 112.25),
-        Pair(10, 116.45),
-        Pair(11, 113.35),
-        Pair(12, 118.65),
-        Pair(13, 110.15),
-        Pair(14, 113.05),
-        Pair(15, 114.25),
-        Pair(16, 116.35),
-        Pair(17, 117.45),
-        Pair(18, 112.65),
-        Pair(19, 115.45),
-        Pair(20, 111.85)
+        Pair(1, 0),
+        Pair(2, 5),
+        Pair(3, 2),
+        Pair(4, 0),
+        Pair(5, 1),
+        Pair(6, 10),
+        Pair(7, 2),
+        Pair(8, 3),
+        Pair(9, 0),
+        Pair(10, 0)
+
     )
     val configuration = LocalConfiguration.current
     val context = LocalContext.current
@@ -105,6 +112,7 @@ fun DriverHome() {
 
 
         }
+
 
         
         Row(
@@ -151,15 +159,17 @@ fun DriverHome() {
 
 }
 
+
+
 @Composable
 fun LineChart(
-    data: List<Pair<Int, Double>> = emptyList(),
+    data: List<Pair<Int, Int>> = emptyList(),
     modifier: Modifier = Modifier,
     title: String = "Session Overview"
 ) {
     val spacing = 100f
     val graphColor = Color(0xFF39AFEA)
-    val upperValue = remember { (data.maxOfOrNull { it.second }?.plus(1))?.roundToInt() ?: 0 }
+    val upperValue = remember { (data.maxOfOrNull { it.second }?.plus(1)) ?: 0 }
     val lowerValue = remember { (data.minOfOrNull { it.second }?.toInt() ?: 0) }
 
     val drawingProgress = remember { Animatable(0f) }
@@ -171,20 +181,25 @@ fun LineChart(
         )
     }
 
-
-
     Canvas(modifier = modifier) {
         val spacePerHour = (size.width - spacing) / data.size
+        val lastDataPointX = spacing + (data.size - 1) * spacePerHour
         val height = size.height
+
+
+        val graphTopPaddingRatio = 0.2f
+        val graphBottomPaddingRatio = 0.2f
+        val availableHeight = height * (1 - graphTopPaddingRatio - graphBottomPaddingRatio)
+        val graphTopPadding = height * graphTopPaddingRatio
 
         val path = Path()
         val drawingLimit = drawingProgress.value.toInt()
 
         for (i in 0 until drawingLimit) {
             val info = data[i]
-            val ratio = (info.second - lowerValue) / (upperValue - lowerValue)
+            val ratio = (info.second - lowerValue).toFloat() / (upperValue - lowerValue)
             val x1 = spacing + i * spacePerHour
-            val y1 = height - spacing - (ratio * height).toFloat()
+            val y1 = graphTopPadding + (1 - ratio) * availableHeight
 
             if (i == 0) {
                 path.moveTo(x1, y1)
@@ -199,10 +214,10 @@ fun LineChart(
             val t = drawingProgress.value - drawingLimit
 
             val startX = spacing + (drawingLimit - 1) * spacePerHour
-            val startY = height - spacing - ((startInfo.second - lowerValue) / (upperValue - lowerValue) * height).toFloat()
+            val startY = graphTopPadding + (1 - (startInfo.second - lowerValue).toFloat() / (upperValue - lowerValue)) * availableHeight
 
             val endX = spacing + drawingLimit * spacePerHour
-            val endY = height - spacing - ((endInfo.second - lowerValue) / (upperValue - lowerValue) * height).toFloat()
+            val endY = graphTopPadding + (1 - (endInfo.second - lowerValue).toFloat() / (upperValue - lowerValue)) * availableHeight
 
             val interpolatedX = lerp(startX, endX, t)
             val interpolatedY = lerp(startY, endY, t)
@@ -214,10 +229,26 @@ fun LineChart(
             path = path,
             color = graphColor,
             style = Stroke(
-                width = 2.dp.toPx(),
+                width = 4.dp.toPx(),
                 cap = StrokeCap.Round
             )
         )
+
+        drawLine(
+            color = Color(0xFF39AFEA),
+            start = Offset(spacing, size.height * graphBottomPaddingRatio),
+            end = Offset(spacing, size.height - size.height * graphTopPaddingRatio + 10.dp.toPx()),
+            strokeWidth = 2.dp.toPx()
+        )
+        //X axis line
+        drawLine(
+            color = Color(0xFF39AFEA),
+            start = Offset(spacing, size.height - size.height * graphTopPaddingRatio + 10.dp.toPx() ),
+            end = Offset(lastDataPointX, size.height - size.height * graphTopPaddingRatio + 10.dp.toPx()),
+            strokeWidth = 2.dp.toPx()
+        )
+
+
 
     }
 }

@@ -42,29 +42,6 @@ class DriverService {
 
     }
 
-//    fun fetchCurrentUser(): Driver {
-//
-//        val driver = Driver()
-//        if(currentUser != null){
-//            db.collection("Drivers").document(currentUser).get()
-//                .addOnSuccessListener {
-//                    if(it != null && it.exists()){
-//                        Log.d("YOO", ("Inside fetchCurrentUser: " + it.getString("name")) ?: "")
-//                        driver.companyName = it.getString("companyName") ?: ""
-//                        driver.email = it.getString("email") ?: ""
-//                        driver.name = it.getString("name") ?: ""
-//                        driver.phoneNumber = it.getString("phoneNumber") ?: ""
-//                        driver.status = it.getBoolean("status") ?: false
-//                    }
-//                }
-//        }
-//        Log.d("YOO", "Inside fetchCurrentUser before return " + driver.name)
-//
-//        return driver
-//
-//
-//    }
-
     fun fetchCurrentUser(callback: (Driver?) -> Unit) {
         if (currentUser != null) {
             db.collection("Drivers").document(currentUser).get()
@@ -88,6 +65,12 @@ class DriverService {
         } else {
             callback(null)
         }
+    }
+
+
+    fun fetchSessions(){
+
+        
     }
 
 }
