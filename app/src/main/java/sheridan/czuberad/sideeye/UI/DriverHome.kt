@@ -6,7 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,13 +16,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,11 +34,11 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.core.content.ContextCompat.startActivity
+import sheridan.czuberad.sideeye.`Application Logic`.IndependentDriverLogic
+import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.EyeDetectionActivity
 import sheridan.czuberad.sideeye.R
 import sheridan.czuberad.sideeye.ReactionTestActivity
@@ -71,6 +68,10 @@ fun DriverHome() {
     val context = LocalContext.current
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
+
+
+    val independentDriverLogic = IndependentDriverLogic()
+    val currentDriver = independentDriverLogic.getCurrentDriverInfo()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,7 +79,7 @@ fun DriverHome() {
         verticalArrangement = Arrangement.Top
     ) {
 
-        InfoCard()
+        InfoCard(currentDriver)
 
         Card(
             modifier = Modifier
@@ -222,7 +223,9 @@ fun LineChart(
 }
 
 @Composable
-fun InfoCard(){
+fun InfoCard(currentDriver: Driver) {
+
+
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
@@ -240,14 +243,18 @@ fun InfoCard(){
 
             Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = "profile pic")
             Column {
-                Text(
-                    text = "JOHN DOE",
-                    color = Color.White
-                )
-                Text(
-                    text = "Independent Driver",
-                    color = Color.White
-                )
+                currentDriver.name?.let {
+                    Text(
+                        text = it,
+                        color = Color.White
+                    )
+                }
+                currentDriver.email?.let {
+                    Text(
+                        text = it,
+                        color = Color.White
+                    )
+                }
 
             }
 
