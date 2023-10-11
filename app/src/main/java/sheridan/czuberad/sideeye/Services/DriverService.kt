@@ -3,7 +3,10 @@ package sheridan.czuberad.sideeye.Services
 import android.os.Debug
 import android.util.Log
 import androidx.compose.ui.layout.LookaheadLayout
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -68,9 +71,61 @@ class DriverService {
     }
 
 
-    fun fetchSessions(){
+    fun fetchSessions(callback: (Map<String, Int>?) -> Unit){
+        Log.d("YOO","FETCHSESSIONS FUNCTION CALL")
+        if (currentUser != null) {
+            db.collection("Drivers")
+                .document(currentUser)
+                .collection("Sessions")
+                .get()
+                .addOnSuccessListener { sessionsSnapshot ->
+                    val sessionAlertsCountMap = mutableMapOf<String, Int>()
+                    val sessionIds = sessionsSnapshot.documents.map { it.id }
 
-        
+                    if (sessionIds.isEmpty()) {
+                        callback(mapOf()) // Return empty map if there are no sessions
+                        return@addOnSuccessListener
+                    }
+
+                    // Counter for completed requests
+                    var completedRequests = 0
+
+                    // Iterate over all the session documents
+                    for (sessionId in sessionIds) {
+                        db.collection("Drivers")
+                            .document(currentUser)
+                            .collection("Sessions")
+                            .document(sessionId)
+                            .collection("Alerts")
+                            .get()
+                            .addOnSuccessListener { alertsSnapshot ->
+                                sessionAlertsCountMap[sessionId] = alertsSnapshot.size()
+                                completedRequests++
+
+                                // Check if all requests are done
+                                if (completedRequests == sessionIds.size) {
+                                    callback(sessionAlertsCountMap)
+                                }
+                            }
+                            .addOnFailureListener {
+                                completedRequests++
+                                sessionAlertsCountMap[sessionId] = 0
+
+                                // Check if all requests are done
+                                if (completedRequests == sessionIds.size) {
+                                    callback(sessionAlertsCountMap)
+                                }
+                            }
+                    }
+                }
+                .addOnFailureListener {
+                    callback(null)
+                }
+        }
+
+
+
+
     }
 
 }

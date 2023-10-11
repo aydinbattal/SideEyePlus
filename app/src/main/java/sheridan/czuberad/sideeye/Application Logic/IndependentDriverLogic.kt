@@ -1,5 +1,6 @@
 package sheridan.czuberad.sideeye.`Application Logic`
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,5 +28,40 @@ class IndependentDriverLogic {
 
         return driver
 
+    }
+
+//    fun getSessionHistoryMap(): MutableMap<Int, Int> {
+//        Log.d("YOO", "Start of Call")
+//        val graphMap = mutableMapOf<Int, Int>()
+//        var counter = 1
+//
+//        driverService.fetchSessions { sessionAlertMap ->
+//
+//            sessionAlertMap?.forEach{(sessionId, alerts) ->
+//                graphMap[counter] = alerts
+//                counter++
+//                Log.d("YOO", "SessionID: $sessionId Number of Alerts:$alerts")
+//            }
+//        }
+//        Log.d("YOO", "SessionMapGraph: $graphMap")
+//        return graphMap
+//        Log.d("YOO", "End of Call")
+//    }
+
+    fun getSessionHistoryMap(callback: (MutableMap<Int, Int>) -> Unit) {
+        Log.d("YOO", "Start of Call")
+        val graphMap = mutableMapOf<Int, Int>()
+        var counter = 1
+
+        driverService.fetchSessions { sessionAlertMap ->
+            sessionAlertMap?.forEach { (_, alerts) ->
+                graphMap[counter] = alerts
+                counter++
+                Log.d("YOO", "Number of Alerts:$alerts")
+            }
+
+            Log.d("YOO", "SessionMapGraph: $graphMap")
+            callback(graphMap)  // Notify that the data is loaded and processed
+        }
     }
 }

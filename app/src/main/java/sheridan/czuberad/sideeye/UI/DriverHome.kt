@@ -2,6 +2,8 @@ package sheridan.czuberad.sideeye.UI
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Debug
+import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -71,6 +73,11 @@ fun DriverHome() {
         Pair(10, 0)
 
     )
+    val myMutableMap = mutableMapOf<Int, Int>()
+
+    for (i in 1..10) {
+        myMutableMap[i] = (1..10).random()
+    }
     val configuration = LocalConfiguration.current
     val context = LocalContext.current
     val screenWidth = configuration.screenWidthDp.dp
@@ -78,7 +85,16 @@ fun DriverHome() {
 
 
     val independentDriverLogic = IndependentDriverLogic()
+    Log.d("YOO", "CALLING FROM UI")
     val currentDriver = independentDriverLogic.getCurrentDriverInfo()
+
+//    var graphData: MutableMap<Int, Int>? = null
+//    independentDriverLogic.getSessionHistoryMap{
+//
+//        Log.d("YOO", "HOME UI Resulting Map: $it")
+//        graphData = it
+//
+//    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -102,13 +118,13 @@ fun DriverHome() {
             )// Optional: if you want to remove rounded corners
             // Optional: if you want to set a custom color
         ) {
-            LineChart(
-                data = data,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
+                LineChart(
+                    data = myMutableMap,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
 
 
         }
@@ -159,18 +175,16 @@ fun DriverHome() {
 
 }
 
-
-
 @Composable
 fun LineChart(
-    data: List<Pair<Int, Int>> = emptyList(),
+    data: MutableMap<Int, Int> = mutableMapOf(),
     modifier: Modifier = Modifier,
     title: String = "Session Overview"
 ) {
     val spacing = 100f
     val graphColor = Color(0xFF39AFEA)
-    val upperValue = remember { (data.maxOfOrNull { it.second }?.plus(1)) ?: 0 }
-    val lowerValue = remember { (data.minOfOrNull { it.second }?.toInt() ?: 0) }
+    val upperValue = remember { (data.values.max().plus(1)) }
+    val lowerValue = remember { data.values.min().toInt() }
 
     val drawingProgress = remember { Animatable(0f) }
 
@@ -186,7 +200,6 @@ fun LineChart(
         val lastDataPointX = spacing + (data.size - 1) * spacePerHour
         val height = size.height
 
-
         val graphTopPaddingRatio = 0.2f
         val graphBottomPaddingRatio = 0.2f
         val availableHeight = height * (1 - graphTopPaddingRatio - graphBottomPaddingRatio)
@@ -195,13 +208,14 @@ fun LineChart(
         val path = Path()
         val drawingLimit = drawingProgress.value.toInt()
 
-        for (i in 0 until drawingLimit) {
-            val info = data[i]
-            val ratio = (info.second - lowerValue).toFloat() / (upperValue - lowerValue)
-            val x1 = spacing + i * spacePerHour
+        for ((index, entry) in data.entries.withIndex()) {
+            if (index >= drawingLimit) break
+
+            val ratio = (entry.value - lowerValue).toFloat() / (upperValue - lowerValue)
+            val x1 = spacing + index * spacePerHour
             val y1 = graphTopPadding + (1 - ratio) * availableHeight
 
-            if (i == 0) {
+            if (index == 0) {
                 path.moveTo(x1, y1)
             } else {
                 path.lineTo(x1, y1)
@@ -209,15 +223,15 @@ fun LineChart(
         }
 
         if (drawingLimit > 0 && drawingLimit < data.size) {
-            val startInfo = data[drawingLimit - 1]
-            val endInfo = data[drawingLimit]
+            val startValue = data.values.toList()[drawingLimit - 1]
+            val endValue = data.values.toList()[drawingLimit]
             val t = drawingProgress.value - drawingLimit
 
             val startX = spacing + (drawingLimit - 1) * spacePerHour
-            val startY = graphTopPadding + (1 - (startInfo.second - lowerValue).toFloat() / (upperValue - lowerValue)) * availableHeight
+            val startY = graphTopPadding + (1 - (startValue - lowerValue).toFloat() / (upperValue - lowerValue)) * availableHeight
 
             val endX = spacing + drawingLimit * spacePerHour
-            val endY = graphTopPadding + (1 - (endInfo.second - lowerValue).toFloat() / (upperValue - lowerValue)) * availableHeight
+            val endY = graphTopPadding + (1 - (endValue - lowerValue).toFloat() / (upperValue - lowerValue)) * availableHeight
 
             val interpolatedX = lerp(startX, endX, t)
             val interpolatedY = lerp(startY, endY, t)
@@ -240,18 +254,110 @@ fun LineChart(
             end = Offset(spacing, size.height - size.height * graphTopPaddingRatio + 10.dp.toPx()),
             strokeWidth = 2.dp.toPx()
         )
-        //X axis line
+        // X axis line
         drawLine(
             color = Color(0xFF39AFEA),
-            start = Offset(spacing, size.height - size.height * graphTopPaddingRatio + 10.dp.toPx() ),
+            start = Offset(spacing, size.height - size.height * graphTopPaddingRatio + 10.dp.toPx()),
             end = Offset(lastDataPointX, size.height - size.height * graphTopPaddingRatio + 10.dp.toPx()),
             strokeWidth = 2.dp.toPx()
         )
-
-
-
     }
 }
+
+
+
+
+//@Composable
+//fun LineChart(
+//    data: List<Pair<Int, Int>> = emptyList(),
+//    modifier: Modifier = Modifier,
+//    title: String = "Session Overview"
+//) {
+//    val spacing = 100f
+//    val graphColor = Color(0xFF39AFEA)
+//    val upperValue = remember { (data.maxOfOrNull { it.second }?.plus(1)) ?: 0 }
+//    val lowerValue = remember { (data.minOfOrNull { it.second }?.toInt() ?: 0) }
+//
+//    val drawingProgress = remember { Animatable(0f) }
+//
+//    LaunchedEffect(drawingProgress) {
+//        drawingProgress.animateTo(
+//            targetValue = data.size.toFloat(),
+//            animationSpec = tween(durationMillis = 2000)
+//        )
+//    }
+//
+//    Canvas(modifier = modifier) {
+//        val spacePerHour = (size.width - spacing) / data.size
+//        val lastDataPointX = spacing + (data.size - 1) * spacePerHour
+//        val height = size.height
+//
+//
+//        val graphTopPaddingRatio = 0.2f
+//        val graphBottomPaddingRatio = 0.2f
+//        val availableHeight = height * (1 - graphTopPaddingRatio - graphBottomPaddingRatio)
+//        val graphTopPadding = height * graphTopPaddingRatio
+//
+//        val path = Path()
+//        val drawingLimit = drawingProgress.value.toInt()
+//
+//        for (i in 0 until drawingLimit) {
+//            val info = data[i]
+//            val ratio = (info.second - lowerValue).toFloat() / (upperValue - lowerValue)
+//            val x1 = spacing + i * spacePerHour
+//            val y1 = graphTopPadding + (1 - ratio) * availableHeight
+//
+//            if (i == 0) {
+//                path.moveTo(x1, y1)
+//            } else {
+//                path.lineTo(x1, y1)
+//            }
+//        }
+//
+//        if (drawingLimit > 0 && drawingLimit < data.size) {
+//            val startInfo = data[drawingLimit - 1]
+//            val endInfo = data[drawingLimit]
+//            val t = drawingProgress.value - drawingLimit
+//
+//            val startX = spacing + (drawingLimit - 1) * spacePerHour
+//            val startY = graphTopPadding + (1 - (startInfo.second - lowerValue).toFloat() / (upperValue - lowerValue)) * availableHeight
+//
+//            val endX = spacing + drawingLimit * spacePerHour
+//            val endY = graphTopPadding + (1 - (endInfo.second - lowerValue).toFloat() / (upperValue - lowerValue)) * availableHeight
+//
+//            val interpolatedX = lerp(startX, endX, t)
+//            val interpolatedY = lerp(startY, endY, t)
+//
+//            path.lineTo(interpolatedX, interpolatedY)
+//        }
+//
+//        drawPath(
+//            path = path,
+//            color = graphColor,
+//            style = Stroke(
+//                width = 4.dp.toPx(),
+//                cap = StrokeCap.Round
+//            )
+//        )
+//
+//        drawLine(
+//            color = Color(0xFF39AFEA),
+//            start = Offset(spacing, size.height * graphBottomPaddingRatio),
+//            end = Offset(spacing, size.height - size.height * graphTopPaddingRatio + 10.dp.toPx()),
+//            strokeWidth = 2.dp.toPx()
+//        )
+//        //X axis line
+//        drawLine(
+//            color = Color(0xFF39AFEA),
+//            start = Offset(spacing, size.height - size.height * graphTopPaddingRatio + 10.dp.toPx() ),
+//            end = Offset(lastDataPointX, size.height - size.height * graphTopPaddingRatio + 10.dp.toPx()),
+//            strokeWidth = 2.dp.toPx()
+//        )
+//
+//
+//
+//    }
+//}
 
 @Composable
 fun InfoCard(currentDriver: Driver) {
