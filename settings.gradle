@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "SideEye+"
 include ':app'
 include ':sideeyewearable'
+include ':sideeyewatch'

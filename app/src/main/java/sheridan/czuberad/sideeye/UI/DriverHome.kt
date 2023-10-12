@@ -1,6 +1,7 @@
 package sheridan.czuberad.sideeye.UI
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Debug
 import android.util.Log
@@ -50,6 +51,10 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.wearable.MessageClient
+import com.google.android.gms.wearable.Node
+import com.google.android.gms.wearable.Wearable
 import sheridan.czuberad.sideeye.`Application Logic`.IndependentDriverLogic
 import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.EyeDetectionActivity
@@ -83,7 +88,7 @@ fun DriverHome() {
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
 
-
+    sendMessage(context)
     val independentDriverLogic = IndependentDriverLogic()
     Log.d("YOO", "CALLING FROM UI")
     val currentDriver = independentDriverLogic.getCurrentDriverInfo()
@@ -173,6 +178,23 @@ fun DriverHome() {
     }
 
 
+}
+
+fun sendMessage(context: Context) {
+    val messageClient: MessageClient = Wearable.getMessageClient(context)
+
+    val nodes: Task<List<Node>> = Wearable.getNodeClient(context).connectedNodes
+    nodes.addOnCompleteListener { task ->
+        if (task.isSuccessful && task.result != null) {
+            val connectedNode = task.result?.firstOrNull()
+            connectedNode?.let {
+                Log.d("Yoo","Message being sent")
+                messageClient.sendMessage(it.id, "/path_to_message", "MESSAGE_SENT".toByteArray()).addOnSuccessListener {
+                    Log.d("Yoo","Message sent")
+                }
+            }
+        }
+    }
 }
 
 @Composable

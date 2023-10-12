@@ -4,7 +4,7 @@
  * changes to the libraries and their usages.
  */
 
-package com.example.sideeyewearable.presentation
+package sheridan.czuberad.sideeye.presentation
 
 import android.os.Bundle
 import android.util.Log
@@ -23,32 +23,28 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
-//import com.example.sideeyewearable.R
-import com.example.sideeyewearable.presentation.theme.SideEyeTheme
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Wearable
+import sheridan.czuberad.sideeye.R
+import sheridan.czuberad.sideeye.presentation.theme.SideEyeTheme
 
 class MainActivity : ComponentActivity(), MessageClient.OnMessageReceivedListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
-            Log.d("Yoo","FROM WEARABLE APP_newtest")
-            WearApp("ADAM")
+            WearApp("Android")
         }
-    }
 
+    }
     override fun onResume() {
         super.onResume()
         Wearable.getMessageClient(this).addListener(this)
     }
-
     override fun onPause() {
         super.onPause()
         Wearable.getMessageClient(this).removeListener(this)
     }
-
     override fun onMessageReceived(messageEvent: MessageEvent) {
         if (messageEvent.path == "/path_to_message") {
 
@@ -60,9 +56,6 @@ class MainActivity : ComponentActivity(), MessageClient.OnMessageReceivedListene
             }
         }
     }
-
-
-
 }
 
 @Composable
@@ -89,7 +82,7 @@ fun Greeting(greetingName: String) {
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center,
         color = MaterialTheme.colors.primary,
-        text = greetingName
+        text = stringResource(R.string.hello_world, greetingName)
     )
 }
 
