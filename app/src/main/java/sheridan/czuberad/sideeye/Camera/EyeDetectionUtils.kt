@@ -12,7 +12,10 @@ import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 import sheridan.czuberad.sideeye.Domain.Alert
 import sheridan.czuberad.sideeye.`Application Logic`.EyeDetectionLogic
+import sheridan.czuberad.sideeye.Domain.Session
+import sheridan.czuberad.sideeye.Services.DriverService
 import java.sql.Timestamp
+import java.util.UUID
 
 class EyeDetectionUtils(
     eyeDetectionText: TextView,
@@ -39,7 +42,11 @@ class EyeDetectionUtils(
     private var endSession = endSessionOnClick
     private var startSession = startSessionOnClick
     private var mediaPlayer = media
+    private var session = Session()
+    private var eyeLogic = EyeDetectionLogic()
+    private var driverService = DriverService()
     private var alertList = arrayListOf<Alert>()
+    private lateinit var sessionUuid:String
     override fun detectFace(image: InputImage): Task<List<Face>> {
         return det.process(image)
     }
@@ -47,7 +54,9 @@ class EyeDetectionUtils(
     override fun onSuccess(results: List<Face>){
         startSession.setOnClickListener {
             sessionT.text = "Press End Session to End Session"
+            sessionUuid = UUID.randomUUID().toString()
             alertList.clear()
+            session.startSession = eyeLogic.getTimeStamp()
             isSessionStart = true
             isSessionEnd = false
 
@@ -58,7 +67,13 @@ class EyeDetectionUtils(
                 if(isSessionEnd == false){
                     sessionT.text = "Press Start To Start Session"
                     //Log.d(TAG, "POP: End press$timestamp")
-                    Log.d(TAG, "ALERTEND $alertList")
+                    //session.alertList = alertList
+                    session.endSession = eyeLogic.getTimeStamp()
+                    driverService.addAlertToSessionById(sessionUuid,session,alertList)
+                    Log.d(TAG, "ALERTEND $session")
+
+
+
                 }
 
                 isSessionStart = false
@@ -86,7 +101,7 @@ class EyeDetectionUtils(
             }
             if(isSessionStart){
                 if(counter>=50){
-                    var eyeLogic = EyeDetectionLogic()
+                    eyeLogic = EyeDetectionLogic()
 
                     alertList.add(Alert(alertSeverity = "low",eyeLogic.getTimeStamp()))
                     mediaPlayer.start()

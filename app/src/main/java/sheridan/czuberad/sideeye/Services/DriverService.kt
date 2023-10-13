@@ -1,8 +1,10 @@
 package sheridan.czuberad.sideeye.Services
 
+import android.content.ContentValues.TAG
 import android.os.Debug
 import android.util.Log
 import androidx.compose.ui.layout.LookaheadLayout
+import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
@@ -19,19 +21,17 @@ class DriverService {
     private var db = FirebaseFirestore.getInstance()
     private val currentUser = FirebaseAuth.getInstance().currentUser?.uid
     fun addAlertToSessionById(
-        currentUser: FirebaseUser?,
-        db: FirebaseFirestore,
         uid: String,
-        session: Session
+        session: Session,
+        alertList: ArrayList<Alert>
     ) {
         var AlertList = arrayListOf<Alert>()
-        AlertList.add(Alert("Eye"))
-        AlertList.add(Alert("Face"))
+
         if (currentUser != null) {
-            db.collection("Drivers").document(currentUser.uid).collection("Sessions").document(uid).set(session).addOnCompleteListener {
+            db.collection("Drivers").document(currentUser).collection("Sessions").document(uid).set(session).addOnCompleteListener {
                 if (it.isSuccessful){
-                    AlertList.forEach{ alert ->
-                        db.collection("Drivers").document(currentUser.uid).collection("Sessions").document(uid).collection("Alerts").document().set(alert)
+                    alertList.forEach{ alert ->
+                        db.collection("Drivers").document(currentUser).collection("Sessions").document(uid).collection("Alerts").document().set(alert)
                     }
                 }
             }
