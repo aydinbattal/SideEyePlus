@@ -97,11 +97,27 @@ class MainActivity : ComponentActivity(){
 @Composable
 fun WearApp(greetingName: String) {
     val alertText = remember { mutableStateOf("0") }
+    val durationText = remember { mutableStateOf("00:00:00") }
     val context = LocalContext.current
     LaunchedEffect(key1 = alertText) {
         val wearableListener =
             MessageClient.OnMessageReceivedListener { messageEvent ->
-                alertText.value = String(messageEvent.data)
+
+                when(messageEvent.path){
+                    "/SESSION_STATUS" ->{
+                        if(String(messageEvent.data) == "SESSION_START"){
+                            durationText.value = "SESSION STARTED"
+                        }
+                        else if(String(messageEvent.data) == "SESSION_END"){
+                            durationText.value = "SESSION ENDED"
+                        }
+
+                    }
+                    "/SESSION_ALERT"->{
+                        alertText.value = String(messageEvent.data)
+                    }
+                }
+
             }
 
         Wearable.getMessageClient(context)
@@ -152,7 +168,7 @@ fun WearApp(greetingName: String) {
                 style = TextStyle(
                     fontSize = 30.sp
                 ),
-                text = "00:00:00"
+                text = durationText.value
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
