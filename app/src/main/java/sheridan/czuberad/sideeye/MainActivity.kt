@@ -2,9 +2,12 @@ package sheridan.czuberad.sideeye
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import sheridan.czuberad.sideeye.Services.DriverService
@@ -18,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        checkPermissions()
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         var firebaseAdmin = FirebaseAdministration()
@@ -76,4 +80,24 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    private fun checkPermissions(){
+        if(!isPermissionsAllowed()){
+            ActivityCompat.requestPermissions(this,
+                MainActivity.REQUIRED_PERMISSIONS,
+                MainActivity.REQUEST_CODE_PERMISSIONS
+            )
+        }
+    }
+
+    private fun isPermissionsAllowed() = MainActivity.REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(baseContext,it) == PackageManager.PERMISSION_GRANTED
+    }
+
+    companion object {
+        private const val REQUEST_CODE_PERMISSIONS = 10
+        private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA)
+    }
+
+
 }
