@@ -32,7 +32,7 @@ class EyeDetectionActivity : AppCompatActivity() {
         val endSessionOnClick = findViewById<Button>(R.id.button_eye_detection_end)
         cameraXUtils = CameraXUtils(this,previewCameraX,this)
         //checkPermissions()
-        cameraXUtils.openCameraPreview(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast)
+        cameraXUtils.openCameraPreview(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, this)
 
 
 

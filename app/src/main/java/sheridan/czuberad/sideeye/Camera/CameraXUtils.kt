@@ -15,6 +15,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import sheridan.czuberad.sideeye.EyeDetectionActivity
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -38,7 +39,8 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
         startSessionOnClick: Button,
         media: MediaPlayer,
         sessionText: TextView,
-        sessionToast: Unit
+        sessionToast: Unit,
+        eyeDetectionActivity: EyeDetectionActivity
     ) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
         cameraProviderFuture.addListener(
@@ -49,7 +51,7 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
                 imageAnalysis = ImageAnalysis.Builder().setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                     .build()
                     .also {
-                        it.setAnalyzer(executorService,analyzer(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast))
+                        it.setAnalyzer(executorService,analyzer(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, eyeDetectionActivity))
                     }
                 val cameraS = CameraSelector.Builder().requireLensFacing(cameraSelector).build()
                 configCamera(processcameraProvider,cameraS)
@@ -64,9 +66,10 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
         startSessionOnClick: Button,
         media: MediaPlayer,
         sessionText: TextView,
-        sessionToast: Unit
+        sessionToast: Unit,
+        eyeDetectionActivity: EyeDetectionActivity
     ): ImageAnalysis.Analyzer {
-        return EyeDetectionUtils(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast)
+        return EyeDetectionUtils(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, eyeDetectionActivity)
     }
     private fun configCamera(processCameraProvider: ProcessCameraProvider?,cameraSelector: CameraSelector){
         try{

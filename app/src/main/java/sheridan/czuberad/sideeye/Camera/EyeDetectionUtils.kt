@@ -6,8 +6,10 @@ import android.media.MediaPlayer
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
-import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.tasks.Task
+import com.google.android.gms.wearable.MessageClient
+import com.google.android.gms.wearable.Node
+import com.google.android.gms.wearable.Wearable
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
@@ -15,6 +17,7 @@ import com.google.mlkit.vision.face.FaceDetectorOptions
 import sheridan.czuberad.sideeye.Domain.Alert
 import sheridan.czuberad.sideeye.`Application Logic`.EyeDetectionLogic
 import sheridan.czuberad.sideeye.Domain.Session
+import sheridan.czuberad.sideeye.EyeDetectionActivity
 import sheridan.czuberad.sideeye.Services.DriverService
 import java.sql.Timestamp
 import java.util.UUID
@@ -25,7 +28,8 @@ class EyeDetectionUtils(
     startSessionOnClick: Button,
     media: MediaPlayer,
     sessionText: TextView,
-    sessionToast: Unit
+    sessionToast: Unit,
+    eyeDetectionActivity: EyeDetectionActivity
 ) :ImageAnalyzer<List<Face>>() {
     private var counter = 0
 
@@ -49,6 +53,7 @@ class EyeDetectionUtils(
     private var driverService = DriverService()
     private var alertList = arrayListOf<Alert>()
     private lateinit var sessionUuid:String
+    private val contextAct = eyeDetectionActivity
     override fun detectFace(image: InputImage): Task<List<Face>> {
         return det.process(image)
     }
@@ -104,6 +109,7 @@ class EyeDetectionUtils(
                     eyeLogic = EyeDetectionLogic()
 
                     alertList.add(Alert(alertSeverity = "low",eyeLogic.getTimeStamp()))
+                    sendMessage(contextAct, alertList.size.toString())
                     mediaPlayer.start()
                     counter = 0
                     Log.d(TAG, "ALERT:$alertList")
@@ -117,5 +123,21 @@ class EyeDetectionUtils(
 
         }
 
+    }
+    fun sendMessage(context: Context, alertCount: String) {
+        val messageClient: MessageClient = Wearable.getMessageClient(context)
+
+        val nodes: Task<List<Node>> = Wearable.getNodeClient(context).connectedNodes
+        nodes.addOnCompleteListener { task ->
+            if (task.isSuccessful && task.result != null) {
+                val connectedNode = task.result?.firstOrNull()
+                connectedNode?.let {
+                    Log.d("Yoo","Message being sent")
+                    messageClient.sendMessage(it.id, "/path_to_message", alertCount.toByteArray()).addOnSuccessListener {
+                        Log.d("Yoo","Message sent")
+                    }
+                }
+            }
+        }
     }
 }
