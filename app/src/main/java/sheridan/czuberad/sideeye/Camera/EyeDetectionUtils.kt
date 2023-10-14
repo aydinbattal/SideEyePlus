@@ -92,12 +92,14 @@ class EyeDetectionUtils(
             if((it.leftEyeOpenProbability!! < 0.5) && (it.rightEyeOpenProbability!! < 0.5)){
                 counter++
                 text.text = "EYES NOT DETECTED"
+
                 text.setTextColor(Color.parseColor("#FF0000"))
 
             }
             else if((it.leftEyeOpenProbability!! > 0.5) && (it.rightEyeOpenProbability!! > 0.5)){
                 counter = 0
                 text.text = "EYES DETECTED"
+                sendMessage(contextAct,"ALERT_INACTIVE", "/SESSION_CURRENT_ALERT")
                 text.setTextColor(Color.parseColor("#00FF0A"))
             }
             else{
@@ -108,7 +110,7 @@ class EyeDetectionUtils(
             if(isSessionStart){
                 if(counter>=50){
                     eyeLogic = EyeDetectionLogic()
-
+                    sendMessage(contextAct,"ALERT_ACTIVE", "/SESSION_CURRENT_ALERT")
                     alertList.add(Alert(alertSeverity = "low",eyeLogic.getTimeStamp()))
                     sendMessage(contextAct, alertList.size.toString(), "/SESSION_ALERT")
                     mediaPlayer.start()

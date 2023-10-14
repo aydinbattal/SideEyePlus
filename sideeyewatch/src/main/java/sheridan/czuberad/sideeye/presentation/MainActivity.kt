@@ -22,7 +22,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
@@ -56,6 +59,9 @@ import kotlinx.coroutines.launch
 import sheridan.czuberad.sideeye.R
 import sheridan.czuberad.sideeye.presentation.theme.SideEyeTheme
 import java.text.DateFormat
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.ui.draw.clip
 
 //class MainActivity : ComponentActivity(), MessageClient.OnMessageReceivedListener{
 class MainActivity : ComponentActivity(){
@@ -67,12 +73,11 @@ class MainActivity : ComponentActivity(){
                 timeText = {
                     TimeText(
                         timeTextStyle = TimeTextDefaults.timeTextStyle(
-                            fontSize = 10.sp
+                            fontSize = 15.sp
                         )
                     )
                 }
             ) {
-
                 WearApp("Android")
             }
 
@@ -85,6 +90,7 @@ fun WearApp(greetingName: String) {
     val durationText = remember { mutableStateOf("00:00:00") }
     var time by remember { mutableStateOf(0) }
     var isSessionRunning by remember { mutableStateOf(false) }
+    var isAlertActive by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
@@ -117,6 +123,17 @@ fun WearApp(greetingName: String) {
                     "/SESSION_ALERT"->{
                         alertText.value = String(messageEvent.data)
                     }
+
+                    "/SESSION_CURRENT_ALERT"->{
+                        if(String(messageEvent.data) == "ALERT_ACTIVE"){
+                            isAlertActive = true
+
+                        }
+                        else if(String(messageEvent.data) == "ALERT_INACTIVE"){
+                            isAlertActive = false
+
+                        }
+                    }
                 }
 
             }
@@ -128,106 +145,115 @@ fun WearApp(greetingName: String) {
     SideEyeTheme {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             TimeText()
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background),
-            verticalArrangement = Arrangement.Center
-        ) {
-
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                color = Color.White,
-                style = TextStyle(
-                    fontSize = 10.sp
-                ),
-                text = "Session Duration"
-            )
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                color = Color(0xFF39AFEA),
-                style = TextStyle(
-                    fontSize = 30.sp
-                ),
-                text = durationText.value
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                color = Color.White,
-                style = TextStyle(
-                    fontSize = 10.sp
-                ),
-                text = "Session Overview"
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background),
+                verticalArrangement = Arrangement.Center
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    color = Color.White,
+                    style = TextStyle(
+                        fontSize = 10.sp
+                    ),
+                    text = "Session Duration"
+                )
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    color = Color(0xFF39AFEA),
+                    style = TextStyle(
+                        fontSize = 30.sp
+                    ),
+                    text = durationText.value
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    color = Color.White,
+                    style = TextStyle(
+                        fontSize = 10.sp
+                    ),
+                    text = "Session Overview"
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+
                 ) {
-                    Text(
-                        text = alertText.value,
-                        color = Color(0xFF39AFEA),
-                        style = TextStyle(
-                            fontSize = 30.sp
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = alertText.value,
+                            color = Color(0xFF39AFEA),
+                            style = TextStyle(
+                                fontSize = 30.sp
+                            )
                         )
-                    )
-                    Text(
-                        text = "Total Alerts",
-                        style = TextStyle(
-                            fontSize = 10.sp
-                        )
+                        Text(
+                            text = "Total Alerts",
+                            style = TextStyle(
+                                fontSize = 10.sp
+                            )
 
-                    )
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(35.dp))
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+
+                        Text(
+                            text = alertText.value,
+                            color = Color(0xFF39AFEA),
+                            style = TextStyle(
+                                fontSize = 30.sp
+                            )
+                        )
+                        Text(
+                            text = "Total Alerts",
+                            style = TextStyle(
+                                fontSize = 10.sp
+                            )
+                        )
+                    }
+
                 }
-                Spacer(modifier = Modifier.width(35.dp))
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-
-                    Text(
-                        text = alertText.value,
-                        color = Color(0xFF39AFEA),
-                        style = TextStyle(
-                            fontSize = 30.sp
-                        )
-                    )
-                    Text(
-                        text = "Total Alerts",
-                        style = TextStyle(
-                            fontSize = 10.sp
-                        )
-                    )
-                }
-
             }
+
+            if(isAlertActive){
+                Card(
+                    modifier = Modifier.align(Alignment.Center)
+                        .clip(CircleShape)
+                        .fillMaxSize(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.Black.copy(alpha = 0.95f)
+                    )
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "ACTIVE ALERT", color = Color.Red, fontSize = 25.sp)
+                    }
+
+                }
+            }
+
         }
+
+
     }
-}
-
-
-
-@Composable
-fun Greeting(greetingName: String) {
-    Text(
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center,
-        color = MaterialTheme.colors.primary,
-        text = stringResource(R.string.hello_world, greetingName)
-    )
 }
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
 @Composable
