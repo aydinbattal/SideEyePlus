@@ -1,10 +1,12 @@
 package sheridan.czuberad.sideeye.Camera
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
@@ -78,8 +80,6 @@ class EyeDetectionUtils(
 
                 isSessionStart = false
                 isSessionEnd = true
-
-
             }
         }
         results.forEach{
