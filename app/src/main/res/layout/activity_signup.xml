@@ -96,7 +96,7 @@
                 android:layout_marginTop="27dp"
                 android:layout_marginRight="20dp"
                 android:ems="10"
-                android:hint="Enter Name"
+                android:hint="Enter Full Name"
                 android:inputType="text" />
             <EditText
                 android:id="@+id/text_phone_signup"
@@ -107,7 +107,7 @@
                 android:layout_marginTop="27dp"
                 android:layout_marginRight="20dp"
                 android:ems="10"
-                android:hint="Enter "
+                android:hint="Enter Phone Number"
                 android:inputType="phone" />
 
 
