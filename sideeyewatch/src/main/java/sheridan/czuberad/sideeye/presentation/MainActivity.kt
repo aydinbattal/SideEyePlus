@@ -24,6 +24,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,8 +52,8 @@ import sheridan.czuberad.sideeye.R
 import sheridan.czuberad.sideeye.presentation.theme.SideEyeTheme
 import java.text.DateFormat
 
-
-class MainActivity : ComponentActivity(), MessageClient.OnMessageReceivedListener{
+//class MainActivity : ComponentActivity(), MessageClient.OnMessageReceivedListener{
+class MainActivity : ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -72,28 +74,49 @@ class MainActivity : ComponentActivity(), MessageClient.OnMessageReceivedListene
         }
 
     }
-    override fun onResume() {
-        super.onResume()
-        Wearable.getMessageClient(this).addListener(this)
-    }
-    override fun onPause() {
-        super.onPause()
-        Wearable.getMessageClient(this).removeListener(this)
-    }
-    override fun onMessageReceived(messageEvent: MessageEvent) {
-        if (messageEvent.path == "/path_to_message") {
-
-            val message = String(messageEvent.data)
-            // Update the UI with the received message
-            Log.d("Yoo" ,"MessagedReceieved: $message")
-            setContent {
-                WearApp(message)
-            }
-        }
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        Wearable.getMessageClient(this).addListener(this)
+//    }
+//    override fun onPause() {
+//        super.onPause()
+//        Wearable.getMessageClient(this).removeListener(this)
+//    }
+//    override fun onMessageReceived(messageEvent: MessageEvent) {
+//        if (messageEvent.path == "/path_to_message") {
+//
+//            val message = String(messageEvent.data)
+//            // Update the UI with the received message
+//            Log.d("Yoo" ,"MessagedReceieved: $message")
+//            setContent {
+//                WearApp(message)
+//            }
+//        }
+//    }
 }
 @Composable
 fun WearApp(greetingName: String) {
+    val alertText = remember { mutableStateOf("0") }
+    val context = LocalContext.current
+    LaunchedEffect(key1 = alertText) {
+        val wearableListener =
+            MessageClient.OnMessageReceivedListener { messageEvent ->
+                alertText.value = String(messageEvent.data)
+            }
+
+        Wearable.getMessageClient(context)
+            .addListener(wearableListener)
+    }
+
+
+
+
+
+
+
+
+
+
     SideEyeTheme {
         /* If you have enough items in your list, use [ScalingLazyColumn] which is an optimized
          * version of LazyColumn for wear devices with some added features. For more information,
@@ -154,7 +177,7 @@ fun WearApp(greetingName: String) {
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "10",
+                        text = alertText.value,
                         color = Color(0xFF39AFEA),
                         style = TextStyle(
                             fontSize = 30.sp
@@ -175,7 +198,7 @@ fun WearApp(greetingName: String) {
                 ) {
 
                     Text(
-                        text = "10",
+                        text = alertText.value,
                         color = Color(0xFF39AFEA),
                         style = TextStyle(
                             fontSize = 30.sp

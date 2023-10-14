@@ -120,8 +120,7 @@ fun DriverHome() {
             shape = RoundedCornerShape(15.dp),
             colors = CardDefaults.cardColors(
                 containerColor = Color.White
-            )// Optional: if you want to remove rounded corners
-            // Optional: if you want to set a custom color
+            )
         ) {
                 LineChart(
                     data = myMutableMap,
@@ -130,12 +129,8 @@ fun DriverHome() {
                         .height(300.dp)
                         .align(Alignment.CenterHorizontally)
                 )
-
-
         }
 
-
-        
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -189,7 +184,7 @@ fun sendMessage(context: Context) {
             val connectedNode = task.result?.firstOrNull()
             connectedNode?.let {
                 Log.d("Yoo","Message being sent")
-                messageClient.sendMessage(it.id, "/path_to_message", "MESSAGE_SENT".toByteArray()).addOnSuccessListener {
+                messageClient.sendMessage(it.id, "/path_to_message", "69".toByteArray()).addOnSuccessListener {
                     Log.d("Yoo","Message sent")
                 }
             }
