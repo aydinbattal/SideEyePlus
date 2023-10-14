@@ -25,8 +25,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,6 +51,8 @@ import androidx.wear.compose.material.TimeTextDefaults
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Wearable
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import sheridan.czuberad.sideeye.R
 import sheridan.czuberad.sideeye.presentation.theme.SideEyeTheme
 import java.text.DateFormat
@@ -74,31 +79,16 @@ class MainActivity : ComponentActivity(){
         }
 
     }
-//    override fun onResume() {
-//        super.onResume()
-//        Wearable.getMessageClient(this).addListener(this)
-//    }
-//    override fun onPause() {
-//        super.onPause()
-//        Wearable.getMessageClient(this).removeListener(this)
-//    }
-//    override fun onMessageReceived(messageEvent: MessageEvent) {
-//        if (messageEvent.path == "/path_to_message") {
-//
-//            val message = String(messageEvent.data)
-//            // Update the UI with the received message
-//            Log.d("Yoo" ,"MessagedReceieved: $message")
-//            setContent {
-//                WearApp(message)
-//            }
-//        }
-//    }
-}
 @Composable
 fun WearApp(greetingName: String) {
     val alertText = remember { mutableStateOf("0") }
     val durationText = remember { mutableStateOf("00:00:00") }
+    var time by remember { mutableStateOf(0) }
+    var isSessionRunning by remember { mutableStateOf(false) }
     val context = LocalContext.current
+
+    val coroutineScope = rememberCoroutineScope()
+
     LaunchedEffect(key1 = alertText) {
         val wearableListener =
             MessageClient.OnMessageReceivedListener { messageEvent ->
@@ -106,10 +96,21 @@ fun WearApp(greetingName: String) {
                 when(messageEvent.path){
                     "/SESSION_STATUS" ->{
                         if(String(messageEvent.data) == "SESSION_START"){
-                            durationText.value = "SESSION STARTED"
+                            //durationText.value = "SESSION STARTED"
+                            isSessionRunning = true
+
+                            coroutineScope.launch {
+                                while(isSessionRunning){
+                                    delay(1000)
+                                    time++
+                                    durationText.value = String.format("%02d:%02d:%02d", time/3600, (time % 3600) / 60, time % 60)
+                                }
+                            }
+
                         }
                         else if(String(messageEvent.data) == "SESSION_END"){
-                            durationText.value = "SESSION ENDED"
+                            //durationText.value = "SESSION ENDED"
+                            isSessionRunning = false
                         }
 
                     }
@@ -124,25 +125,10 @@ fun WearApp(greetingName: String) {
             .addListener(wearableListener)
     }
 
-
-
-
-
-
-
-
-
-
     SideEyeTheme {
-        /* If you have enough items in your list, use [ScalingLazyColumn] which is an optimized
-         * version of LazyColumn for wear devices with some added features. For more information,
-         * see d.android.com/wear/compose.
-         */
-
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             TimeText()
         }
-
 
         Column(
             modifier = Modifier
@@ -150,7 +136,6 @@ fun WearApp(greetingName: String) {
                 .background(MaterialTheme.colors.background),
             verticalArrangement = Arrangement.Center
         ) {
-
 
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -229,10 +214,6 @@ fun WearApp(greetingName: String) {
                 }
 
             }
-
-            
-
-
         }
     }
 }
@@ -252,4 +233,5 @@ fun Greeting(greetingName: String) {
 @Composable
 fun DefaultPreview() {
     WearApp("Preview Android")
+}
 }
