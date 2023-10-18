@@ -1,5 +1,6 @@
 package sheridan.czuberad.sideeye
 
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -12,11 +13,15 @@ import java.util.*
 class ReactionTestActivity : AppCompatActivity() {
     private lateinit var startButton: Button
     private lateinit var frameLayout: FrameLayout
-    private lateinit var reactionTimeView: TextView
     private lateinit var messageView: TextView
+    private lateinit var testNumberView: TextView
     private var isRed = true
     private var testRunning = false
     private var testStarted = false
+
+    private var testCount = 0
+    private var totalReactionTime = 0L
+    private var averageReactionTime = 0L
 
     private lateinit var binding: ActivityReactionTestBinding
 
@@ -30,8 +35,8 @@ class ReactionTestActivity : AppCompatActivity() {
 
         startButton = binding.startButton
         frameLayout = binding.frameLayout
-        reactionTimeView = binding.reactionTimeView
         messageView = binding.messageView
+        testNumberView = binding.testNumberView
 
         startButton.setOnClickListener {
             if (!testStarted) {
@@ -40,12 +45,14 @@ class ReactionTestActivity : AppCompatActivity() {
         }
 
         frameLayout.setOnClickListener {
-            if (testRunning) {
+            if (testCount >= 5) {
+                showMessage("DONE\nAverage Reaction Time: $averageReactionTime ms")
+            } else if (testRunning) {
                 if (isRed) {
                     if (!testStarted) {
                         showMessage("Tap the button to start the test.")
                     } else {
-                        stopTest("Tapped too early. Tap again to restart the test.")
+                        stopTest("Tap too early. Tap again to restart the test.")
                     }
                 } else {
                     completeTest()
@@ -54,11 +61,14 @@ class ReactionTestActivity : AppCompatActivity() {
                 showMessage("Tap the button to start the test.")
             }
         }
+
     }
 
     private var startTime: Long = 0
 
     private fun startTest() {
+        testNumberView.text = "Test #${testCount+1}"
+        testNumberView.visibility = View.VISIBLE
         if (isRed) {
             if (testRunning) {
                 return
@@ -85,7 +95,6 @@ class ReactionTestActivity : AppCompatActivity() {
 
         // Hide the UI elements and clear the message
         startButton.visibility = View.GONE
-        reactionTimeView.visibility = View.GONE
         testStarted = true
         testRunning = true
     }
@@ -93,25 +102,29 @@ class ReactionTestActivity : AppCompatActivity() {
     private fun completeTest() {
         // Calculate and display the reaction time
         val reactionTime = System.currentTimeMillis() - startTime
-        val reactionTimeText = "Reaction time: $reactionTime ms"
-        reactionTimeView.text = reactionTimeText
-        reactionTimeView.visibility = View.VISIBLE
-
         // Reset the background to white and show the UI elements
-//        isRed = true
-//        frameLayout.setBackgroundColor(getColor(R.color.white))
-//        startButton.visibility = View.VISIBLE
-//        reactionTimeView.visibility = View.VISIBLE
-//        testRunning = false
-//        testStarted = false
         stopTest("")
+        testNumberView.text = "Test #${testCount+1}"
+        if (testCount < 4) { // Perform the test 5 times
+            testCount++
+            totalReactionTime += reactionTime
+            startTest()
+        } else { // All tests are done
+            testCount++
+            totalReactionTime += reactionTime
+            averageReactionTime = totalReactionTime / 5
+            showMessage("DONE\nAverage Reaction Time: $averageReactionTime ms")
+            startButton.visibility = View.GONE // Hide the start button
+            testNumberView.visibility = View.GONE
+            testRunning = false
+            testStarted = false
+        }
     }
 
     private fun stopTest(message: String) {
         isRed = true
         frameLayout.setBackgroundColor(getColor(R.color.white))
         startButton.visibility = View.VISIBLE
-        //reactionTimeView.visibility = View.GONE
         messageView.text = message
         messageView.visibility = View.VISIBLE
         testRunning = false
