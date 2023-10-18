@@ -88,7 +88,7 @@ fun DriverHome() {
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
 
-    sendMessage(context)
+    //sendMessage(context)
     val independentDriverLogic = IndependentDriverLogic()
     Log.d("YOO", "CALLING FROM UI")
     val currentDriver = independentDriverLogic.getCurrentDriverInfo()

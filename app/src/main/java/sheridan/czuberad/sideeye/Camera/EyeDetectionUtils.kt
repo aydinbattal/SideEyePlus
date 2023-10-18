@@ -63,6 +63,7 @@ class EyeDetectionUtils(
             sessionT.text = "Press End Session to End Session"
             sessionUuid = UUID.randomUUID().toString()
             alertList.clear()
+            sendMessage(contextAct, "SESSION_START", "/SESSION_STATUS")
             session.startSession = eyeLogic.getTimeStamp()
             isSessionStart = true
             isSessionEnd = false
@@ -73,10 +74,10 @@ class EyeDetectionUtils(
             endSession.setOnClickListener {
                 if(isSessionEnd == false){
                     sessionT.text = "Press Start To Start Session"
-                    //Log.d(TAG, "POP: End press$timestamp")
-                    //session.alertList = alertList
                     session.endSession = eyeLogic.getTimeStamp()
-                    driverService.addAlertToSessionById(sessionUuid,session,alertList)
+                    //Commented out to not waste session reads
+                    //driverService.addAlertToSessionById(sessionUuid,session,alertList)
+                    sendMessage(contextAct, "SESSION_END", "/SESSION_STATUS")
                     Log.d(TAG, "ALERTEND $session")
 
 
@@ -91,12 +92,14 @@ class EyeDetectionUtils(
             if((it.leftEyeOpenProbability!! < 0.5) && (it.rightEyeOpenProbability!! < 0.5)){
                 counter++
                 text.text = "EYES NOT DETECTED"
+
                 text.setTextColor(Color.parseColor("#FF0000"))
 
             }
             else if((it.leftEyeOpenProbability!! > 0.5) && (it.rightEyeOpenProbability!! > 0.5)){
                 counter = 0
                 text.text = "EYES DETECTED"
+                sendMessage(contextAct,"ALERT_INACTIVE", "/SESSION_CURRENT_ALERT")
                 text.setTextColor(Color.parseColor("#00FF0A"))
             }
             else{
@@ -107,9 +110,9 @@ class EyeDetectionUtils(
             if(isSessionStart){
                 if(counter>=50){
                     eyeLogic = EyeDetectionLogic()
-
+                    sendMessage(contextAct,"ALERT_ACTIVE", "/SESSION_CURRENT_ALERT")
                     alertList.add(Alert(alertSeverity = "low",eyeLogic.getTimeStamp()))
-                    sendMessage(contextAct, alertList.size.toString())
+                    sendMessage(contextAct, alertList.size.toString(), "/SESSION_ALERT")
                     mediaPlayer.start()
                     counter = 0
                     Log.d(TAG, "ALERT:$alertList")
@@ -124,7 +127,7 @@ class EyeDetectionUtils(
         }
 
     }
-    fun sendMessage(context: Context, alertCount: String) {
+    fun sendMessage(context: Context, alertCount: String, messagePath: String) {
         val messageClient: MessageClient = Wearable.getMessageClient(context)
 
         val nodes: Task<List<Node>> = Wearable.getNodeClient(context).connectedNodes
@@ -133,7 +136,7 @@ class EyeDetectionUtils(
                 val connectedNode = task.result?.firstOrNull()
                 connectedNode?.let {
                     Log.d("Yoo","Message being sent")
-                    messageClient.sendMessage(it.id, "/path_to_message", alertCount.toByteArray()).addOnSuccessListener {
+                    messageClient.sendMessage(it.id, messagePath, alertCount.toByteArray()).addOnSuccessListener {
                         Log.d("Yoo","Message sent")
                     }
                 }
