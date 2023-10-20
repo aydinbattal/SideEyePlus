@@ -1,5 +1,7 @@
 package sheridan.czuberad.sideeye
 
+import android.app.Activity
+import android.content.Intent
 import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -117,6 +119,13 @@ class ReactionTestActivity : AppCompatActivity() {
             testNumberView.visibility = View.GONE
             testRunning = false
             testStarted = false
+
+            // Navigate back to home screen for tests
+            val intent = Intent()
+            intent.putExtra("completedTest", true) // Set the boolean variable
+            intent.putExtra("averageReactionTime", averageReactionTime) // Set the average reaction time
+            setResult(Activity.RESULT_OK, intent)
+            finish()
         }
     }
 
