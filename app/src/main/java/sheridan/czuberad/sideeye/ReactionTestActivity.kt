@@ -27,7 +27,6 @@ class ReactionTestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         binding = ActivityReactionTestBinding.inflate(layoutInflater)
         val view = binding.root

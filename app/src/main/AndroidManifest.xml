@@ -18,7 +18,7 @@
         android:theme="@style/Theme.SideEye"
         tools:targetApi="31">
         <activity
-            android:name=".HomeTests"
+            android:name=".HomeTestsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

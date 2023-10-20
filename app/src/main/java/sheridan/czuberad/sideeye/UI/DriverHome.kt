@@ -1,9 +1,7 @@
 package sheridan.czuberad.sideeye.UI
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.Debug
 import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -11,7 +9,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,12 +29,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
@@ -45,11 +40,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.drawText
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wearable.MessageClient
@@ -58,9 +49,8 @@ import com.google.android.gms.wearable.Wearable
 import sheridan.czuberad.sideeye.`Application Logic`.IndependentDriverLogic
 import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.EyeDetectionActivity
+import sheridan.czuberad.sideeye.HomeTestsActivity
 import sheridan.czuberad.sideeye.R
-import sheridan.czuberad.sideeye.ReactionTestActivity
-import kotlin.math.roundToInt
 
 
 @Composable
@@ -154,7 +144,7 @@ fun DriverHome() {
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF39AFEA)),
                 onClick = {
-                    val intent = Intent(context, ReactionTestActivity::class.java)
+                    val intent = Intent(context, HomeTestsActivity::class.java)
                     context.startActivity(intent)
                 }) {
                 Text("Reaction Test")
