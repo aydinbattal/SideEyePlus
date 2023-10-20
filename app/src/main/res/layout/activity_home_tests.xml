@@ -101,14 +101,36 @@
         app:layout_constraintTop_toBottomOf="@+id/reactionLinearLayout" />
 
     <TextView
-        android:id="@+id/reactionResultTextView"
+        android:id="@+id/reactionResultsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="8dp"
-        android:text="Reaction Result:"
+        android:text="Results:"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/testStatusTextView" />
+
+    <TextView
+        android:id="@+id/reactionResult1TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="8dp"
+        android:text="Result1"
+        android:textColor="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reactionResultsTextView" />
+
+    <TextView
+        android:id="@+id/reactionResult2TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="8dp"
+        android:text="Result1"
+        android:textColor="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reactionResult1TextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
