@@ -114,7 +114,7 @@ class ReactionTestActivity : AppCompatActivity() {
             totalReactionTime += reactionTime
             averageReactionTime = totalReactionTime / 5
             showMessage("DONE\nAverage Reaction Time: $averageReactionTime ms")
-            startButton.visibility = View.GONE // Hide the start button
+            startButton.visibility = View.GONE
             testNumberView.visibility = View.GONE
             testRunning = false
             testStarted = false
