@@ -1,14 +1,21 @@
 package sheridan.czuberad.sideeye
 
 import android.app.Activity
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.ktx.Firebase
 import sheridan.czuberad.sideeye.databinding.ActivityReactionTestBinding
 import java.util.*
 
@@ -53,7 +60,7 @@ class ReactionTestActivity : AppCompatActivity() {
                     if (!testStarted) {
                         showMessage("Tap the button to start the test.")
                     } else {
-                        stopTest("Tap too early. Tap again to restart the test.")
+                        stopTest("Tapped too early. Tap the button again to restart the test.")
                     }
                 } else {
                     completeTest()
@@ -68,7 +75,7 @@ class ReactionTestActivity : AppCompatActivity() {
     private var startTime: Long = 0
 
     private fun startTest() {
-        testNumberView.text = "Test #${testCount+1}"
+        testNumberView.text = "Attempt #${testCount+1}"
         testNumberView.visibility = View.VISIBLE
         if (isRed) {
             if (testRunning) {
@@ -105,7 +112,7 @@ class ReactionTestActivity : AppCompatActivity() {
         val reactionTime = System.currentTimeMillis() - startTime
         // Reset the background to white and show the UI elements
         stopTest("")
-        testNumberView.text = "Test #${testCount+1}"
+        testNumberView.text = "Attempt #${testCount+1}"
         if (testCount < 4) { // Perform the test 5 times
             testCount++
             totalReactionTime += reactionTime
@@ -119,6 +126,22 @@ class ReactionTestActivity : AppCompatActivity() {
             testNumberView.visibility = View.GONE
             testRunning = false
             testStarted = false
+
+
+            // Save the average reaction time and test completion time to db
+            val db = FirebaseFirestore.getInstance()
+            val uid = Firebase.auth.currentUser?.uid
+            if (uid != null) {
+                val reactionTestsRef = db.collection("ReactionTests")
+                val userRef = reactionTestsRef.document(uid)
+                val reactionData = hashMapOf(
+                    "averageReactionTime" to averageReactionTime,
+                    "timestamp" to FieldValue.serverTimestamp()
+                )
+                userRef.set(reactionData, SetOptions.merge())
+                    .addOnSuccessListener { Log.d(TAG, "Reaction data saved!") }
+                    .addOnFailureListener { e -> Log.w(TAG, "Error saving reaction data", e) }
+            }
 
             // Navigate back to home screen for tests
             val intent = Intent()
