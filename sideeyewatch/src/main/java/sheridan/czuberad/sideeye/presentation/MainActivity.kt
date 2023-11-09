@@ -237,7 +237,7 @@ fun WearApp(greetingName: String) {
                         .clip(CircleShape)
                         .fillMaxSize(),
                     colors = CardDefaults.cardColors(
-                        containerColor = Color.Black.copy(alpha = 0.95f)
+                        containerColor = Color.Black.copy(alpha = 0.8f)
                     )
                 ) {
                     Box(

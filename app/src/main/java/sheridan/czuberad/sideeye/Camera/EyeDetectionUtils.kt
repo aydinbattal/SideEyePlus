@@ -80,8 +80,6 @@ class EyeDetectionUtils(
                     sendMessage(contextAct, "SESSION_END", "/SESSION_STATUS")
                     Log.d(TAG, "ALERTEND $session")
 
-
-
                 }
 
                 isSessionStart = false
