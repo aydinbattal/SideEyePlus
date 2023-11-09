@@ -2,12 +2,14 @@ package sheridan.czuberad.sideeye
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
 import sheridan.czuberad.sideeye.Services.CompanyService
 import sheridan.czuberad.sideeye.databinding.FragmentAddDriverDialogBinding
 import sheridan.czuberad.sideeye.databinding.FragmentRemoveDriverDialogBinding
@@ -35,11 +37,19 @@ class RemoveDriverDialogFragment(private val email: String) : DialogFragment() {
         binding.btnRemoveDriver.setOnClickListener{
             companyService.removeDriverFromCompany(email)
             val driversAdapter = DriversAdapter()
-            driversAdapter.notifyDataSetChanged()
+            //driversAdapter.notifyDataSetChanged()
             Toast.makeText(context, "Successfully removed!", Toast.LENGTH_LONG).show()
-            dismiss()
-            val intent = Intent(context, HomeCompanyActivity::class.java)
-            startActivity(intent)
+
+            //todo: find out why its not updating previously added drivers
+            //todo: currently it updates if you remove user after just adding it
+            companyService.driversList.observe(this, Observer {
+                Log.d("ABC", "Observed a change in the drivers list")
+                Log.d("ABCDE", it.toString())
+                driversAdapter.notifyDataSetChanged()
+                dismiss()
+                val intent = Intent(context, HomeCompanyActivity::class.java)
+                startActivity(intent)
+            })
         }
 
         return view
