@@ -32,6 +32,37 @@
 
 
     </androidx.camera.view.PreviewView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/sessionTextView"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="300dp"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/alertCountTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:textColor="#FFFFFF"
+            android:text="AlertCount" />
+
+        <TextView
+            android:id="@+id/statusTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textColor="#FFFFFF"
+            android:text="Status" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/sessionTextView"

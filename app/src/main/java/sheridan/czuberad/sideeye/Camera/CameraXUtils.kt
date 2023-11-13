@@ -40,7 +40,8 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
         media: MediaPlayer,
         sessionText: TextView,
         sessionToast: Unit,
-        eyeDetectionActivity: EyeDetectionActivity
+        eyeDetectionActivity: EyeDetectionActivity,
+        alertText: TextView
     ) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
         cameraProviderFuture.addListener(
@@ -51,7 +52,7 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
                 imageAnalysis = ImageAnalysis.Builder().setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                     .build()
                     .also {
-                        it.setAnalyzer(executorService,analyzer(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, eyeDetectionActivity))
+                        it.setAnalyzer(executorService,analyzer(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, eyeDetectionActivity, alertText))
                     }
                 val cameraS = CameraSelector.Builder().requireLensFacing(cameraSelector).build()
                 configCamera(processcameraProvider,cameraS)
@@ -67,9 +68,10 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
         media: MediaPlayer,
         sessionText: TextView,
         sessionToast: Unit,
-        eyeDetectionActivity: EyeDetectionActivity
+        eyeDetectionActivity: EyeDetectionActivity,
+        alertText: TextView
     ): ImageAnalysis.Analyzer {
-        return EyeDetectionUtils(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, eyeDetectionActivity)
+        return EyeDetectionUtils(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, eyeDetectionActivity, alertText)
     }
     private fun configCamera(processCameraProvider: ProcessCameraProvider?,cameraSelector: CameraSelector){
         try{

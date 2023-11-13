@@ -31,7 +31,8 @@ class EyeDetectionUtils(
     media: MediaPlayer,
     sessionText: TextView,
     sessionToast: Unit,
-    eyeDetectionActivity: EyeDetectionActivity
+    eyeDetectionActivity: EyeDetectionActivity,
+    alertText: TextView
 ) :ImageAnalyzer<List<Face>>() {
     private var counter = 0
     private var fatigueCounter = 0
@@ -57,6 +58,7 @@ class EyeDetectionUtils(
     private var alertList = arrayListOf<Alert>()
     private lateinit var sessionUuid:String
     private val contextAct = eyeDetectionActivity
+    private val alertText = alertText
 
     private val timeQueue: Queue<Long> = LinkedList()
     private val timeInterval = 30000
@@ -141,9 +143,11 @@ class EyeDetectionUtils(
                 }
 
                 if(counter>=50){
+
                     eyeLogic = EyeDetectionLogic()
                     sendMessage(contextAct,"ALERT_ACTIVE", "/SESSION_CURRENT_ALERT")
                     alertList.add(Alert(alertSeverity = "low",eyeLogic.getTimeStamp()))
+                    alertText.text = alertList.size.toString()
                     sendMessage(contextAct, alertList.size.toString(), "/SESSION_ALERT")
                     mediaPlayer.start()
                     counter = 0
