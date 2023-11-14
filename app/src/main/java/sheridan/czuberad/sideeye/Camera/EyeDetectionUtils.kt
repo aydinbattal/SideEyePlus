@@ -14,6 +14,7 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
+import com.google.mlkit.vision.face.FaceLandmark
 import sheridan.czuberad.sideeye.Domain.Alert
 import sheridan.czuberad.sideeye.`Application Logic`.EyeDetectionLogic
 import sheridan.czuberad.sideeye.Domain.Session
@@ -41,6 +42,7 @@ class EyeDetectionUtils(
         .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
         .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
         .setContourMode(FaceDetectorOptions.CONTOUR_MODE_NONE)
+        .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
         .build()
 
     private val det = FaceDetection.getClient(realTimeOpts)
@@ -98,8 +100,17 @@ class EyeDetectionUtils(
         var fatigueCounterStartTime = System.currentTimeMillis()
         results.forEach{
 
-            val currentTimeMs = System.currentTimeMillis()
+            val mouthBottom = it.getLandmark(FaceLandmark.MOUTH_BOTTOM)?.position
+            val noseBase = it.getLandmark(FaceLandmark.NOSE_BASE)?.position
 
+
+
+            Log.d(TAG, "MOUTH values mouthBottom: $mouthBottom noseBase: $noseBase")
+            if (mouthBottom != null && noseBase != null) {
+                val openY = mouthBottom.y - noseBase.y
+                Log.d(TAG, "MOUTH DISTANCE: $openY")
+            }
+            val currentTimeMs = System.currentTimeMillis()
 
             if((it.leftEyeOpenProbability!! < 0.5) && (it.rightEyeOpenProbability!! < 0.5)){
                 counter++
