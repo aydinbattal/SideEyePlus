@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -37,10 +38,15 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wearable.MessageClient
@@ -121,6 +127,8 @@ fun DriverHome() {
                 )
         }
 
+        SessionCardListView()
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -152,14 +160,6 @@ fun DriverHome() {
             
         }
 
-//        LineChart(
-//            data = data,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(300.dp)
-//                .align(Alignment.CenterHorizontally)
-//                .border(1.dp, Color.Blue)
-//        )
     }
 
 
@@ -403,6 +403,54 @@ fun InfoCard(currentDriver: Driver) {
             }
 
         }
+
+    }
+}
+
+@Composable
+fun SessionCardListView(){
+    //Create DriverService method for retrieving Sessions and Alerts
+    //Create IndependentDriver Logic method for mapping Sessions and Alerts return itemList
+// Session(StartTime, EndTime, AlertCount, AlertList(pass into detail page))
+    Text(
+        modifier = Modifier.padding(start = 7.dp),
+        text = "Past Sessions",
+        color = Color(0xFF39AFEA),
+        style = TextStyle(
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp  // Adjust the font size as needed
+        )
+    )
+    val itemsList = listOf(
+        "Card 1", "Card 2", "Card 3", "Card 4", "Card 5",
+        "Card 6", "Card 7", "Card 8", "Card 9", "Card 10"
+    )
+    LazyRow(
+        modifier = Modifier.padding(bottom = 10.dp)
+    ){
+        items(10){
+            Card(
+                modifier = Modifier
+                    .height(150.dp)
+                    .width(200.dp)
+                    .padding(8.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White
+                )
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(text = "StartDate")
+                    Text(text = "EndDate")
+                    Text(text = "AlertCount")
+
+
+                }
+
+            }
+        }
+
+
 
     }
 }

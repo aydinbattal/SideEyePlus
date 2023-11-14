@@ -103,8 +103,6 @@ class EyeDetectionUtils(
             val mouthBottom = it.getLandmark(FaceLandmark.MOUTH_BOTTOM)?.position
             val noseBase = it.getLandmark(FaceLandmark.NOSE_BASE)?.position
 
-
-
             Log.d(TAG, "MOUTH values mouthBottom: $mouthBottom noseBase: $noseBase")
             if (mouthBottom != null && noseBase != null) {
                 val openY = mouthBottom.y - noseBase.y
