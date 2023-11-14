@@ -440,9 +440,47 @@ fun SessionCardListView(){
                 )
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(text = "StartDate")
-                    Text(text = "EndDate")
-                    Text(text = "AlertCount")
+
+                    Row(horizontalArrangement = Arrangement.Center){
+                        Column(horizontalAlignment = Alignment.CenterHorizontally){
+                            Text(text = "Alerts",
+                                color = Color(0xFF39AFEA),
+                                style = TextStyle(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 15.sp  // Adjust the font size as needed
+                                ))
+                            Spacer(modifier = Modifier.width(100.dp))
+                            Text(text = "15",color = Color(0xFF39AFEA),
+                                style = TextStyle(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 20.sp  // Adjust the font size as needed
+                                ))
+                            
+                        }
+
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(text = "Fatigue",
+                                color = Color(0xFF39AFEA),
+                                style = TextStyle(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 15.sp  // Adjust the font size as needed
+                                ))
+                            Spacer(modifier = Modifier.width(300.dp))
+                            Text(text = "30",color = Color(0xFF39AFEA),
+                                style = TextStyle(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 20.sp  // Adjust the font size as needed
+                                ))
+
+                        }
+
+
+                    }
+                    Row{
+
+                    }
+                    Text(text = "December 13, 2022")
+                    Text(text = "Duration: 1:03:34")
 
 
                 }
