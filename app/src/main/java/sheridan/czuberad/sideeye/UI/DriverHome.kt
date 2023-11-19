@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Arrangement
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +26,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -38,7 +38,6 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -48,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavHostController
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Node
@@ -60,7 +60,7 @@ import sheridan.czuberad.sideeye.R
 
 
 @Composable
-fun DriverHome() {
+fun DriverHome(navController: NavHostController) {
     val data = listOf(
         Pair(1, 0),
         Pair(2, 5),
@@ -110,8 +110,8 @@ fun DriverHome() {
                 .width(screenWidth)
                 .height(screenHeight / 3)
                 .zIndex(1f)
-                .offset(y = (-50).dp)
-                .padding(10.dp),
+                .offset(y = (-125).dp)
+                .padding(5.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
             shape = RoundedCornerShape(15.dp),
             colors = CardDefaults.cardColors(
@@ -127,40 +127,11 @@ fun DriverHome() {
                 )
         }
 
-        SessionCardListView()
+        SessionCardListView(navController)
+        buttonLayout(context)
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(3.dp),
-            horizontalArrangement = Arrangement.Center) {
-            Button(
-                modifier = Modifier.weight(1f),
-                shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF39AFEA)),
-                onClick = {
-                    val intent = Intent(context, EyeDetectionActivity::class.java)
-                    context.startActivity(intent)
-
-                }) {
-                Text("Session Tracking")
-            }
-            Spacer(modifier = Modifier.width(5.dp))
-            Button(
-
-                shape = RectangleShape,
-                modifier = Modifier.weight(1f),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF39AFEA)),
-                onClick = {
-                    val intent = Intent(context, HomeTestsActivity::class.java)
-                    context.startActivity(intent)
-                }) {
-                Text("Reaction Test")
-            }
-            
         }
 
-    }
 
 
 }
@@ -272,99 +243,46 @@ fun LineChart(
 }
 
 
+@Composable
+fun buttonLayout(context: Context) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(3.dp),
+            horizontalArrangement = Arrangement.Center) {
+            Button(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp),
+                shape = RectangleShape,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF39AFEA)),
+                onClick = {
+                    val intent = Intent(context, EyeDetectionActivity::class.java)
+                    context.startActivity(intent)
+
+                }) {
+                Text("Session Tracking")
+            }
+            Spacer(modifier = Modifier.width(5.dp))
+            Button(
+
+                shape = RectangleShape,
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF39AFEA)),
+                onClick = {
+                    val intent = Intent(context, HomeTestsActivity::class.java)
+                    context.startActivity(intent)
+                }) {
+                Text("Reaction Test")
+            }
+
+        }
+
+}
 
 
-//@Composable
-//fun LineChart(
-//    data: List<Pair<Int, Int>> = emptyList(),
-//    modifier: Modifier = Modifier,
-//    title: String = "Session Overview"
-//) {
-//    val spacing = 100f
-//    val graphColor = Color(0xFF39AFEA)
-//    val upperValue = remember { (data.maxOfOrNull { it.second }?.plus(1)) ?: 0 }
-//    val lowerValue = remember { (data.minOfOrNull { it.second }?.toInt() ?: 0) }
-//
-//    val drawingProgress = remember { Animatable(0f) }
-//
-//    LaunchedEffect(drawingProgress) {
-//        drawingProgress.animateTo(
-//            targetValue = data.size.toFloat(),
-//            animationSpec = tween(durationMillis = 2000)
-//        )
-//    }
-//
-//    Canvas(modifier = modifier) {
-//        val spacePerHour = (size.width - spacing) / data.size
-//        val lastDataPointX = spacing + (data.size - 1) * spacePerHour
-//        val height = size.height
-//
-//
-//        val graphTopPaddingRatio = 0.2f
-//        val graphBottomPaddingRatio = 0.2f
-//        val availableHeight = height * (1 - graphTopPaddingRatio - graphBottomPaddingRatio)
-//        val graphTopPadding = height * graphTopPaddingRatio
-//
-//        val path = Path()
-//        val drawingLimit = drawingProgress.value.toInt()
-//
-//        for (i in 0 until drawingLimit) {
-//            val info = data[i]
-//            val ratio = (info.second - lowerValue).toFloat() / (upperValue - lowerValue)
-//            val x1 = spacing + i * spacePerHour
-//            val y1 = graphTopPadding + (1 - ratio) * availableHeight
-//
-//            if (i == 0) {
-//                path.moveTo(x1, y1)
-//            } else {
-//                path.lineTo(x1, y1)
-//            }
-//        }
-//
-//        if (drawingLimit > 0 && drawingLimit < data.size) {
-//            val startInfo = data[drawingLimit - 1]
-//            val endInfo = data[drawingLimit]
-//            val t = drawingProgress.value - drawingLimit
-//
-//            val startX = spacing + (drawingLimit - 1) * spacePerHour
-//            val startY = graphTopPadding + (1 - (startInfo.second - lowerValue).toFloat() / (upperValue - lowerValue)) * availableHeight
-//
-//            val endX = spacing + drawingLimit * spacePerHour
-//            val endY = graphTopPadding + (1 - (endInfo.second - lowerValue).toFloat() / (upperValue - lowerValue)) * availableHeight
-//
-//            val interpolatedX = lerp(startX, endX, t)
-//            val interpolatedY = lerp(startY, endY, t)
-//
-//            path.lineTo(interpolatedX, interpolatedY)
-//        }
-//
-//        drawPath(
-//            path = path,
-//            color = graphColor,
-//            style = Stroke(
-//                width = 4.dp.toPx(),
-//                cap = StrokeCap.Round
-//            )
-//        )
-//
-//        drawLine(
-//            color = Color(0xFF39AFEA),
-//            start = Offset(spacing, size.height * graphBottomPaddingRatio),
-//            end = Offset(spacing, size.height - size.height * graphTopPaddingRatio + 10.dp.toPx()),
-//            strokeWidth = 2.dp.toPx()
-//        )
-//        //X axis line
-//        drawLine(
-//            color = Color(0xFF39AFEA),
-//            start = Offset(spacing, size.height - size.height * graphTopPaddingRatio + 10.dp.toPx() ),
-//            end = Offset(lastDataPointX, size.height - size.height * graphTopPaddingRatio + 10.dp.toPx()),
-//            strokeWidth = 2.dp.toPx()
-//        )
-//
-//
-//
-//    }
-//}
 
 @Composable
 fun InfoCard(currentDriver: Driver) {
@@ -408,91 +326,112 @@ fun InfoCard(currentDriver: Driver) {
 }
 
 @Composable
-fun SessionCardListView(){
+fun SessionCardListView(navController: NavHostController) {
+
+    Card(modifier = Modifier.offset(y = (-100).dp),colors = CardDefaults.cardColors(
+        containerColor = Color.White
+    )) {
+        
+        Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(
+                modifier = Modifier.padding(start = 7.dp),
+                text = "Latest Sessions",
+                color = Color(0xFF39AFEA),
+                style = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp  // Adjust the font size as needed
+                )
+            )
+
+            TextButton(onClick = {navController.navigate("sessionListView")}, modifier = Modifier.height(33.dp),
+            ) {
+                Text(text = "View All", fontSize = 12.sp, color = Color(0xFF39AFEA))
+            }
+            
+        }
+        
+        val itemsList = listOf(
+            "Card 1", "Card 2", "Card 3", "Card 4", "Card 5",
+            "Card 6", "Card 7", "Card 8", "Card 9", "Card 10"
+        )
+        LazyRow(
+            //modifier = Modifier.padding(bottom = 10.dp)
+        ){
+            items(10){
+                Card(
+                    modifier = Modifier
+                        .height(200.dp)
+                        .width(200.dp)
+                        .padding(8.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White
+                    )
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+
+                        Row(horizontalArrangement = Arrangement.Center){
+                            Column(horizontalAlignment = Alignment.CenterHorizontally){
+                                Text(text = "Alerts",
+                                    color = Color(0xFF39AFEA),
+                                    style = TextStyle(
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 15.sp  // Adjust the font size as needed
+                                    ))
+                                Spacer(modifier = Modifier.width(100.dp))
+                                Text(text = "15",color = Color(0xFF39AFEA),
+                                    style = TextStyle(
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 20.sp  // Adjust the font size as needed
+                                    ))
+                            }
+
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(text = "Fatigue",
+                                    color = Color(0xFF39AFEA),
+                                    style = TextStyle(
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 15.sp  // Adjust the font size as needed
+                                    ))
+                                Spacer(modifier = Modifier.width(300.dp))
+                                Text(text = "30",color = Color(0xFF39AFEA),
+                                    style = TextStyle(
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 20.sp  // Adjust the font size as needed
+                                    ))
+
+                            }
+
+
+                        }
+                        Row{
+
+                        }
+                        Text(text = "December 13, 2022")
+                        Text(text = "Duration: 1:03:34")
+
+
+                    }
+
+                }
+            }
+
+
+
+        }
+    }
     //Create DriverService method for retrieving Sessions and Alerts
     //Create IndependentDriver Logic method for mapping Sessions and Alerts return itemList
 // Session(StartTime, EndTime, AlertCount, AlertList(pass into detail page))
-    Text(
-        modifier = Modifier.padding(start = 7.dp),
-        text = "Past Sessions",
-        color = Color(0xFF39AFEA),
-        style = TextStyle(
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp  // Adjust the font size as needed
-        )
-    )
-    val itemsList = listOf(
-        "Card 1", "Card 2", "Card 3", "Card 4", "Card 5",
-        "Card 6", "Card 7", "Card 8", "Card 9", "Card 10"
-    )
-    LazyRow(
-        modifier = Modifier.padding(bottom = 10.dp)
-    ){
-        items(10){
-            Card(
-                modifier = Modifier
-                    .height(150.dp)
-                    .width(200.dp)
-                    .padding(8.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White
-                )
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
 
-                    Row(horizontalArrangement = Arrangement.Center){
-                        Column(horizontalAlignment = Alignment.CenterHorizontally){
-                            Text(text = "Alerts",
-                                color = Color(0xFF39AFEA),
-                                style = TextStyle(
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp  // Adjust the font size as needed
-                                ))
-                            Spacer(modifier = Modifier.width(100.dp))
-                            Text(text = "15",color = Color(0xFF39AFEA),
-                                style = TextStyle(
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 20.sp  // Adjust the font size as needed
-                                ))
-                            
-                        }
-
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "Fatigue",
-                                color = Color(0xFF39AFEA),
-                                style = TextStyle(
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp  // Adjust the font size as needed
-                                ))
-                            Spacer(modifier = Modifier.width(300.dp))
-                            Text(text = "30",color = Color(0xFF39AFEA),
-                                style = TextStyle(
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 20.sp  // Adjust the font size as needed
-                                ))
-
-                        }
-
-
-                    }
-                    Row{
-
-                    }
-                    Text(text = "December 13, 2022")
-                    Text(text = "Duration: 1:03:34")
-
-
-                }
-
-            }
-        }
-
-
-
-    }
 }
 
 fun lerp(start: Float, stop: Float, fraction: Float): Float {
     return start + fraction * (stop - start)
+}
+
+@Preview
+@Composable
+fun preview(){
+    //buttonLayout()
 }
