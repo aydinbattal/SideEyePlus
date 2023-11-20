@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.UI.DriverHome
+import sheridan.czuberad.sideeye.UI.SessionDetail
 import sheridan.czuberad.sideeye.UI.SessionHistory
 
 
@@ -29,7 +30,8 @@ class HomeDriverActivity : AppCompatActivity() {
 
             NavHost(navController = navController, startDestination = "driverHome"){
                 composable("driverHome"){ DriverHome(navController)}
-                composable("sessionListView"){ SessionHistory()}
+                composable("sessionListView"){ SessionHistory(navController)}
+                composable("sessionDetail"){ SessionDetail() }
             }
 
         }

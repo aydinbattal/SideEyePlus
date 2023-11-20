@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 
 import androidx.compose.foundation.layout.Column
@@ -362,7 +363,8 @@ fun SessionCardListView(navController: NavHostController) {
                     modifier = Modifier
                         .height(200.dp)
                         .width(200.dp)
-                        .padding(8.dp),
+                        .padding(8.dp)
+                        .clickable { navController.navigate("sessionDetail") },
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = Color.White
