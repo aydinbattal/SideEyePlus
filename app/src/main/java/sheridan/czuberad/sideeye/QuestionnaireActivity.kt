@@ -21,16 +21,80 @@ class QuestionnaireActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityQuestionnaireBinding
 
-    private data class Question(val text: String, var userAnswerId: Int = -1, var correctAnswerId: Int = -1)
+    private data class Question(
+        val text: String,
+        val options: List<Pair<String, String>>,
+        var userAnswerId: Int = -1)
 
     private val questions = mutableListOf(
-        Question("Are you feeling drowsy?", -1, R.id.option1),
-        Question("Have you had enough rest?", -1, R.id.option2),
-        // Add more questions here with correct answer IDs
+        Question(
+            "How long have you been driving since your last break?",
+            listOf(
+                "Less than two hours" to "Low",
+                "Between two and four hours" to "Mild",
+                "More than four hours" to "Severe"
+            ),
+            -1,
+        ),
+        Question(
+            "Do you think your hydration and blood sugar is OK?",
+            listOf(
+                "Yes, and I think it is as good as possible" to "Low",
+                "Yes, and I could do with a drink or snack" to "Mild",
+                "No" to "Severe"
+                ),
+            -1,
+        ),
+        Question(
+            "Do you believe you are fit to continue work?",
+            listOf(
+                "Yes" to "Low",
+                "Yes, with additional risk controls" to "Mild",
+                "No, not right now" to "Severe"
+            ),
+            -1,
+        ),
+        Question(
+            "How do you feel right now?",
+            listOf(
+                "Very alert – wide awake" to "Low",
+                "A bit tired, effort required to stay alert" to "Mild",
+                "Very fatigued, having difficulty staying alert" to "Severe"
+            ),
+            -1,
+        ),
+        Question(
+            "Did you sleep in the last 24 hours?",
+            listOf(
+                "Yes, I got my ideal amount of sleep" to "Low",
+                "Yes, but I did not get my ideal amount of sleep" to "Mild",
+                "No" to "Severe"
+            ),
+            -1,
+        ),
+        Question(
+            "How would you rate the quality of that sleep compared with what you\n" +
+                    "usually get on similar shift patterns?",
+            listOf(
+                "Good" to "Low",
+                "Average" to "Mild",
+                "Poor" to "Severe"
+            ),
+            -1,
+        ),
+        Question(
+            "Have you experienced any physical\n" +
+                    "signs of fatigue immediately prior to or\n" +
+                    "during this shift (e.g. microsleeps or difficulty concentrating)",
+            listOf(
+                "No" to "Low",
+                "Yes" to "Severe"
+            ),
+            -1,
+        ),
     )
 
     private var currentQuestionIndex = 0
-    private var correctAnswers = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,10 +139,10 @@ class QuestionnaireActivity : AppCompatActivity() {
                 clearErrorMessage()
 
                 // Calculate the number of correct answers
-                calculateCorrectAnswers()
+                val category = calculateCategory()
 
                 // Navigate back to home screen
-                navigateBackToHomeScreen()
+                navigateBackToHomeScreen(category)
             }
         }
     }
@@ -110,19 +174,29 @@ class QuestionnaireActivity : AppCompatActivity() {
         errorMessageTextView.visibility = View.GONE
     }
 
-    private fun calculateCorrectAnswers() {
+    private fun calculateCategory(): String {
+        val redCategory = "Low"
+        val amberCategory = "Mild"
+        val greenCategory = "Severe"
+
         for (question in questions) {
-            if (question.userAnswerId == question.correctAnswerId) {
-                correctAnswers++
+            val selectedOptionIndex = question.options.indexOfFirst { it.first == question.userAnswerId.toString() }
+            val userAnswerCategory = question.options[selectedOptionIndex].second
+
+            if (userAnswerCategory == redCategory) {
+                return redCategory
+            } else if (userAnswerCategory == amberCategory) {
+                return amberCategory
             }
         }
+
+        return greenCategory
     }
 
-    private fun navigateBackToHomeScreen() {
+    private fun navigateBackToHomeScreen(category: String) {
         val intent = Intent()
-        intent.putExtra("completedTest", true) // Set the boolean variable
-        val score = "$correctAnswers/${questions.size}"
-        intent.putExtra("score", score) // Set the number of correct answers
+        intent.putExtra("completedTest", true)
+        intent.putExtra("category", category) // Set user's category
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
