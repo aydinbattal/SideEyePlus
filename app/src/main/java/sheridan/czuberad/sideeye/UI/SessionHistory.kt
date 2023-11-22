@@ -32,11 +32,6 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun SessionHistory(navController: NavHostController) {
-    
-
-
-
-
 
     Column(modifier = Modifier
         .fillMaxSize()

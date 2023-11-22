@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 
@@ -39,10 +40,12 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -361,8 +364,8 @@ fun SessionCardListView(navController: NavHostController) {
             items(10){
                 Card(
                     modifier = Modifier
-                        .height(200.dp)
-                        .width(200.dp)
+                        .height(150.dp)
+                        .width(205.dp)
                         .padding(8.dp)
                         .clickable { navController.navigate("sessionDetail") },
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -370,9 +373,27 @@ fun SessionCardListView(navController: NavHostController) {
                         containerColor = Color.White
                     )
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
 
-                        Row(horizontalArrangement = Arrangement.Center){
+                    Column(modifier = Modifier
+                        .fillMaxSize()
+                        .padding(10.dp), verticalArrangement = Arrangement.SpaceBetween) {
+
+                        Column() {
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                Text(text = "02/12/2023", fontWeight = FontWeight.Bold)
+                                Text(text = "08:23AM")
+                            }
+
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                Text(text = "02/12/2023",fontWeight = FontWeight.Bold)
+                                Text(text = "08:23AM")
+                            }
+                        }
+
+
+
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+
                             Column(horizontalAlignment = Alignment.CenterHorizontally){
                                 Text(text = "Alerts",
                                     color = Color(0xFF39AFEA),
@@ -380,7 +401,20 @@ fun SessionCardListView(navController: NavHostController) {
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 15.sp  // Adjust the font size as needed
                                     ))
-                                Spacer(modifier = Modifier.width(100.dp))
+                                Text(text = "15",color = Color(0xFF39AFEA),
+                                    style = TextStyle(
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 20.sp  // Adjust the font size as needed
+                                    ))
+                            }
+                            Column(horizontalAlignment = Alignment.CenterHorizontally){
+                                Text(text = "Fatigue",
+                                    color = Color(0xFF39AFEA),
+                                    style = TextStyle(
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 15.sp  // Adjust the font size as needed
+                                    ))
+
                                 Text(text = "15",color = Color(0xFF39AFEA),
                                     style = TextStyle(
                                         fontWeight = FontWeight.Bold,
@@ -388,32 +422,56 @@ fun SessionCardListView(navController: NavHostController) {
                                     ))
                             }
 
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(text = "Fatigue",
-                                    color = Color(0xFF39AFEA),
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 15.sp  // Adjust the font size as needed
-                                    ))
-                                Spacer(modifier = Modifier.width(300.dp))
-                                Text(text = "30",color = Color(0xFF39AFEA),
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 20.sp  // Adjust the font size as needed
-                                    ))
-
-                            }
 
 
                         }
-                        Row{
 
-                        }
-                        Text(text = "December 13, 2022")
-                        Text(text = "Duration: 1:03:34")
 
 
                     }
+
+
+                //                    Column(modifier = Modifier.fillMaxWidth()) {
+//
+//                        Row(horizontalArrangement = Arrangement.SpaceBetween){
+//                            Column(horizontalAlignment = Alignment.CenterHorizontally){
+//                                Text(text = "Alerts",
+//                                    color = Color(0xFF39AFEA),
+//                                    style = TextStyle(
+//                                        fontWeight = FontWeight.Bold,
+//                                        fontSize = 15.sp  // Adjust the font size as needed
+//                                    ))
+//                                Spacer(modifier = Modifier.width(100.dp))
+//                                Text(text = "15",color = Color(0xFF39AFEA),
+//                                    style = TextStyle(
+//                                        fontWeight = FontWeight.Bold,
+//                                        fontSize = 20.sp  // Adjust the font size as needed
+//                                    ))
+//                            }
+//
+//                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//                                Text(text = "Fatigue",
+//                                    color = Color(0xFF39AFEA),
+//                                    style = TextStyle(
+//                                        fontWeight = FontWeight.Bold,
+//                                        fontSize = 15.sp  // Adjust the font size as needed
+//                                    ))
+//                                Spacer(modifier = Modifier.width(300.dp))
+//                                Text(text = "30",color = Color(0xFF39AFEA),
+//                                    style = TextStyle(
+//                                        fontWeight = FontWeight.Bold,
+//                                        fontSize = 20.sp  // Adjust the font size as needed
+//                                    ))
+//
+//                            }
+//
+//
+//                        }
+//                        Text(text = "December 13, 2022")
+//                        Text(text = "Duration: 1:03:34")
+//
+//
+//                    }
 
                 }
             }
