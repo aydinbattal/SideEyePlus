@@ -46,10 +46,12 @@ class DriverService {
 
         if(currentUser != null){
 
-            db.collection("Drivers").document(currentUser).collection("Sessions").document(session.sessionUUID.toString()).set(session).addOnCompleteListener{
-                if(it.isSuccessful){
-                    alertList.forEach{alert ->
-                        db.collection("Alerts").document(alert.alertUUID.toString()).set(alert)
+            session.sessionUUID?.let {
+                db.collection("Drivers").document(currentUser).collection("Sessions").document(it).set(session).addOnCompleteListener{complete->
+                    if(complete.isSuccessful){
+                        alertList.forEach{alert ->
+                            alert.alertUUID?.let { it1 -> db.collection("Alerts").document(it1).set(alert) }
+                        }
                     }
                 }
             }

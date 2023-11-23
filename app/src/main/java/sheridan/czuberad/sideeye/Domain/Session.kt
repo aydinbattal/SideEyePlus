@@ -5,9 +5,9 @@ import java.util.Date
 import java.util.UUID
 
 data class Session(
-    var sessionUUID: UUID? = null,
+    var sessionUUID: String? = null,
     var startSession: Timestamp? = null,
     var endSession: Timestamp? = null,
-    var alertUUIDList: ArrayList<UUID>? = null,
+    var alertUUIDList: ArrayList<String>? = null,
     var fatigueList: ArrayList<Timestamp>? = null
     )

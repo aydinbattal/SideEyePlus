@@ -76,7 +76,7 @@ class EyeDetectionUtils(
     override fun onSuccess(results: List<Face>){
         startSession.setOnClickListener {
             sessionT.text = "Press End Session to End Session"
-            session.sessionUUID = UUID.randomUUID()
+            session.sessionUUID = UUID.randomUUID().toString()
             alertList.clear()
             sendMessage(contextAct, "SESSION_START", "/SESSION_STATUS")
             session.startSession = Timestamp(System.currentTimeMillis())
@@ -190,7 +190,7 @@ class EyeDetectionUtils(
 
                     eyeLogic = EyeDetectionLogic()
                     sendMessage(contextAct,"ALERT_ACTIVE", "/SESSION_CURRENT_ALERT")
-                    alertList.add(Alert(alertUUID = UUID.randomUUID(),alertSeverity = "low",Timestamp(System.currentTimeMillis())))
+                    alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "low",Timestamp(System.currentTimeMillis())))
                     alertText.text = alertList.size.toString()
                     sendMessage(contextAct, alertList.size.toString(), "/SESSION_ALERT")
                     mediaPlayer.start()
