@@ -33,7 +33,8 @@ class EyeDetectionUtils(
     sessionText: TextView,
     sessionToast: Unit,
     eyeDetectionActivity: EyeDetectionActivity,
-    alertText: TextView
+    alertText: TextView,
+    fatigueText: TextView
 ) :ImageAnalyzer<List<Face>>() {
     private var counter = 0
     private var fatigueCounter = 0
@@ -50,6 +51,7 @@ class EyeDetectionUtils(
     private var sessionT = sessionText
     private var isSessionStart = false
     private var isSessionEnd = false
+    private var isAbove = false
     private var sessionEndToast = sessionToast
     private var endSession = endSessionOnClick
     private var startSession = startSessionOnClick
@@ -61,7 +63,8 @@ class EyeDetectionUtils(
     private lateinit var sessionUuid:String
     private val contextAct = eyeDetectionActivity
     private val alertText = alertText
-
+    private val fatigueText = fatigueText
+    private var fatigueC = 0
     private val timeQueue: Queue<Long> = LinkedList()
     private val timeInterval = 30000
 
@@ -90,6 +93,12 @@ class EyeDetectionUtils(
                     //driverService.addAlertToSessionById(sessionUuid,session,alertList)
                     sendMessage(contextAct, "SESSION_END", "/SESSION_STATUS")
                     Log.d(TAG, "ALERTEND $session")
+
+                    alertText.text = "0"
+                    fatigueText.text = "0"
+
+                    fatigueC = 0
+                    timeQueue.clear()
 
                 }
 
@@ -148,7 +157,17 @@ class EyeDetectionUtils(
                 }
 
                 if(timeQueue.size >=5){
+                    if(!isAbove){
+                        isAbove = true
+                        fatigueC++
+                        fatigueText.text = fatigueC.toString()
+
+                    }
+
                     Log.d(TAG, "PPP QUEUE REACHED 5")
+                }
+                else{
+                    isAbove = false
                 }
 
                 if(counter>=50){
@@ -164,6 +183,10 @@ class EyeDetectionUtils(
                 }
 
                 Log.d(TAG, "PPP QUEUE END OF LOOP $timeQueue")
+                Log.d(TAG, "PPP $fatigueC")
+                for(x in timeQueue){
+                    Log.d(TAG, "PPP TimeStamp: ${Timestamp(x)}")
+                }
 
 
             }

@@ -32,6 +32,38 @@
 
 
     </androidx.camera.view.PreviewView>
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_centerVertical="true"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/sessionTextView"-->
+<!--        android:layout_marginStart="5dp"-->
+<!--        android:layout_marginEnd="5dp"-->
+<!--        android:layout_marginBottom="300dp"-->
+<!--        tools:ignore="MissingConstraints">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/alertCountTextView"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:gravity="start"-->
+<!--            android:textColor="#FFFFFF"-->
+<!--            android:text="Alert Count" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/statusTextView"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:gravity="end"-->
+<!--            android:textColor="#FFFFFF"-->
+<!--            android:text="Fatigue Count" />-->
+<!--    </LinearLayout>-->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,23 +77,53 @@
         android:layout_marginBottom="300dp"
         tools:ignore="MissingConstraints">
 
-        <TextView
-            android:id="@+id/alertCountTextView"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="start"
-            android:textColor="#FFFFFF"
-            android:text="AlertCount" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/statusTextView"
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alert Count"
+                android:gravity="start"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/alertCountTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:gravity="start"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="end"
-            android:textColor="#FFFFFF"
-            android:text="Status" />
+
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fatigue Count"
+                android:gravity="end"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/fatigueCountTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="0"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <TextView
