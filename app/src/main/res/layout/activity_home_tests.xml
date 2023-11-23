@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:background="#39AFEA"
-        android:text="Reaction Tests"
+        android:text="Fatigue Assessment Tests"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_marginRight="400dp"
-                android:text="Reaction Test 1"
+                android:text="Reaction Test"
                 android:textColor="#000000"
                 android:textSize="20sp" />
 
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_marginRight="400dp"
-                android:text="Reaction Test 2"
+                android:text="Questionnaire"
                 android:textColor="#000000"
                 android:textSize="20sp" />
 
@@ -117,7 +117,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="8dp"
-        android:text="Result1"
+        android:text="Average Reaction Time:"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reactionResultsTextView" />
@@ -128,7 +128,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="8dp"
-        android:text="Result1"
+        android:text="Fatigue Status:"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reactionResult1TextView" />
