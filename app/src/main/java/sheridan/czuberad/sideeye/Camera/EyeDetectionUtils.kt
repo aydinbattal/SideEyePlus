@@ -75,7 +75,7 @@ class EyeDetectionUtils(
     override fun onSuccess(results: List<Face>){
         startSession.setOnClickListener {
             sessionT.text = "Press End Session to End Session"
-            sessionUuid = UUID.randomUUID().toString()
+            session.sessionUUID = UUID.randomUUID()
             alertList.clear()
             sendMessage(contextAct, "SESSION_START", "/SESSION_STATUS")
             session.startSession = eyeLogic.getTimeStamp()
@@ -87,12 +87,27 @@ class EyeDetectionUtils(
 
             endSession.setOnClickListener {
                 if(isSessionEnd == false){
+                    session.fatigueList = arrayListOf()
+                    session.alertUUIDList = arrayListOf()
                     sessionT.text = "Press Start To Start Session"
                     session.endSession = eyeLogic.getTimeStamp()
                     //Commented out to not waste session reads
                     //driverService.addAlertToSessionById(sessionUuid,session,alertList)
                     sendMessage(contextAct, "SESSION_END", "/SESSION_STATUS")
-                    Log.d(TAG, "ALERTEND $session")
+
+                    timeQueue.forEach{
+                        session.fatigueList?.add(Timestamp(it))
+                    }
+
+                    alertList.forEach{
+                        it.alertUUID?.let { it1 -> session.alertUUIDList?.add(it1) }
+                    }
+
+
+                    Log.d(TAG, "ALERTEND Session: $session")
+                    Log.d(TAG, "ALERTEND Session: ${session.alertUUIDList}")
+                    Log.d(TAG, "ALERTEND Session: ${session.fatigueList}")
+                    Log.d(TAG, "ALERTEND AlertList: $alertList")
 
                     alertText.text = "0"
                     fatigueText.text = "0"
@@ -174,7 +189,7 @@ class EyeDetectionUtils(
 
                     eyeLogic = EyeDetectionLogic()
                     sendMessage(contextAct,"ALERT_ACTIVE", "/SESSION_CURRENT_ALERT")
-                    alertList.add(Alert(alertSeverity = "low",eyeLogic.getTimeStamp()))
+                    alertList.add(Alert(alertUUID = UUID.randomUUID(),alertSeverity = "low",eyeLogic.getTimeStamp()))
                     alertText.text = alertList.size.toString()
                     sendMessage(contextAct, alertList.size.toString(), "/SESSION_ALERT")
                     mediaPlayer.start()
