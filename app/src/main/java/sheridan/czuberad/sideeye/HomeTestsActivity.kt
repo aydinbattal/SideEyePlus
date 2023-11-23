@@ -3,6 +3,7 @@ package sheridan.czuberad.sideeye
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -60,14 +61,14 @@ class HomeTestsActivity : AppCompatActivity() {
         } else if (requestCode == questionnaireRequestCode && resultCode == Activity.RESULT_OK) {
             // Handle result from QuestionnaireActivity
             val completedTest = data?.getBooleanExtra("completedTest", false) ?: false
-            val score = data?.getStringExtra("score") ?: ""
+            val category = data?.getStringExtra("category") ?: ""
 
             if (completedTest) {
                 // Handle the completion of the questionnaire
                 // Disable the button
                 startButton2.isEnabled = false
                 startButton2.text = "Done"
-                reactionTestResult2.text = score
+                reactionTestResult2.text = "Fatigue Status: $category"
             }
         }
     }

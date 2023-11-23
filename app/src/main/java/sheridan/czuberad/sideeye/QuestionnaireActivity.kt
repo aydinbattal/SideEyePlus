@@ -4,11 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.RadioGroup
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import sheridan.czuberad.sideeye.databinding.ActivityQuestionnaireBinding
 import sheridan.czuberad.sideeye.databinding.ActivityReactionTestBinding
 
@@ -24,7 +22,7 @@ class QuestionnaireActivity : AppCompatActivity() {
     private data class Question(
         val text: String,
         val options: List<Pair<String, String>>,
-        var userAnswerId: Int = -1)
+        var selectedOption: Pair<String, String>? = null)
 
     private val questions = mutableListOf(
         Question(
@@ -34,7 +32,7 @@ class QuestionnaireActivity : AppCompatActivity() {
                 "Between two and four hours" to "Mild",
                 "More than four hours" to "Severe"
             ),
-            -1,
+
         ),
         Question(
             "Do you think your hydration and blood sugar is OK?",
@@ -43,7 +41,7 @@ class QuestionnaireActivity : AppCompatActivity() {
                 "Yes, and I could do with a drink or snack" to "Mild",
                 "No" to "Severe"
                 ),
-            -1,
+
         ),
         Question(
             "Do you believe you are fit to continue work?",
@@ -52,7 +50,7 @@ class QuestionnaireActivity : AppCompatActivity() {
                 "Yes, with additional risk controls" to "Mild",
                 "No, not right now" to "Severe"
             ),
-            -1,
+
         ),
         Question(
             "How do you feel right now?",
@@ -61,7 +59,7 @@ class QuestionnaireActivity : AppCompatActivity() {
                 "A bit tired, effort required to stay alert" to "Mild",
                 "Very fatigued, having difficulty staying alert" to "Severe"
             ),
-            -1,
+
         ),
         Question(
             "Did you sleep in the last 24 hours?",
@@ -70,7 +68,7 @@ class QuestionnaireActivity : AppCompatActivity() {
                 "Yes, but I did not get my ideal amount of sleep" to "Mild",
                 "No" to "Severe"
             ),
-            -1,
+
         ),
         Question(
             "How would you rate the quality of that sleep compared with what you\n" +
@@ -80,7 +78,7 @@ class QuestionnaireActivity : AppCompatActivity() {
                 "Average" to "Mild",
                 "Poor" to "Severe"
             ),
-            -1,
+
         ),
         Question(
             "Have you experienced any physical\n" +
@@ -90,7 +88,7 @@ class QuestionnaireActivity : AppCompatActivity() {
                 "No" to "Low",
                 "Yes" to "Severe"
             ),
-            -1,
+
         ),
     )
 
@@ -114,7 +112,8 @@ class QuestionnaireActivity : AppCompatActivity() {
         nextButton.setOnClickListener {
             val selectedOptionId = answerOptionsGroup.checkedRadioButtonId
             if (selectedOptionId != -1) { // User selected an option
-                questions[currentQuestionIndex].userAnswerId = selectedOptionId // Store the answer
+                val selectedOptionIndex = answerOptionsGroup.indexOfChild(findViewById(selectedOptionId))
+                questions[currentQuestionIndex].selectedOption = questions[currentQuestionIndex].options[selectedOptionIndex]
                 currentQuestionIndex++
 
                 if (currentQuestionIndex < questions.size) {
@@ -135,7 +134,8 @@ class QuestionnaireActivity : AppCompatActivity() {
             if (selectedOptionId == -1) {
                 displayErrorMessage("Please select an option.")
             } else {
-                questions[currentQuestionIndex].userAnswerId = selectedOptionId // Store the answer for the last question
+                val selectedOptionIndex = answerOptionsGroup.indexOfChild(findViewById(selectedOptionId))
+                questions[currentQuestionIndex].selectedOption = questions[currentQuestionIndex].options[selectedOptionIndex]
                 clearErrorMessage()
 
                 // Calculate the number of correct answers
@@ -150,8 +150,17 @@ class QuestionnaireActivity : AppCompatActivity() {
     private fun displayQuestion(index: Int) {
         val question = questions[index]
         questionTextView.text = "Question ${index + 1}: ${question.text}"
-        // Set radio button options for the current question
-        answerOptionsGroup.clearCheck() // Clear previous selection
+        // Clear previous selection and remove existing radio buttons
+        answerOptionsGroup.clearCheck()
+        answerOptionsGroup.removeAllViews()
+
+        // Add new radio buttons based on the current question's options
+        for ((optionText, _) in question.options) {
+            val radioButton = RadioButton(this)
+            radioButton.text = optionText
+            radioButton.id = View.generateViewId()
+            answerOptionsGroup.addView(radioButton)
+        }
 
         if (currentQuestionIndex == questions.size - 1) {
             // On the last question, hide "Next" button and show "Submit" button
@@ -175,22 +184,20 @@ class QuestionnaireActivity : AppCompatActivity() {
     }
 
     private fun calculateCategory(): String {
-        val redCategory = "Low"
+        val redCategory = "Severe"
         val amberCategory = "Mild"
-        val greenCategory = "Severe"
+        val greenCategory = "Low"
 
-        for (question in questions) {
-            val selectedOptionIndex = question.options.indexOfFirst { it.first == question.userAnswerId.toString() }
-            val userAnswerCategory = question.options[selectedOptionIndex].second
-
-            if (userAnswerCategory == redCategory) {
-                return redCategory
-            } else if (userAnswerCategory == amberCategory) {
-                return amberCategory
-            }
+        // Collect categories for all questions
+        val categories = questions.mapNotNull { question ->
+            question.selectedOption?.second
         }
 
-        return greenCategory
+        return when {
+            redCategory in categories -> redCategory
+            amberCategory in categories -> amberCategory
+            else -> greenCategory
+        }
     }
 
     private fun navigateBackToHomeScreen(category: String) {
@@ -198,6 +205,7 @@ class QuestionnaireActivity : AppCompatActivity() {
         intent.putExtra("completedTest", true)
         intent.putExtra("category", category) // Set user's category
         setResult(Activity.RESULT_OK, intent)
+        Log.d("QuestionnaireActivity", "category: $category")
         finish()
     }
 }
