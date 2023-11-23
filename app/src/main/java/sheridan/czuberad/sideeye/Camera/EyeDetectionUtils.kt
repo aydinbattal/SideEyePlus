@@ -66,6 +66,7 @@ class EyeDetectionUtils(
     private val fatigueText = fatigueText
     private var fatigueC = 0
     private val timeQueue: Queue<Long> = LinkedList()
+    private val fatigueTimeStampList = ArrayList<Timestamp>()
     private val timeInterval = 30000
 
     override fun detectFace(image: InputImage): Task<List<Face>> {
@@ -78,7 +79,7 @@ class EyeDetectionUtils(
             session.sessionUUID = UUID.randomUUID()
             alertList.clear()
             sendMessage(contextAct, "SESSION_START", "/SESSION_STATUS")
-            session.startSession = eyeLogic.getTimeStamp()
+            session.startSession = Timestamp(System.currentTimeMillis())
             isSessionStart = true
             isSessionEnd = false
 
@@ -90,30 +91,29 @@ class EyeDetectionUtils(
                     session.fatigueList = arrayListOf()
                     session.alertUUIDList = arrayListOf()
                     sessionT.text = "Press Start To Start Session"
-                    session.endSession = eyeLogic.getTimeStamp()
-                    //Commented out to not waste session reads
-                    //driverService.addAlertToSessionById(sessionUuid,session,alertList)
+                    session.endSession = Timestamp(System.currentTimeMillis())
                     sendMessage(contextAct, "SESSION_END", "/SESSION_STATUS")
 
-                    timeQueue.forEach{
-                        session.fatigueList?.add(Timestamp(it))
-                    }
+                    session.fatigueList = fatigueTimeStampList
 
                     alertList.forEach{
                         it.alertUUID?.let { it1 -> session.alertUUIDList?.add(it1) }
                     }
-
 
                     Log.d(TAG, "ALERTEND Session: $session")
                     Log.d(TAG, "ALERTEND Session: ${session.alertUUIDList}")
                     Log.d(TAG, "ALERTEND Session: ${session.fatigueList}")
                     Log.d(TAG, "ALERTEND AlertList: $alertList")
 
+
+                    //TODO: Update Storing Session and AlertList into Firebase, create function that passes Both session and alertList
+                    driverService.addSession(session, alertList)
                     alertText.text = "0"
                     fatigueText.text = "0"
 
                     fatigueC = 0
                     timeQueue.clear()
+                    fatigueTimeStampList.clear()
 
                 }
 
@@ -176,6 +176,7 @@ class EyeDetectionUtils(
                         isAbove = true
                         fatigueC++
                         fatigueText.text = fatigueC.toString()
+                        fatigueTimeStampList.add(Timestamp(System.currentTimeMillis()))
 
                     }
 
@@ -189,7 +190,7 @@ class EyeDetectionUtils(
 
                     eyeLogic = EyeDetectionLogic()
                     sendMessage(contextAct,"ALERT_ACTIVE", "/SESSION_CURRENT_ALERT")
-                    alertList.add(Alert(alertUUID = UUID.randomUUID(),alertSeverity = "low",eyeLogic.getTimeStamp()))
+                    alertList.add(Alert(alertUUID = UUID.randomUUID(),alertSeverity = "low",Timestamp(System.currentTimeMillis())))
                     alertText.text = alertList.size.toString()
                     sendMessage(contextAct, alertList.size.toString(), "/SESSION_ALERT")
                     mediaPlayer.start()

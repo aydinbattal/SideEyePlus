@@ -20,22 +20,43 @@ import sheridan.czuberad.sideeye.Domain.Session
 class DriverService {
     private var db = FirebaseFirestore.getInstance()
     private val currentUser = FirebaseAuth.getInstance().currentUser?.uid
-    fun addAlertToSessionById(
-        uid: String,
+//    fun addAlertToSessionById(
+//        uid: String,
+//        session: Session,
+//        alertList: ArrayList<Alert>
+//    ) {
+//        var AlertList = arrayListOf<Alert>()
+//
+//        if (currentUser != null) {
+//            db.collection("Drivers").document(currentUser).collection("Sessions").document(uid).set(session).addOnCompleteListener {
+//                if (it.isSuccessful){
+//                    alertList.forEach{ alert ->
+//                        db.collection("Drivers").document(currentUser).collection("Sessions").document(uid).collection("Alerts").document().set(alert)
+//                    }
+//                }
+//            }
+//        }
+//
+//    }
+
+    fun addSession(
         session: Session,
         alertList: ArrayList<Alert>
-    ) {
-        var AlertList = arrayListOf<Alert>()
+    ){
 
-        if (currentUser != null) {
-            db.collection("Drivers").document(currentUser).collection("Sessions").document(uid).set(session).addOnCompleteListener {
-                if (it.isSuccessful){
-                    alertList.forEach{ alert ->
-                        db.collection("Drivers").document(currentUser).collection("Sessions").document(uid).collection("Alerts").document().set(alert)
+        if(currentUser != null){
+
+            db.collection("Drivers").document(currentUser).collection("Sessions").document(session.sessionUUID.toString()).set(session).addOnCompleteListener{
+                if(it.isSuccessful){
+                    alertList.forEach{alert ->
+                        db.collection("Alerts").document(alert.alertUUID.toString()).set(alert)
                     }
                 }
             }
+
+
         }
+
 
     }
 
