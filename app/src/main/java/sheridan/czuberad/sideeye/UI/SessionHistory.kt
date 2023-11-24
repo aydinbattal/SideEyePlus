@@ -19,6 +19,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -27,11 +28,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import sheridan.czuberad.sideeye.`Application Logic`.IndependentDriverLogic
+import sheridan.czuberad.sideeye.Domain.Session
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 @Composable
 fun SessionHistory(navController: NavHostController) {
+
+
+    val viewModel: IndependentDriverLogic = viewModel()
+
+    LaunchedEffect(Unit){
+        viewModel.getSessionCardInfoList()
+    }
+
+    val sessionList = viewModel.sessions.value ?: emptyList()
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -40,7 +55,7 @@ fun SessionHistory(navController: NavHostController) {
     horizontalAlignment = Alignment.CenterHorizontally) {
             Text(text = "Session History", fontSize = 30.sp, modifier = Modifier.padding(10.dp))
 
-            SessionList(navController)
+            SessionList(navController,sessionList)
 
     }
 }
@@ -48,12 +63,12 @@ fun SessionHistory(navController: NavHostController) {
 
 
 @Composable
-fun SessionList(navController: NavHostController) {
+fun SessionList(navController: NavHostController, sessionList: List<Session>) {
 
     val items = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5","item 6", "item 8")
     
     LazyColumn{
-        items(items){item ->
+        items(sessionList){item ->
             SessionListItem(item, navController)
         }
     }
@@ -62,7 +77,7 @@ fun SessionList(navController: NavHostController) {
 }
 
 @Composable
-fun SessionListItem(item: String, navController: NavHostController) {
+fun SessionListItem(item: Session, navController: NavHostController) {
     
     Card(modifier = Modifier
         .fillMaxWidth()
@@ -79,26 +94,26 @@ fun SessionListItem(item: String, navController: NavHostController) {
 
             Column(modifier = Modifier.fillMaxWidth(0.45f)) {
                 Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween,verticalAlignment = Alignment.CenterVertically){
-                    Text(text = "Oct 13, 2023", fontWeight = FontWeight.Bold)
+                    Text(text = SimpleDateFormat("MMM dd, yyy", Locale.getDefault()).format(item.startSession), fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.width(5.dp))
-                    Text("8:52:16 AM", fontSize = 12.sp )
+                    Text(SimpleDateFormat("HH:mm", Locale.getDefault()).format(item.startSession), fontSize = 12.sp )
                 }
                 Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween,verticalAlignment = Alignment.CenterVertically){
-                    Text(text = "Oct 13, 2023", fontWeight = FontWeight.Bold)
+                    Text(text = SimpleDateFormat("MMM dd, yyy", Locale.getDefault()).format(item.endSession), fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.width(5.dp))
-                    Text("10:52:16 AM", fontSize = 12.sp)
+                    Text(SimpleDateFormat("HH:mm", Locale.getDefault()).format(item.endSession), fontSize = 12.sp)
                 }
                 Spacer(modifier = Modifier.fillMaxHeight(0.4f))
 
                 Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween){
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = "Alerts",fontSize = 12.sp)
-                        Text(text = "12", fontWeight = FontWeight.ExtraBold)
+                        Text(text = item.alertUUIDList?.size.toString(), fontWeight = FontWeight.ExtraBold)
 
                     }
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = "Fatigue", fontSize = 12.sp)
-                        Text(text = "12", fontWeight = FontWeight.ExtraBold)
+                        Text(text = item.fatigueList?.size.toString(), fontWeight = FontWeight.ExtraBold)
                     }
                 }
 
