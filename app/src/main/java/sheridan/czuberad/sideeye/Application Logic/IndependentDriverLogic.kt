@@ -1,17 +1,40 @@
 package sheridan.czuberad.sideeye.`Application Logic`
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
 import sheridan.czuberad.sideeye.Domain.Driver
+import sheridan.czuberad.sideeye.Domain.Session
+import sheridan.czuberad.sideeye.Domain.SessionSummary
 import sheridan.czuberad.sideeye.Services.DriverService
 
-class IndependentDriverLogic {
+class IndependentDriverLogic : ViewModel() {
     private val driverService = DriverService()
+
+    private val _sessions = mutableStateOf<List<Session>?>(null)
+    val sessions: State<List<Session>?> = _sessions
+
+
+    fun getSessionCardInfoList(){
+
+        driverService.fetchAllSessionsByCurrentID {
+            if(it != null){
+                Log.d(TAG, "Sessions: $it")
+
+                _sessions.value = it
+            }
+            else{
+                Log.d(TAG, "Sessions else: $it")
+            }
+        }
+    }
 
     @Composable
     fun getCurrentDriverInfo(): Driver {

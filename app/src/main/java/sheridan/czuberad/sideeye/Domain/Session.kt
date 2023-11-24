@@ -1,13 +1,12 @@
 package sheridan.czuberad.sideeye.Domain
 
-import java.sql.Timestamp
 import java.util.Date
-import java.util.UUID
+import java.sql.Timestamp
 
 data class Session(
     var sessionUUID: String? = null,
-    var startSession: Timestamp? = null,
-    var endSession: Timestamp? = null,
+    var startSession: Date? = null,
+    var endSession: Date? = null,
     var alertUUIDList: ArrayList<String>? = null,
     var fatigueList: ArrayList<Timestamp>? = null
     )

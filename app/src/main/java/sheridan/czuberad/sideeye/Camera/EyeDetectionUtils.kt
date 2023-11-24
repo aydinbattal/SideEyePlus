@@ -20,6 +20,7 @@ import sheridan.czuberad.sideeye.`Application Logic`.EyeDetectionLogic
 import sheridan.czuberad.sideeye.Domain.Session
 import sheridan.czuberad.sideeye.EyeDetectionActivity
 import sheridan.czuberad.sideeye.Services.DriverService
+import java.util.Date
 import java.sql.Timestamp
 import java.util.LinkedList
 import java.util.Queue
@@ -79,7 +80,7 @@ class EyeDetectionUtils(
             session.sessionUUID = UUID.randomUUID().toString()
             alertList.clear()
             sendMessage(contextAct, "SESSION_START", "/SESSION_STATUS")
-            session.startSession = Timestamp(System.currentTimeMillis())
+            session.startSession = Date(System.currentTimeMillis())
             isSessionStart = true
             isSessionEnd = false
 
@@ -91,7 +92,7 @@ class EyeDetectionUtils(
                     session.fatigueList = arrayListOf()
                     session.alertUUIDList = arrayListOf()
                     sessionT.text = "Press Start To Start Session"
-                    session.endSession = Timestamp(System.currentTimeMillis())
+                    session.endSession = Date(System.currentTimeMillis())
                     sendMessage(contextAct, "SESSION_END", "/SESSION_STATUS")
 
                     session.fatigueList = fatigueTimeStampList
@@ -190,7 +191,7 @@ class EyeDetectionUtils(
 
                     eyeLogic = EyeDetectionLogic()
                     sendMessage(contextAct,"ALERT_ACTIVE", "/SESSION_CURRENT_ALERT")
-                    alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "low",Timestamp(System.currentTimeMillis())))
+                    alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "low",Date(System.currentTimeMillis()) ))
                     alertText.text = alertList.size.toString()
                     sendMessage(contextAct, alertList.size.toString(), "/SESSION_ALERT")
                     mediaPlayer.start()
@@ -203,8 +204,6 @@ class EyeDetectionUtils(
                 for(x in timeQueue){
                     Log.d(TAG, "PPP TimeStamp: ${Timestamp(x)}")
                 }
-
-
             }
             Log.d(TAG, "YOO COUNTER: $counter")
             Log.d(TAG,"YOO LEFT EYE" + it.rightEyeOpenProbability.toString())

@@ -1,5 +1,6 @@
 package sheridan.czuberad.sideeye.UI
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -8,7 +9,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 
@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -40,17 +41,17 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wearable.MessageClient
@@ -58,13 +59,23 @@ import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.Wearable
 import sheridan.czuberad.sideeye.`Application Logic`.IndependentDriverLogic
 import sheridan.czuberad.sideeye.Domain.Driver
+import sheridan.czuberad.sideeye.Domain.Session
 import sheridan.czuberad.sideeye.EyeDetectionActivity
 import sheridan.czuberad.sideeye.HomeTestsActivity
 import sheridan.czuberad.sideeye.R
+import java.text.SimpleDateFormat
 
 
 @Composable
 fun DriverHome(navController: NavHostController) {
+
+    val viewModel: IndependentDriverLogic = viewModel()
+
+    LaunchedEffect(Unit){
+        viewModel.getSessionCardInfoList()
+    }
+
+    val sessionList = viewModel.sessions.value ?: emptyList()
     val data = listOf(
         Pair(1, 0),
         Pair(2, 5),
@@ -90,6 +101,8 @@ fun DriverHome(navController: NavHostController) {
 
     //sendMessage(context)
     val independentDriverLogic = IndependentDriverLogic()
+
+
     Log.d("YOO", "CALLING FROM UI")
     val currentDriver = independentDriverLogic.getCurrentDriverInfo()
 
@@ -131,7 +144,7 @@ fun DriverHome(navController: NavHostController) {
                 )
         }
 
-        SessionCardListView(navController)
+        SessionCardListView(navController,sessionList)
         buttonLayout(context)
 
         }
@@ -330,7 +343,7 @@ fun InfoCard(currentDriver: Driver) {
 }
 
 @Composable
-fun SessionCardListView(navController: NavHostController) {
+fun SessionCardListView(navController: NavHostController, sessionList: List<Session>?) {
 
     Card(modifier = Modifier.offset(y = (-100).dp),colors = CardDefaults.cardColors(
         containerColor = Color.White
@@ -358,121 +371,122 @@ fun SessionCardListView(navController: NavHostController) {
             "Card 1", "Card 2", "Card 3", "Card 4", "Card 5",
             "Card 6", "Card 7", "Card 8", "Card 9", "Card 10"
         )
+        Log.d(TAG, "HOME UI: $sessionList")
         LazyRow(
             //modifier = Modifier.padding(bottom = 10.dp)
         ){
-            items(10){
-                Card(
-                    modifier = Modifier
-                        .height(150.dp)
-                        .width(205.dp)
-                        .padding(8.dp)
-                        .clickable { navController.navigate("sessionDetail") },
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.White
-                    )
-                ) {
+            if (sessionList != null) {
+                items(listOf(*sessionList.toTypedArray())){
+                    Card(
+                        modifier = Modifier
+                            .height(150.dp)
+                            .width(205.dp)
+                            .padding(8.dp)
+                            .clickable { navController.navigate("sessionDetail") },
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.White
+                        )
+                    ) {
 
-                    Column(modifier = Modifier
-                        .fillMaxSize()
-                        .padding(10.dp), verticalArrangement = Arrangement.SpaceBetween) {
+                        Column(modifier = Modifier
+                            .fillMaxSize()
+                            .padding(10.dp), verticalArrangement = Arrangement.SpaceBetween) {
 
-                        Column() {
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                Text(text = "02/12/2023", fontWeight = FontWeight.Bold)
-                                Text(text = "08:23AM")
+                            Column() {
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Text(text = SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault()).format(it.startSession), fontWeight = FontWeight.Bold)
+                                    Text(text = SimpleDateFormat("HH:mm", java.util.Locale.getDefault()).format(it.startSession))
+                                }
+
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Text(text = SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault()).format(it.endSession), fontWeight = FontWeight.Bold)
+                                    Text(text = SimpleDateFormat("HH:mm", java.util.Locale.getDefault()).format(it.endSession))
+                                }
                             }
 
+
+
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                Text(text = "02/12/2023",fontWeight = FontWeight.Bold)
-                                Text(text = "08:23AM")
+
+                                Column(horizontalAlignment = Alignment.CenterHorizontally){
+                                    Text(text = "Alerts",
+                                        color = Color(0xFF39AFEA),
+                                        style = TextStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 15.sp  // Adjust the font size as needed
+                                        ))
+                                    Text(text = it.alertUUIDList?.size.toString(),color = Color(0xFF39AFEA),
+                                        style = TextStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 20.sp  // Adjust the font size as needed
+                                        ))
+                                }
+                                Column(horizontalAlignment = Alignment.CenterHorizontally){
+                                    Text(text = "Fatigue",
+                                        color = Color(0xFF39AFEA),
+                                        style = TextStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 15.sp  // Adjust the font size as needed
+                                        ))
+
+                                    Text(text = it.fatigueList?.size.toString(),color = Color(0xFF39AFEA),
+                                        style = TextStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 20.sp  // Adjust the font size as needed
+                                        ))
+                                }
+
+
                             }
+
+
                         }
 
 
-
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-
-                            Column(horizontalAlignment = Alignment.CenterHorizontally){
-                                Text(text = "Alerts",
-                                    color = Color(0xFF39AFEA),
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 15.sp  // Adjust the font size as needed
-                                    ))
-                                Text(text = "15",color = Color(0xFF39AFEA),
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 20.sp  // Adjust the font size as needed
-                                    ))
-                            }
-                            Column(horizontalAlignment = Alignment.CenterHorizontally){
-                                Text(text = "Fatigue",
-                                    color = Color(0xFF39AFEA),
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 15.sp  // Adjust the font size as needed
-                                    ))
-
-                                Text(text = "15",color = Color(0xFF39AFEA),
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 20.sp  // Adjust the font size as needed
-                                    ))
-                            }
-
-
-
-                        }
-
-
+                        //                    Column(modifier = Modifier.fillMaxWidth()) {
+        //
+        //                        Row(horizontalArrangement = Arrangement.SpaceBetween){
+        //                            Column(horizontalAlignment = Alignment.CenterHorizontally){
+        //                                Text(text = "Alerts",
+        //                                    color = Color(0xFF39AFEA),
+        //                                    style = TextStyle(
+        //                                        fontWeight = FontWeight.Bold,
+        //                                        fontSize = 15.sp  // Adjust the font size as needed
+        //                                    ))
+        //                                Spacer(modifier = Modifier.width(100.dp))
+        //                                Text(text = "15",color = Color(0xFF39AFEA),
+        //                                    style = TextStyle(
+        //                                        fontWeight = FontWeight.Bold,
+        //                                        fontSize = 20.sp  // Adjust the font size as needed
+        //                                    ))
+        //                            }
+        //
+        //                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        //                                Text(text = "Fatigue",
+        //                                    color = Color(0xFF39AFEA),
+        //                                    style = TextStyle(
+        //                                        fontWeight = FontWeight.Bold,
+        //                                        fontSize = 15.sp  // Adjust the font size as needed
+        //                                    ))
+        //                                Spacer(modifier = Modifier.width(300.dp))
+        //                                Text(text = "30",color = Color(0xFF39AFEA),
+        //                                    style = TextStyle(
+        //                                        fontWeight = FontWeight.Bold,
+        //                                        fontSize = 20.sp  // Adjust the font size as needed
+        //                                    ))
+        //
+        //                            }
+        //
+        //
+        //                        }
+        //                        Text(text = "December 13, 2022")
+        //                        Text(text = "Duration: 1:03:34")
+        //
+        //
+        //                    }
 
                     }
-
-
-                //                    Column(modifier = Modifier.fillMaxWidth()) {
-//
-//                        Row(horizontalArrangement = Arrangement.SpaceBetween){
-//                            Column(horizontalAlignment = Alignment.CenterHorizontally){
-//                                Text(text = "Alerts",
-//                                    color = Color(0xFF39AFEA),
-//                                    style = TextStyle(
-//                                        fontWeight = FontWeight.Bold,
-//                                        fontSize = 15.sp  // Adjust the font size as needed
-//                                    ))
-//                                Spacer(modifier = Modifier.width(100.dp))
-//                                Text(text = "15",color = Color(0xFF39AFEA),
-//                                    style = TextStyle(
-//                                        fontWeight = FontWeight.Bold,
-//                                        fontSize = 20.sp  // Adjust the font size as needed
-//                                    ))
-//                            }
-//
-//                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-//                                Text(text = "Fatigue",
-//                                    color = Color(0xFF39AFEA),
-//                                    style = TextStyle(
-//                                        fontWeight = FontWeight.Bold,
-//                                        fontSize = 15.sp  // Adjust the font size as needed
-//                                    ))
-//                                Spacer(modifier = Modifier.width(300.dp))
-//                                Text(text = "30",color = Color(0xFF39AFEA),
-//                                    style = TextStyle(
-//                                        fontWeight = FontWeight.Bold,
-//                                        fontSize = 20.sp  // Adjust the font size as needed
-//                                    ))
-//
-//                            }
-//
-//
-//                        }
-//                        Text(text = "December 13, 2022")
-//                        Text(text = "Duration: 1:03:34")
-//
-//
-//                    }
-
                 }
             }
 
