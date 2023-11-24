@@ -78,7 +78,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/reactionButton"
+        android:id="@+id/testHistoryButton"
         android:layout_width="178dp"
         android:layout_height="48dp"
         android:layout_marginStart="116dp"

@@ -20,6 +20,7 @@ import sheridan.czuberad.sideeye.`Application Logic`.EyeDetectionLogic
 import sheridan.czuberad.sideeye.Domain.Session
 import sheridan.czuberad.sideeye.EyeDetectionActivity
 import sheridan.czuberad.sideeye.Services.DriverService
+import sheridan.czuberad.sideeye.SessionManager
 import java.util.Date
 import java.sql.Timestamp
 import java.util.LinkedList
@@ -92,7 +93,9 @@ class EyeDetectionUtils(
                     session.fatigueList = arrayListOf()
                     session.alertUUIDList = arrayListOf()
                     sessionT.text = "Press Start To Start Session"
-                    session.endSession = Date(System.currentTimeMillis())
+                    //session.endSession = Date(System.currentTimeMillis())
+                    SessionManager.saveSessionToFirestore(contextAct)
+                    SessionManager.endSession(contextAct)
                     sendMessage(contextAct, "SESSION_END", "/SESSION_STATUS")
 
                     session.fatigueList = fatigueTimeStampList

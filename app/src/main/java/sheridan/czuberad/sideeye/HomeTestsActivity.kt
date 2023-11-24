@@ -16,6 +16,7 @@ class HomeTestsActivity : AppCompatActivity() {
     private val questionnaireRequestCode = 2
     private lateinit var startButton1: Button
     private lateinit var startButton2: Button
+    private lateinit var historyButton: Button
     private lateinit var reactionTestResult1: TextView
     private lateinit var reactionTestResult2: TextView
 
@@ -28,17 +29,30 @@ class HomeTestsActivity : AppCompatActivity() {
 
         startButton1 = binding.reactionTest1Button
         startButton2 = binding.reactionTest2Button
+        historyButton = binding.testHistoryButton
         reactionTestResult1 = binding.reactionResult1TextView
         reactionTestResult2 = binding.reactionResult2TextView
 
         startButton1.setOnClickListener {
             val intent = Intent(this@HomeTestsActivity, ReactionTestActivity::class.java)
             startActivityForResult(intent, reactionTestRequestCode) // Start the activity for a result
+            // Check if a session is already started
+                // Start a new session
+                SessionManager.startSession(this)
+
         }
 
         startButton2.setOnClickListener {
             val intent = Intent(this@HomeTestsActivity, QuestionnaireActivity::class.java)
             startActivityForResult(intent, questionnaireRequestCode)
+            // Check if a session is already started
+                // Start a new session
+                SessionManager.startSession(this)
+
+        }
+
+        historyButton.setOnClickListener {
+            //todo: show tests history
         }
     }
 
