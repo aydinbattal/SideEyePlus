@@ -52,6 +52,28 @@ class DriverService {
 
     }
 
+    fun fetchSessionById(sessionId: String, callback: (Session?) ->Unit){
+        if (currentUser != null) {
+            db.collection("Drivers").document(currentUser).collection("Sessions").document(sessionId).get()
+                .addOnSuccessListener {
+                    if(it.exists()){
+                        val session = it.toObject(Session::class.java)
+                        Log.d(TAG, "IF SERVICE")
+                        callback(session)
+                    }
+                    else{
+                        Log.d(TAG, "ELSE SERVICE")
+                        callback(null)
+
+                    }
+                }.addOnFailureListener {
+                    Log.d(TAG, "FAILURE SERVICE")
+                    callback(null)
+                }
+        }
+
+    }
+
     fun addReactionTest(averageReactionTime:Long, reactionTestUUID:String) {
         // Save the average reaction time and test completion time to db
             val reactionTestsRef = db.collection("ReactionTests")

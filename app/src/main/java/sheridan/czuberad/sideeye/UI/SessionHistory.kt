@@ -82,7 +82,7 @@ fun SessionListItem(item: Session, navController: NavHostController) {
     Card(modifier = Modifier
         .fillMaxWidth()
         .height(150.dp)
-        .padding(10.dp).clickable { navController.navigate("sessionDetail") },
+        .padding(10.dp).clickable { navController.navigate("sessionDetail/${item.sessionUUID}") },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White

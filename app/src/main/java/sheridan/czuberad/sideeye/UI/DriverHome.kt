@@ -366,12 +366,6 @@ fun SessionCardListView(navController: NavHostController, sessionList: List<Sess
             }
             
         }
-        
-        val itemsList = listOf(
-            "Card 1", "Card 2", "Card 3", "Card 4", "Card 5",
-            "Card 6", "Card 7", "Card 8", "Card 9", "Card 10"
-        )
-        Log.d(TAG, "HOME UI: $sessionList")
         LazyRow(
             //modifier = Modifier.padding(bottom = 10.dp)
         ){
@@ -382,7 +376,7 @@ fun SessionCardListView(navController: NavHostController, sessionList: List<Sess
                             .height(150.dp)
                             .width(205.dp)
                             .padding(8.dp)
-                            .clickable { navController.navigate("sessionDetail") },
+                            .clickable { navController.navigate("sessionDetail/${it.sessionUUID}") },
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                         colors = CardDefaults.cardColors(
                             containerColor = Color.White
@@ -395,6 +389,7 @@ fun SessionCardListView(navController: NavHostController, sessionList: List<Sess
 
                             Column() {
                                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Text(text = "Session UUID: "+it.sessionUUID)
                                     Text(text = SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault()).format(it.startSession), fontWeight = FontWeight.Bold)
                                     Text(text = SimpleDateFormat("HH:mm", java.util.Locale.getDefault()).format(it.startSession))
                                 }

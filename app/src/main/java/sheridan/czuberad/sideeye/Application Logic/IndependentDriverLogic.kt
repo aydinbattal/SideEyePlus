@@ -21,6 +21,24 @@ class IndependentDriverLogic : ViewModel() {
     private val _sessions = mutableStateOf<List<Session>?>(null)
     val sessions: State<List<Session>?> = _sessions
 
+    private val _sessionDetail = mutableStateOf<Session?>(null)
+    val sessionDetail: State<Session?> = _sessionDetail
+
+    fun getSessionDetail(sessionId: String){
+
+        driverService.fetchSessionById(sessionId){
+            if(it != null){
+                _sessionDetail.value = it
+            }
+            else{
+                Log.d(TAG, "SESSION DETAIL NOT FOUND")
+            }
+        }
+
+
+    }
+
+
 
     fun getSessionCardInfoList(){
 

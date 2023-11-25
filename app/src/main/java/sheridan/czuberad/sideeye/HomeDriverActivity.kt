@@ -31,7 +31,10 @@ class HomeDriverActivity : AppCompatActivity() {
             NavHost(navController = navController, startDestination = "driverHome"){
                 composable("driverHome"){ DriverHome(navController)}
                 composable("sessionListView"){ SessionHistory(navController)}
-                composable("sessionDetail"){ SessionDetail() }
+                composable("sessionDetail/{sessionID}"){backStackEntry->
+                    val sessionID = backStackEntry.arguments?.getString("sessionID")
+                    SessionDetail(sessionID)
+                }
             }
 
         }
