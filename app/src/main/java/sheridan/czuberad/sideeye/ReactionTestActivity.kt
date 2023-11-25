@@ -127,22 +127,6 @@ class ReactionTestActivity : AppCompatActivity() {
             testRunning = false
             testStarted = false
 
-
-            // Save the average reaction time and test completion time to db
-            val db = FirebaseFirestore.getInstance()
-            val uid = Firebase.auth.currentUser?.uid
-            if (uid != null) {
-                val reactionTestsRef = db.collection("ReactionTests")
-                val userRef = reactionTestsRef.document(uid)
-                val reactionData = hashMapOf(
-                    "averageReactionTime" to averageReactionTime,
-                    "timestamp" to FieldValue.serverTimestamp()
-                )
-                userRef.set(reactionData, SetOptions.merge())
-                    .addOnSuccessListener { Log.d(TAG, "Reaction data saved!") }
-                    .addOnFailureListener { e -> Log.w(TAG, "Error saving reaction data", e) }
-            }
-
             // Navigate back to home screen for tests
             val intent = Intent()
             intent.putExtra("completedTest", true) // Set the boolean variable

@@ -20,7 +20,7 @@ import sheridan.czuberad.sideeye.`Application Logic`.EyeDetectionLogic
 import sheridan.czuberad.sideeye.Domain.Session
 import sheridan.czuberad.sideeye.EyeDetectionActivity
 import sheridan.czuberad.sideeye.Services.DriverService
-import sheridan.czuberad.sideeye.SessionManager
+import sheridan.czuberad.sideeye.SharedPreferencesUtils
 import java.util.Date
 import java.sql.Timestamp
 import java.util.LinkedList
@@ -76,53 +76,61 @@ class EyeDetectionUtils(
     }
 
     override fun onSuccess(results: List<Face>){
-        startSession.setOnClickListener {
-            sessionT.text = "Press End Session to End Session"
-            session.sessionUUID = UUID.randomUUID().toString()
-            alertList.clear()
-            sendMessage(contextAct, "SESSION_START", "/SESSION_STATUS")
-            session.startSession = Date(System.currentTimeMillis())
-            isSessionStart = true
-            isSessionEnd = false
+        if (session.reactionTestUUID.isNullOrEmpty()) {
+            startSession.setOnClickListener {
+                sessionT.text = "Press End Session to End Session"
+                session.sessionUUID = UUID.randomUUID().toString()
+                alertList.clear()
+                sendMessage(contextAct, "SESSION_START", "/SESSION_STATUS")
+                session.startSession = Date(System.currentTimeMillis())
+                isSessionStart = true
+                isSessionEnd = false
 
-            val timestamp = Timestamp(System.currentTimeMillis())
-            Log.d(TAG, " POP: Start press$timestamp")
+                val timestamp = Timestamp(System.currentTimeMillis())
+                Log.d(TAG, " POP: Start press$timestamp")
 
-            endSession.setOnClickListener {
-                if(isSessionEnd == false){
-                    session.fatigueList = arrayListOf()
-                    session.alertUUIDList = arrayListOf()
-                    sessionT.text = "Press Start To Start Session"
-                    //session.endSession = Date(System.currentTimeMillis())
-                    SessionManager.saveSessionToFirestore(contextAct)
-                    SessionManager.endSession(contextAct)
-                    sendMessage(contextAct, "SESSION_END", "/SESSION_STATUS")
+                endSession.setOnClickListener {
+                    if (isSessionEnd == false) {
+                        session.fatigueList = arrayListOf()
+                        session.alertUUIDList = arrayListOf()
+                        session.questionnaireUUID =
+                            SharedPreferencesUtils.getQuestionnaireId(contextAct)
+                        session.reactionTestUUID =
+                            SharedPreferencesUtils.getReactionTestId(contextAct)
 
-                    session.fatigueList = fatigueTimeStampList
+                        sessionT.text = "Press Start To Start Session"
+                        session.endSession = Date(System.currentTimeMillis())
 
-                    alertList.forEach{
-                        it.alertUUID?.let { it1 -> session.alertUUIDList?.add(it1) }
+                        Log.d("SessionManager", "button clicked")
+
+                        sendMessage(contextAct, "SESSION_END", "/SESSION_STATUS")
+
+                        session.fatigueList = fatigueTimeStampList
+
+                        alertList.forEach {
+                            it.alertUUID?.let { it1 -> session.alertUUIDList?.add(it1) }
+                        }
+
+                        Log.d(TAG, "ALERTEND Session: $session")
+                        Log.d(TAG, "ALERTEND Session: ${session.alertUUIDList}")
+                        Log.d(TAG, "ALERTEND Session: ${session.fatigueList}")
+                        Log.d(TAG, "ALERTEND AlertList: $alertList")
+
+
+                        //TODO: Update Storing Session and AlertList into Firebase, create function that passes Both session and alertList
+                        driverService.addSession(session, alertList)
+                        alertText.text = "0"
+                        fatigueText.text = "0"
+
+                        fatigueC = 0
+                        timeQueue.clear()
+                        fatigueTimeStampList.clear()
+
                     }
 
-                    Log.d(TAG, "ALERTEND Session: $session")
-                    Log.d(TAG, "ALERTEND Session: ${session.alertUUIDList}")
-                    Log.d(TAG, "ALERTEND Session: ${session.fatigueList}")
-                    Log.d(TAG, "ALERTEND AlertList: $alertList")
-
-
-                    //TODO: Update Storing Session and AlertList into Firebase, create function that passes Both session and alertList
-                    driverService.addSession(session, alertList)
-                    alertText.text = "0"
-                    fatigueText.text = "0"
-
-                    fatigueC = 0
-                    timeQueue.clear()
-                    fatigueTimeStampList.clear()
-
+                    isSessionStart = false
+                    isSessionEnd = true
                 }
-
-                isSessionStart = false
-                isSessionEnd = true
             }
         }
         var fatigueCounterStartTime = System.currentTimeMillis()

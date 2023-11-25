@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import sheridan.czuberad.sideeye.Services.DriverService
 import sheridan.czuberad.sideeye.databinding.ActivityHomeTestsBinding
 
 
@@ -36,18 +37,12 @@ class HomeTestsActivity : AppCompatActivity() {
         startButton1.setOnClickListener {
             val intent = Intent(this@HomeTestsActivity, ReactionTestActivity::class.java)
             startActivityForResult(intent, reactionTestRequestCode) // Start the activity for a result
-            // Check if a session is already started
-                // Start a new session
-                SessionManager.startSession(this)
 
         }
 
         startButton2.setOnClickListener {
             val intent = Intent(this@HomeTestsActivity, QuestionnaireActivity::class.java)
             startActivityForResult(intent, questionnaireRequestCode)
-            // Check if a session is already started
-                // Start a new session
-                SessionManager.startSession(this)
 
         }
 
@@ -69,7 +64,12 @@ class HomeTestsActivity : AppCompatActivity() {
                 startButton1.isEnabled = false
                 startButton1.text = "Done"
                 reactionTestResult1.text = "Average Reaction Time: $averageReactionTime ms"
-
+                SharedPreferencesUtils.saveReactionTestId(this)
+                val reactionTestUUID = SharedPreferencesUtils.getReactionTestId(this)
+                val driver = DriverService()
+                if (reactionTestUUID != null) {
+                    driver.addReactionTest(averageReactionTime,reactionTestUUID)
+                }
             }
 
         } else if (requestCode == questionnaireRequestCode && resultCode == Activity.RESULT_OK) {
@@ -83,6 +83,8 @@ class HomeTestsActivity : AppCompatActivity() {
                 startButton2.isEnabled = false
                 startButton2.text = "Done"
                 reactionTestResult2.text = "Fatigue Status: $category"
+                SharedPreferencesUtils.saveQuestionnaireId(this)
+
             }
         }
     }

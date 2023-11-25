@@ -8,5 +8,7 @@ data class Session(
     var startSession: Date? = null,
     var endSession: Date? = null,
     var alertUUIDList: ArrayList<String>? = null,
-    var fatigueList: ArrayList<Timestamp>? = null
+    var fatigueList: ArrayList<Timestamp>? = null,
+    var reactionTestUUID: String? = null,
+    var questionnaireUUID: String? = null,
     )

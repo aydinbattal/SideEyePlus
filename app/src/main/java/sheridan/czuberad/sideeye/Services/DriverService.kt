@@ -11,11 +11,16 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.ktx.Firebase
 import sheridan.czuberad.sideeye.Domain.Alert
 import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.Domain.Session
+import java.util.UUID
 
 class DriverService {
     private var db = FirebaseFirestore.getInstance()
@@ -44,6 +49,20 @@ class DriverService {
 
         }
 
+
+    }
+
+    fun addReactionTest(averageReactionTime:Long, reactionTestUUID:String) {
+        // Save the average reaction time and test completion time to db
+            val reactionTestsRef = db.collection("ReactionTests")
+            val testRef = reactionTestsRef.document(reactionTestUUID)
+            val reactionData = hashMapOf(
+                "averageReactionTime" to averageReactionTime,
+                "timestamp" to FieldValue.serverTimestamp()
+            )
+        testRef.set(reactionData, SetOptions.merge())
+                .addOnSuccessListener { Log.d(TAG, "Reaction data saved!") }
+                .addOnFailureListener { e -> Log.w(TAG, "Error saving reaction data", e) }
 
     }
 
