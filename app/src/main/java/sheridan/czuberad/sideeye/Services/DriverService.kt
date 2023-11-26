@@ -19,8 +19,14 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.ktx.Firebase
 import sheridan.czuberad.sideeye.Domain.Alert
 import sheridan.czuberad.sideeye.Domain.Driver
+import sheridan.czuberad.sideeye.Domain.ReactionTest
 import sheridan.czuberad.sideeye.Domain.Session
-import java.util.UUID
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import com.google.firebase.Timestamp
+import java.util.Date
+
 
 class DriverService {
     private var db = FirebaseFirestore.getInstance()
@@ -87,6 +93,79 @@ class DriverService {
                 .addOnFailureListener { e -> Log.w(TAG, "Error saving reaction data", e) }
 
     }
+
+    fun addQuestionnaire(category:String, questionnaireUUID:String) {
+        // Save the questionnaire category and test completion time to db
+        val questionnairesRef = db.collection("Questionnaires")
+        val testRef = questionnairesRef.document(questionnaireUUID)
+        val reactionData = hashMapOf(
+            "category" to category,
+            "timestamp" to FieldValue.serverTimestamp()
+        )
+        testRef.set(reactionData, SetOptions.merge())
+            .addOnSuccessListener { Log.d(TAG, "Questionnaire data saved!") }
+            .addOnFailureListener { e -> Log.w(TAG, "Error saving questionnaire data", e) }
+
+    }
+
+
+    fun getReactionTestResults(
+        onSuccess: (List<ReactionTest>) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val reactionTestResults = mutableListOf<ReactionTest>()
+        val reactionTestUids = mutableSetOf<String>() // Using a Set to avoid duplicates
+
+        // Fetch all session UIDs
+        fetchAllSessionsByCurrentID { sessions ->
+            sessions?.let {
+                it.forEach { session ->
+                    session.reactionTestUUID?.let { reactionTestUids.add(it) }
+                }
+
+                // Fetch reaction test results for all UIDs
+                if (reactionTestUids.isNotEmpty()) {
+                    var fetchedCount = 0
+
+                    reactionTestUids.forEach { reactionTestUid ->
+                        db.collection("ReactionTests")
+                            .document(reactionTestUid)
+                            .get()
+                            .addOnSuccessListener { document ->
+                                val timestamp = document["timestamp"] as Timestamp
+                                val score = document.getLong("averageReactionTime") ?: 0
+
+                                // Convert Timestamp to formatted string
+                                val formattedTimeStamp = timestamp?.let {
+                                    SimpleDateFormat("MMM dd, yyy", Locale.getDefault()).format(it.toDate())
+                                } ?: ""
+
+                                // Check if the reaction test result is not already in the list
+                                if (!reactionTestResults.any { it.uid == reactionTestUid }) {
+                                    reactionTestResults.add(ReactionTest(reactionTestUid, score, formattedTimeStamp))
+                                }
+
+                                // Check if all reactions tests have been fetched
+                                fetchedCount++
+                                if (fetchedCount == reactionTestUids.size) {
+                                    onSuccess(reactionTestResults)
+                                }
+                            }
+                            .addOnFailureListener { exception ->
+                                onFailure(exception)
+                            }
+                    }
+                } else {
+                    // No reaction tests to fetch
+                    onSuccess(reactionTestResults)
+                }
+            } ?: onFailure(Exception("Failed to fetch sessions"))
+        }
+    }
+
+
+
+
 
     fun fetchAllSessionsByCurrentID(callback: (List<Session>?) -> Unit) {
 

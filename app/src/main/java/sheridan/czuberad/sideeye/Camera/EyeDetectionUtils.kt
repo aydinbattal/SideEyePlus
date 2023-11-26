@@ -76,7 +76,7 @@ class EyeDetectionUtils(
     }
 
     override fun onSuccess(results: List<Face>){
-        if (session.reactionTestUUID.isNullOrEmpty()) {
+        if (session.reactionTestUUID.isNullOrEmpty() && session.questionnaireUUID.isNullOrEmpty()) {
             startSession.setOnClickListener {
                 sessionT.text = "Press End Session to End Session"
                 session.sessionUUID = UUID.randomUUID().toString()
