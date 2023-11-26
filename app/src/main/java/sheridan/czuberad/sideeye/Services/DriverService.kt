@@ -88,6 +88,20 @@ class DriverService {
 
     }
 
+    fun addQuestionnaire(category:String, questionnaireUUID:String) {
+        // Save the questionnaire category and test completion time to db
+        val questionnairesRef = db.collection("Questionnaires")
+        val testRef = questionnairesRef.document(questionnaireUUID)
+        val reactionData = hashMapOf(
+            "category" to category,
+            "timestamp" to FieldValue.serverTimestamp()
+        )
+        testRef.set(reactionData, SetOptions.merge())
+            .addOnSuccessListener { Log.d(TAG, "Questionnaire data saved!") }
+            .addOnFailureListener { e -> Log.w(TAG, "Error saving questionnaire data", e) }
+
+    }
+
     fun fetchAllSessionsByCurrentID(callback: (List<Session>?) -> Unit) {
 
         if (currentUser != null) {

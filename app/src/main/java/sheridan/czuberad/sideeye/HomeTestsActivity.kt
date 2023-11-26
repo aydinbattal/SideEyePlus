@@ -15,6 +15,7 @@ class HomeTestsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeTestsBinding
     private val reactionTestRequestCode = 1
     private val questionnaireRequestCode = 2
+    private val driverService = DriverService()
     private lateinit var startButton1: Button
     private lateinit var startButton2: Button
     private lateinit var historyButton: Button
@@ -66,9 +67,8 @@ class HomeTestsActivity : AppCompatActivity() {
                 reactionTestResult1.text = "Average Reaction Time: $averageReactionTime ms"
                 SharedPreferencesUtils.saveReactionTestId(this)
                 val reactionTestUUID = SharedPreferencesUtils.getReactionTestId(this)
-                val driver = DriverService()
                 if (reactionTestUUID != null) {
-                    driver.addReactionTest(averageReactionTime,reactionTestUUID)
+                    driverService.addReactionTest(averageReactionTime,reactionTestUUID)
                 }
             }
 
@@ -84,7 +84,10 @@ class HomeTestsActivity : AppCompatActivity() {
                 startButton2.text = "Done"
                 reactionTestResult2.text = "Fatigue Status: $category"
                 SharedPreferencesUtils.saveQuestionnaireId(this)
-
+                val questionnaireUUID = SharedPreferencesUtils.getReactionTestId(this)
+                if (questionnaireUUID != null) {
+                    driverService.addQuestionnaire(category,questionnaireUUID)
+                }
             }
         }
     }
