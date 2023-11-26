@@ -278,7 +278,7 @@ fun buttonLayout(context: Context) {
                     context.startActivity(intent)
 
                 }) {
-                Text("Session Tracking")
+                Text("Driving Session")
             }
             Spacer(modifier = Modifier.width(5.dp))
             Button(
@@ -292,7 +292,7 @@ fun buttonLayout(context: Context) {
                     val intent = Intent(context, HomeTestsActivity::class.java)
                     context.startActivity(intent)
                 }) {
-                Text("Reaction Test")
+                Text("Fatigue Assessment")
             }
 
         }
