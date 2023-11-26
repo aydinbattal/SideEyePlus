@@ -389,7 +389,6 @@ fun SessionCardListView(navController: NavHostController, sessionList: List<Sess
 
                             Column() {
                                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                    Text(text = "Session UUID: "+it.sessionUUID)
                                     Text(text = SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault()).format(it.startSession), fontWeight = FontWeight.Bold)
                                     Text(text = SimpleDateFormat("HH:mm", java.util.Locale.getDefault()).format(it.startSession))
                                 }
