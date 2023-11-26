@@ -171,21 +171,21 @@ class EyeDetectionUtils(
                         //LOW SEVERITY
                         val duration = (counter/16)
                         alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "Low",Date(System.currentTimeMillis()), alertDuration = duration ))
+                        alertText.text = alertList.size.toString()
                     }
                     else if(counter in 101..150){
                         //MILD SEVERITY
                         val duration = (counter/16)
                         alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "Mild",Date(System.currentTimeMillis()), alertDuration = duration ))
+                        alertText.text = alertList.size.toString()
                     }
                     else if(counter > 150){
                         //HIGH SEVERITY
                         val duration = (counter/16)
                         alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "High",Date(System.currentTimeMillis()),alertDuration = duration ))
+                        alertText.text = alertList.size.toString()
                     }
                 }
-
-
-
 
                 counter = 0
                 fatigueCounter = 0
@@ -220,7 +220,7 @@ class EyeDetectionUtils(
                     eyeLogic = EyeDetectionLogic()
                     sendMessage(contextAct,"ALERT_ACTIVE", "/SESSION_CURRENT_ALERT")
                     //alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "low",Date(System.currentTimeMillis()) ))
-                    alertText.text = alertList.size.toString()
+                    //alertText.text = alertList.size.toString()
                     sendMessage(contextAct, alertList.size.toString(), "/SESSION_ALERT")
                     mediaPlayer.start()
                     //counter = 0

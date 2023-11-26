@@ -87,7 +87,7 @@ class IndependentDriverLogic : ViewModel() {
 //        Log.d("YOO", "SessionMapGraph: $graphMap")
 //        return graphMap
 //        Log.d("YOO", "End of Call")
-//    }
+//    }get
 
     fun getSessionHistoryMap(callback: (MutableMap<Int, Int>) -> Unit) {
         Log.d("YOO", "Start of Call")

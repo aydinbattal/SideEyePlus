@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -120,21 +121,20 @@ fun DriverHome(navController: NavHostController) {
         verticalArrangement = Arrangement.Top
     ) {
 
-        InfoCard(currentDriver)
+        Column() {
+            InfoCard(currentDriver)
+            Card(
+                modifier = Modifier
+                    .width(screenWidth)
+                    .height(screenHeight / 3).zIndex(1f)
+                    .offset(y = (-50).dp),
 
-        Card(
-            modifier = Modifier
-                .width(screenWidth)
-                .height(screenHeight / 3)
-                .zIndex(1f)
-                .offset(y = (-125).dp)
-                .padding(5.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-            shape = RoundedCornerShape(15.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )
-        ) {
+                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                shape = RoundedCornerShape(15.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White
+                )
+            ) {
                 LineChart(
                     data = myMutableMap,
                     modifier = Modifier
@@ -142,11 +142,12 @@ fun DriverHome(navController: NavHostController) {
                         .height(300.dp)
                         .align(Alignment.CenterHorizontally)
                 )
+            }
         }
-
-        SessionCardListView(navController,sessionList)
-        buttonLayout(context)
-
+        Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight()) {
+            SessionCardListView(navController,sessionList)
+            buttonLayout(context)
+        }
         }
 
 
@@ -266,11 +267,9 @@ fun buttonLayout(context: Context) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(3.dp),
-            horizontalArrangement = Arrangement.Center) {
+            horizontalArrangement = Arrangement.SpaceBetween) {
             Button(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(50.dp),
+                modifier = Modifier.width(185.dp),
                 shape = RectangleShape,
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF39AFEA)),
                 onClick = {
@@ -280,13 +279,10 @@ fun buttonLayout(context: Context) {
                 }) {
                 Text("Session Tracking")
             }
-            Spacer(modifier = Modifier.width(5.dp))
             Button(
 
                 shape = RectangleShape,
-                modifier = Modifier
-                    .weight(1f)
-                    .height(50.dp),
+                modifier = Modifier.width(185.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF39AFEA)),
                 onClick = {
                     val intent = Intent(context, HomeTestsActivity::class.java)
@@ -311,7 +307,7 @@ fun InfoCard(currentDriver: Driver) {
 
     Card(modifier = Modifier
         .width(screenWidth)
-        .height(screenHeight / 3),
+        .height(screenHeight / 4),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     colors = CardDefaults.cardColors(
         containerColor = Color(0xFF39AFEA)
@@ -339,13 +335,16 @@ fun InfoCard(currentDriver: Driver) {
 
         }
 
+
+
+
     }
 }
 
 @Composable
 fun SessionCardListView(navController: NavHostController, sessionList: List<Session>?) {
-
-    Card(modifier = Modifier.offset(y = (-100).dp),colors = CardDefaults.cardColors(
+    //Card(modifier = Modifier.offset(y = (-100).dp),colors = CardDefaults.cardColors(
+    Card(colors = CardDefaults.cardColors(
         containerColor = Color.White
     )) {
         
