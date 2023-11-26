@@ -165,18 +165,35 @@ class EyeDetectionUtils(
 
             }
             else if((it.leftEyeOpenProbability!! > 0.5) && (it.rightEyeOpenProbability!! > 0.5)){
+
+                if(isSessionStart){
+                    if(counter in 50..100){
+                        //LOW SEVERITY
+                        val duration = (counter/16)
+                        alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "Low",Date(System.currentTimeMillis()), alertDuration = duration ))
+                    }
+                    else if(counter in 101..150){
+                        //MILD SEVERITY
+                        val duration = (counter/16)
+                        alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "Mild",Date(System.currentTimeMillis()), alertDuration = duration ))
+                    }
+                    else if(counter > 150){
+                        //HIGH SEVERITY
+                        val duration = (counter/16)
+                        alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "High",Date(System.currentTimeMillis()),alertDuration = duration ))
+                    }
+                }
+
+
+
+
                 counter = 0
                 fatigueCounter = 0
                 text.text = "EYES DETECTED"
                 sendMessage(contextAct,"ALERT_INACTIVE", "/SESSION_CURRENT_ALERT")
                 text.setTextColor(Color.parseColor("#00FF0A"))
             }
-            else{
-                counter = 0
-                fatigueCounter = 0
-                text.text = "EYES DETECTED"
-                text.setTextColor(Color.parseColor("#00FF0A"))
-            }
+
             if(isSessionStart){
 
                 while (!timeQueue.isEmpty() && currentTimeMs - timeQueue.peek() as Long > timeInterval){
@@ -202,20 +219,16 @@ class EyeDetectionUtils(
 
                     eyeLogic = EyeDetectionLogic()
                     sendMessage(contextAct,"ALERT_ACTIVE", "/SESSION_CURRENT_ALERT")
-                    alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "low",Date(System.currentTimeMillis()) ))
+                    //alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "low",Date(System.currentTimeMillis()) ))
                     alertText.text = alertList.size.toString()
                     sendMessage(contextAct, alertList.size.toString(), "/SESSION_ALERT")
                     mediaPlayer.start()
-                    counter = 0
+                    //counter = 0
                     Log.d(TAG, "ALERT:$alertList")
                 }
 
-                Log.d(TAG, "PPP QUEUE END OF LOOP $timeQueue")
-                Log.d(TAG, "PPP $fatigueC")
-                for(x in timeQueue){
-                    Log.d(TAG, "PPP TimeStamp: ${Timestamp(x)}")
-                }
             }
+            Log.d(TAG, "ALERTLIST: $alertList")
             Log.d(TAG, "YOO COUNTER: $counter")
             Log.d(TAG,"YOO LEFT EYE" + it.rightEyeOpenProbability.toString())
             Log.d(TAG,"YOO RIGHT EYE" + it.leftEyeOpenProbability.toString())

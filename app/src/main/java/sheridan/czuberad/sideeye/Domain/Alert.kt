@@ -8,4 +8,5 @@ data class Alert(
     var alertUUID: String? = null,
     var alertSeverity: String? = null,
     var alertTime: Date? = null,
+    var alertDuration: Int? = null
 )
