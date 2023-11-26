@@ -49,6 +49,8 @@ class HomeTestsActivity : AppCompatActivity() {
 
         historyButton.setOnClickListener {
             //todo: show tests history
+            val intent = Intent(this@HomeTestsActivity, TestHistory::class.java)
+            startActivity(intent)
         }
     }
 
