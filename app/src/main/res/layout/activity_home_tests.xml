@@ -26,7 +26,6 @@
         android:layout_height="222dp"
         android:layout_marginBottom="145dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/reactionButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reactionTextView">
@@ -42,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_marginRight="400dp"
-                android:text="Reaction Test"
+                android:text="Reaction Tests"
                 android:textColor="#000000"
                 android:textSize="20sp" />
 
@@ -50,7 +49,8 @@
                 android:id="@+id/reactionTest1Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Start" />
+                android:text="Start"
+                android:layout_marginTop="6dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -72,7 +72,8 @@
                 android:id="@+id/reactionTest2Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Start" />
+                android:text="Start"
+                android:layout_marginTop="6dp"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -95,21 +96,46 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="24dp"
-        android:text="Test Status:"
+        android:text="Status:"
+        android:textStyle="bold"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reactionLinearLayout" />
+
+    <TextView
+        android:id="@+id/reactionTestStatusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="8dp"
+        android:text="Not determined"
+        android:textColor="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/testStatusTextView" />
+
+    <TextView
+        android:id="@+id/questionnaireStatusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="8dp"
+        android:text="Not determined"
+        android:textColor="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reactionTestStatusTextView" />
 
     <TextView
         android:id="@+id/reactionResultsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="30dp"
         android:text="Results:"
+        android:textStyle="bold"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/testStatusTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/questionnaireStatusTextView"
+        />
 
     <TextView
         android:id="@+id/reactionResult1TextView"

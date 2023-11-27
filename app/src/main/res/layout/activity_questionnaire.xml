@@ -5,15 +5,29 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/questionnaireTestTitle"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="#39AFEA"
+        android:text="Questionnaire"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:layout_marginBottom="15dp"/>
+
+    <TextView
         android:id="@+id/questionTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Question 1: Are you feeling drowsy?"/>
+        android:text="Question 1: Are you feeling drowsy?"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_marginStart="15dp"/>
 
     <RadioGroup
         android:id="@+id/answerOptionsGroup"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp">
 
         <RadioButton
             android:id="@+id/option1"
@@ -38,7 +52,8 @@
         android:id="@+id/nextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next" />
+        android:text="Next"
+        android:layout_gravity="center_horizontal"/>
 
     <Button
         android:id="@+id/submitButton"

@@ -17,14 +17,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.ktx.Firebase
-import sheridan.czuberad.sideeye.Domain.Alert
-import sheridan.czuberad.sideeye.Domain.Driver
-import sheridan.czuberad.sideeye.Domain.ReactionTest
-import sheridan.czuberad.sideeye.Domain.Session
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import com.google.firebase.Timestamp
+import sheridan.czuberad.sideeye.Domain.*
 import java.util.Date
 
 
@@ -158,6 +155,60 @@ class DriverService {
                 } else {
                     // No reaction tests to fetch
                     onSuccess(reactionTestResults)
+                }
+            } ?: onFailure(Exception("Failed to fetch sessions"))
+        }
+    }
+
+    fun getQuestionnaireResults(
+        onSuccess: (List<Questionnaire>) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val questionnaireResults = mutableListOf<Questionnaire>()
+        val questionnaireUids = mutableSetOf<String>() // Using a Set to avoid duplicates
+
+        // Fetch all session UIDs
+        fetchAllSessionsByCurrentID { sessions ->
+            sessions?.let {
+                it.forEach { session ->
+                    session.questionnaireUUID?.let { questionnaireUids.add(it) }
+                }
+
+                // Fetch reaction test results for all UIDs
+                if (questionnaireUids.isNotEmpty()) {
+                    var fetchedCount = 0
+
+                    questionnaireUids.forEach { questionnaireUid ->
+                        db.collection("Questionnaires")
+                            .document(questionnaireUid)
+                            .get()
+                            .addOnSuccessListener { document ->
+                                val timestamp = document["timestamp"] as Timestamp
+                                val category = document.getString("category") ?: ""
+
+                                // Convert Timestamp to formatted string
+                                val formattedTimeStamp = timestamp?.let {
+                                    SimpleDateFormat("MMM dd, yyy", Locale.getDefault()).format(it.toDate())
+                                } ?: ""
+
+                                // Check if the reaction test result is not already in the list
+                                if (!questionnaireResults.any { it.uid == questionnaireUid }) {
+                                    questionnaireResults.add(Questionnaire(questionnaireUid, category, formattedTimeStamp))
+                                }
+
+                                // Check if all reactions tests have been fetched
+                                fetchedCount++
+                                if (fetchedCount == questionnaireUids.size) {
+                                    onSuccess(questionnaireResults)
+                                }
+                            }
+                            .addOnFailureListener { exception ->
+                                onFailure(exception)
+                            }
+                    }
+                } else {
+                    // No questionnaires to fetch
+                    onSuccess(questionnaireResults)
                 }
             } ?: onFailure(Exception("Failed to fetch sessions"))
         }

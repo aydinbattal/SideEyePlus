@@ -17,15 +17,25 @@ class TestHistory : AppCompatActivity() {
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val reactionTestResults = mutableListOf<ReactionTest>() // Populate this list with your data
-        val adapter = ReactionTestAdapter(reactionTestResults)
+        val combinedResults = mutableListOf<Any>() // List to hold both reaction test and questionnaire results
+        val adapter = CombinedResultAdapter(combinedResults)
         recyclerView.adapter = adapter
 
         // Call your function to fetch reaction test results and update the adapter
         driverService.getReactionTestResults(
-            onSuccess = { results ->
-                reactionTestResults.clear()
-                reactionTestResults.addAll(results)
+            onSuccess = { reactionTestResults ->
+                combinedResults.addAll(reactionTestResults)
+                adapter.notifyDataSetChanged()
+            },
+            onFailure = { exception ->
+                // Handle failure
+            }
+        )
+
+        // Call your function to fetch questionnaire results and update the adapter
+        driverService.getQuestionnaireResults(
+            onSuccess = { questionnaireResults ->
+                combinedResults.addAll(questionnaireResults)
                 adapter.notifyDataSetChanged()
             },
             onFailure = { exception ->
@@ -34,3 +44,4 @@ class TestHistory : AppCompatActivity() {
         )
     }
 }
+
