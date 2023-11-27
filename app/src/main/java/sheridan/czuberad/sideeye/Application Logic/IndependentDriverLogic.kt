@@ -42,11 +42,13 @@ class IndependentDriverLogic : ViewModel() {
 
     fun getSessionCardInfoList(){
 
-        driverService.fetchAllSessionsByCurrentID {
+        driverService.fetchAllSessionsByCurrentID { it ->
             if(it != null){
                 Log.d(TAG, "Sessions: $it")
 
-                _sessions.value = it
+                val sortedSessionList = it.sortedByDescending { it.startSession }
+
+                _sessions.value = sortedSessionList
             }
             else{
                 Log.d(TAG, "Sessions else: $it")

@@ -4,6 +4,8 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -33,7 +35,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -70,11 +75,14 @@ import java.text.SimpleDateFormat
 @Composable
 fun DriverHome(navController: NavHostController) {
 
-    val viewModel: IndependentDriverLogic = viewModel()
+    var needsUpdate by remember { mutableStateOf(false) }
 
+    val viewModel: IndependentDriverLogic = viewModel()
     LaunchedEffect(Unit){
         viewModel.getSessionCardInfoList()
     }
+
+
 
     val sessionList = viewModel.sessions.value ?: emptyList()
     val data = listOf(
@@ -126,7 +134,8 @@ fun DriverHome(navController: NavHostController) {
             Card(
                 modifier = Modifier
                     .width(screenWidth)
-                    .height(screenHeight / 3).zIndex(1f)
+                    .height(screenHeight / 3)
+                    .zIndex(1f)
                     .offset(y = (-50).dp),
 
                 elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
@@ -135,13 +144,21 @@ fun DriverHome(navController: NavHostController) {
                     containerColor = Color.White
                 )
             ) {
-                LineChart(
-                    data = myMutableMap,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp)
-                        .align(Alignment.CenterHorizontally)
-                )
+                Column(verticalArrangement = Arrangement.Top) {
+                    Text(text = "Latest Session's Trend", color = Color(0xFF39AFEA),style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 19.sp  // Adjust the font size as needed
+                    ), modifier = Modifier.padding(start = 30.dp, top = 10.dp))
+                    LineChart(
+                        data = myMutableMap,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp)
+                            .align(Alignment.CenterHorizontally)
+                    )
+                }
+                
+
             }
         }
         Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight()) {
@@ -313,27 +330,32 @@ fun InfoCard(currentDriver: Driver) {
         containerColor = Color(0xFF39AFEA)
     ),
     shape = RectangleShape) {
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-
-            Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = "profile pic")
-            Column {
-                currentDriver.name?.let {
-                    Text(
-                        text = it,
-                        color = Color.White
-                    )
-                }
-                currentDriver.email?.let {
-                    Text(
-                        text = it,
-                        color = Color.White
-                    )
-                }
-
-            }
-
+        
+        Column(modifier = Modifier.padding(20.dp)) {
+            currentDriver.name?.let { Text(text = "Hi Adam", color = Color.White, fontSize = 35.sp, fontWeight = FontWeight.Bold) }
+            Text(text = "Welcome back", color = Color.White)
         }
+
+//        Row(verticalAlignment = Alignment.CenterVertically) {
+//
+//            Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = "profile pic")
+//            Column {
+//                currentDriver.name?.let {
+//                    Text(
+//                        text = it,
+//                        color = Color.White
+//                    )
+//                }
+//                currentDriver.email?.let {
+//                    Text(
+//                        text = it,
+//                        color = Color.White
+//                    )
+//                }
+//
+//            }
+//
+//        }
 
 
 
