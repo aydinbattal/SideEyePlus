@@ -120,6 +120,20 @@ class HomeTestsActivity : AppCompatActivity() {
                 startButton2.text = "Done"
                 reactionTestResult2.text = "Fatigue Status: $category"
 
+                if (category != "High") {
+                    val originalText = "Questionnaire: PASSED"
+                    val spannable = SpannableString(originalText)
+                    val passedColorSpan = ForegroundColorSpan(resources.getColor(R.color.green))
+                    spannable.setSpan(passedColorSpan, originalText.indexOf("PASSED"), originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    questionnaireStatus.text = spannable
+                } else {
+                    val originalText = "Questionnaire: FAILED"
+                    val spannable = SpannableString(originalText)
+                    val passedColorSpan = ForegroundColorSpan(resources.getColor(R.color.red))
+                    spannable.setSpan(passedColorSpan, originalText.indexOf("FAILED"), originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    questionnaireStatus.text = spannable
+                }
+
                 SharedPreferencesUtils.saveQuestionnaireId(this)
                 val questionnaireUUID = SharedPreferencesUtils.getReactionTestId(this)
                 if (questionnaireUUID != null) {
