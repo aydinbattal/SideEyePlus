@@ -30,7 +30,7 @@ class QuestionnaireActivity : AppCompatActivity() {
             listOf(
                 "Less than two hours" to "Low",
                 "Between two and four hours" to "Mild",
-                "More than four hours" to "Severe"
+                "More than four hours" to "High"
             ),
 
         ),
@@ -39,7 +39,7 @@ class QuestionnaireActivity : AppCompatActivity() {
             listOf(
                 "Yes, and I think it is as good as possible" to "Low",
                 "Yes, and I could do with a drink or snack" to "Mild",
-                "No" to "Severe"
+                "No" to "High"
                 ),
 
         ),
@@ -48,7 +48,7 @@ class QuestionnaireActivity : AppCompatActivity() {
             listOf(
                 "Yes" to "Low",
                 "Yes, with additional risk controls" to "Mild",
-                "No, not right now" to "Severe"
+                "No, not right now" to "High"
             ),
 
         ),
@@ -57,7 +57,7 @@ class QuestionnaireActivity : AppCompatActivity() {
             listOf(
                 "Very alert – wide awake" to "Low",
                 "A bit tired, effort required to stay alert" to "Mild",
-                "Very fatigued, having difficulty staying alert" to "Severe"
+                "Very fatigued, having difficulty staying alert" to "High"
             ),
 
         ),
@@ -66,7 +66,7 @@ class QuestionnaireActivity : AppCompatActivity() {
             listOf(
                 "Yes, I got my ideal amount of sleep" to "Low",
                 "Yes, but I did not get my ideal amount of sleep" to "Mild",
-                "No" to "Severe"
+                "No" to "High"
             ),
 
         ),
@@ -76,7 +76,7 @@ class QuestionnaireActivity : AppCompatActivity() {
             listOf(
                 "Good" to "Low",
                 "Average" to "Mild",
-                "Poor" to "Severe"
+                "Poor" to "High"
             ),
 
         ),
@@ -86,7 +86,7 @@ class QuestionnaireActivity : AppCompatActivity() {
                     "during this shift (e.g. microsleeps or difficulty concentrating)",
             listOf(
                 "No" to "Low",
-                "Yes" to "Severe"
+                "Yes" to "High"
             ),
 
         ),
@@ -184,7 +184,7 @@ class QuestionnaireActivity : AppCompatActivity() {
     }
 
     private fun calculateCategory(): String {
-        val redCategory = "Severe"
+        val redCategory = "High"
         val amberCategory = "Mild"
         val greenCategory = "Low"
 
