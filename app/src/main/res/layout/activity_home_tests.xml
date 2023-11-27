@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_marginRight="400dp"
-                android:text="Reaction Test"
+                android:text="Reaction Tests"
                 android:textColor="#000000"
                 android:textSize="20sp" />
 

@@ -6,14 +6,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
+    android:gravity="top"
     tools:context=".ReactionTestActivity">
+
+        <TextView
+            android:id="@+id/reactionTestTitle"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="#39AFEA"
+            android:text="Reaction Tests"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/testInstructionsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Instructions"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/reactionTestTitle" />
+
+        <TextView
+            android:id="@+id/testInstructions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="1. Click the large button below to start the test.\n2. Wait for the screen to turn green.\n3. When the screen turns green, tap the screen as soon as possible!\n4. There are going to be 5 tests in total and the average of those 5 tests will be used to determine if you pass/fail."
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/testInstructionsTitle" />
 
         <Button
             android:id="@+id/startButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start Test" />
+            android:text="Start Tests"
+            android:layout_marginTop="24dp"
+            android:layout_gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/testInstructions" />
 
         <TextView
             android:id="@+id/testNumberView"
@@ -21,7 +64,11 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textSize="24sp"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:layout_gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/startButton" />
 
         <TextView
             android:id="@+id/messageView"
@@ -29,14 +76,20 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textSize="18sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:layout_gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/testNumberView" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/frameLayout"
             android:background="@color/white"
-            android:gravity="center">
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/testNumberView">
         </FrameLayout>
 </LinearLayout>
 

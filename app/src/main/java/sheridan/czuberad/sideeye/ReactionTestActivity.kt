@@ -24,6 +24,8 @@ class ReactionTestActivity : AppCompatActivity() {
     private lateinit var frameLayout: FrameLayout
     private lateinit var messageView: TextView
     private lateinit var testNumberView: TextView
+    private lateinit var instructionsTitleView: TextView
+    private lateinit var instructionsView: TextView
     private var isRed = true
     private var testRunning = false
     private var testStarted = false
@@ -45,6 +47,8 @@ class ReactionTestActivity : AppCompatActivity() {
         frameLayout = binding.frameLayout
         messageView = binding.messageView
         testNumberView = binding.testNumberView
+        instructionsView = binding.testInstructions
+        instructionsTitleView = binding.testInstructionsTitle
 
         startButton.setOnClickListener {
             if (!testStarted) {
@@ -75,8 +79,11 @@ class ReactionTestActivity : AppCompatActivity() {
     private var startTime: Long = 0
 
     private fun startTest() {
-        testNumberView.text = "Attempt #${testCount+1}"
+        instructionsTitleView.visibility = View.GONE
+        instructionsView.visibility = View.GONE
+        testNumberView.text = "Test #${testCount+1}"
         testNumberView.visibility = View.VISIBLE
+        frameLayout.visibility = View.VISIBLE
         if (isRed) {
             if (testRunning) {
                 return
@@ -112,7 +119,7 @@ class ReactionTestActivity : AppCompatActivity() {
         val reactionTime = System.currentTimeMillis() - startTime
         // Reset the background to white and show the UI elements
         stopTest("")
-        testNumberView.text = "Attempt #${testCount+1}"
+        testNumberView.text = "Test #${testCount+1}"
         if (testCount < 4) { // Perform the test 5 times
             testCount++
             totalReactionTime += reactionTime

@@ -88,13 +88,13 @@ class HomeTestsActivity : AppCompatActivity() {
                 }
 
                 if (averageReactionTime <= threshold) {
-                    val originalText = "Reaction Test: PASSED"
+                    val originalText = "Reaction Tests: PASSED"
                     val spannable = SpannableString(originalText)
                     val passedColorSpan = ForegroundColorSpan(resources.getColor(R.color.green))
                     spannable.setSpan(passedColorSpan, originalText.indexOf("PASSED"), originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     reactionTestStatus.text = spannable
                 } else {
-                    val originalText = "Reaction Test: FAILED"
+                    val originalText = "Reaction Tests: FAILED"
                     val spannable = SpannableString(originalText)
                     val passedColorSpan = ForegroundColorSpan(resources.getColor(R.color.red))
                     spannable.setSpan(passedColorSpan, originalText.indexOf("FAILED"), originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
