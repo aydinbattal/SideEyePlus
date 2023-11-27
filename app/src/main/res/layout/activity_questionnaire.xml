@@ -45,7 +45,7 @@
             android:id="@+id/option3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Severe" />
+            android:text="High" />
     </RadioGroup>
 
     <Button
@@ -60,7 +60,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Submit"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:layout_gravity="center_horizontal"/>
 
     <TextView
         android:id="@+id/errorMessageTextView"
