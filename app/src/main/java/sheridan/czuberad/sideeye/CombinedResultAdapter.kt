@@ -70,7 +70,7 @@ class CombinedResultAdapter(private val combinedResults: List<Any>) :
 
         fun bindReactionTest(reactionTest: ReactionTest) {
             // Bind data for ReactionTest
-            dateTextView.text = "Date: ${reactionTest.date}"
+            dateTextView.text = "${reactionTest.date}"
             scoreTextView.text = "Average Reaction Time: ${reactionTest.avgTime}"
         }
     }
@@ -83,7 +83,7 @@ class CombinedResultAdapter(private val combinedResults: List<Any>) :
 
         fun bindQuestionnaireResult(questionnaireResult: Questionnaire) {
             // Bind data for QuestionnaireResult
-            dateTextView.text = "Date: ${questionnaireResult.date}"
+            dateTextView.text = "${questionnaireResult.date}"
             categoryTextView.text = "Category: ${questionnaireResult.category}"
         }
     }
