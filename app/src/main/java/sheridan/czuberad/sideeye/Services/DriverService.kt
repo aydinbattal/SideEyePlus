@@ -83,7 +83,8 @@ class DriverService {
             val testRef = reactionTestsRef.document(reactionTestUUID)
             val reactionData = hashMapOf(
                 "averageReactionTime" to averageReactionTime,
-                "timestamp" to FieldValue.serverTimestamp()
+                "timestamp" to FieldValue.serverTimestamp(),
+                "driverId" to currentUser
             )
         testRef.set(reactionData, SetOptions.merge())
                 .addOnSuccessListener { Log.d(TAG, "Reaction data saved!") }
@@ -111,54 +112,38 @@ class DriverService {
         onFailure: (Exception) -> Unit
     ) {
         val reactionTestResults = mutableListOf<ReactionTest>()
-        val reactionTestUids = mutableSetOf<String>() // Using a Set to avoid duplicates
 
-        // Fetch all session UIDs
-        fetchAllSessionsByCurrentID { sessions ->
-            sessions?.let {
-                it.forEach { session ->
-                    session.reactionTestUUID?.let { reactionTestUids.add(it) }
+        db.collection("ReactionTests")
+            .whereEqualTo("driverId", currentUser) // Add the condition to filter by driverId
+            .get()
+            .addOnSuccessListener { documents ->
+                documents.forEach { document ->
+                    val timestamp = document["timestamp"] as Timestamp
+                    val score = document.getLong("averageReactionTime") ?: 0
+
+                    // Convert Timestamp to formatted string with both date and time
+                    val formattedTimeStamp = timestamp?.let {
+                        SimpleDateFormat("MMM dd, yyy - HH:mm", Locale.getDefault()).format(it.toDate())
+                    } ?: ""
+
+                    // Assuming that the "driverId" field exists in your data
+                    val reactionTestUid = document.id
+
+                    // Add reaction test to the results list
+                    reactionTestResults.add(ReactionTest(reactionTestUid, score, formattedTimeStamp))
                 }
 
-                // Fetch reaction test results for all UIDs
-                if (reactionTestUids.isNotEmpty()) {
-                    var fetchedCount = 0
+                // Sort the results by timestamp in descending order
+                val sortedResults = reactionTestResults.sortedByDescending { it.date }
 
-                    reactionTestUids.forEach { reactionTestUid ->
-                        db.collection("ReactionTests")
-                            .document(reactionTestUid)
-                            .get()
-                            .addOnSuccessListener { document ->
-                                val timestamp = document["timestamp"] as Timestamp
-                                val score = document.getLong("averageReactionTime") ?: 0
-
-                                // Convert Timestamp to formatted string
-                                val formattedTimeStamp = timestamp?.let {
-                                    SimpleDateFormat("MMM dd, yyy", Locale.getDefault()).format(it.toDate())
-                                } ?: ""
-
-                                // Check if the reaction test result is not already in the list
-                                if (!reactionTestResults.any { it.uid == reactionTestUid }) {
-                                    reactionTestResults.add(ReactionTest(reactionTestUid, score, formattedTimeStamp))
-                                }
-
-                                // Check if all reactions tests have been fetched
-                                fetchedCount++
-                                if (fetchedCount == reactionTestUids.size) {
-                                    onSuccess(reactionTestResults)
-                                }
-                            }
-                            .addOnFailureListener { exception ->
-                                onFailure(exception)
-                            }
-                    }
-                } else {
-                    // No reaction tests to fetch
-                    onSuccess(reactionTestResults)
-                }
-            } ?: onFailure(Exception("Failed to fetch sessions"))
-        }
+                onSuccess(sortedResults)
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception)
+            }
     }
+
+
 
     fun getQuestionnaireResults(
         onSuccess: (List<Questionnaire>) -> Unit,
