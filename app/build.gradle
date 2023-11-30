@@ -49,6 +49,9 @@ android {
 
 dependencies {
 
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
+
     implementation "androidx.navigation:navigation-compose"
     implementation 'androidx.navigation:navigation-runtime-ktx:2.6.0'
 

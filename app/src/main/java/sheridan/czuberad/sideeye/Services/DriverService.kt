@@ -23,6 +23,7 @@ import kotlin.collections.ArrayList
 import com.google.firebase.Timestamp
 import sheridan.czuberad.sideeye.Domain.*
 import java.util.Date
+import java.util.concurrent.atomic.AtomicInteger
 
 
 class DriverService {
@@ -83,8 +84,7 @@ class DriverService {
             val testRef = reactionTestsRef.document(reactionTestUUID)
             val reactionData = hashMapOf(
                 "averageReactionTime" to averageReactionTime,
-                "timestamp" to FieldValue.serverTimestamp(),
-                "driverId" to currentUser
+                "timestamp" to FieldValue.serverTimestamp()
             )
         testRef.set(reactionData, SetOptions.merge())
                 .addOnSuccessListener { Log.d(TAG, "Reaction data saved!") }
@@ -106,43 +106,56 @@ class DriverService {
 
     }
 
-
     fun getReactionTestResults(
         onSuccess: (List<ReactionTest>) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
         val reactionTestResults = mutableListOf<ReactionTest>()
+        val reactionTestUids = mutableSetOf<String>() // Using a Set to avoid duplicates
 
-        db.collection("ReactionTests")
-            .whereEqualTo("driverId", currentUser) // Add the condition to filter by driverId
-            .get()
-            .addOnSuccessListener { documents ->
-                documents.forEach { document ->
-                    val timestamp = document["timestamp"] as Timestamp
-                    val score = document.getLong("averageReactionTime") ?: 0
+        // Fetch all session UIDs
+        fetchAllSessionsByCurrentID { sessions ->
+            sessions?.let {
+                val fetchedCount = AtomicInteger(0)
 
-                    // Convert Timestamp to formatted string with both date and time
-                    val formattedTimeStamp = timestamp?.let {
-                        SimpleDateFormat("MMM dd, yyy - HH:mm", Locale.getDefault()).format(it.toDate())
-                    } ?: ""
+                it.forEach { session ->
+                    session.reactionTestUUID?.let { reactionTestUids.add(it) }
 
-                    // Assuming that the "driverId" field exists in your data
-                    val reactionTestUid = document.id
+                    // Fetch reaction test results for each UID
+                    reactionTestUids.forEach { reactionTestUid ->
+                        db.collection("ReactionTests")
+                            .document(reactionTestUid)
+                            .get()
+                            .addOnSuccessListener { document ->
+                                val timestamp = document["timestamp"] as Timestamp
+                                val score = document.getLong("averageReactionTime") ?: 0
 
-                    // Add reaction test to the results list
-                    reactionTestResults.add(ReactionTest(reactionTestUid, score, formattedTimeStamp))
+                                // Convert Timestamp to formatted string
+                                val formattedTimeStamp = timestamp?.let {
+                                    SimpleDateFormat("MMM dd, yyy - HH:mm", Locale.getDefault()).format(it.toDate())
+                                } ?: ""
+
+                                // Check if the reaction test result is not already in the list
+                                if (!reactionTestResults.any { it.uid == reactionTestUid }) {
+                                    reactionTestResults.add(
+                                        ReactionTest(reactionTestUid, score, formattedTimeStamp, session.sessionUUID)
+                                    )
+                                    Log.d("driverservice", "$reactionTestResults")
+                                }
+
+                                // Check if all reactions tests have been fetched
+                                if (fetchedCount.incrementAndGet() == reactionTestUids.size) {
+                                    onSuccess(reactionTestResults)
+                                }
+                            }
+                            .addOnFailureListener { exception ->
+                                onFailure(exception)
+                            }
+                    }
                 }
-
-                // Sort the results by timestamp in descending order
-                val sortedResults = reactionTestResults.sortedByDescending { it.date }
-
-                onSuccess(sortedResults)
-            }
-            .addOnFailureListener { exception ->
-                onFailure(exception)
-            }
+            } ?: onFailure(Exception("Failed to fetch sessions"))
+        }
     }
-
 
 
     fun getQuestionnaireResults(
@@ -155,14 +168,12 @@ class DriverService {
         // Fetch all session UIDs
         fetchAllSessionsByCurrentID { sessions ->
             sessions?.let {
+                val fetchedCount = AtomicInteger(0)
+
                 it.forEach { session ->
                     session.questionnaireUUID?.let { questionnaireUids.add(it) }
-                }
 
-                // Fetch reaction test results for all UIDs
-                if (questionnaireUids.isNotEmpty()) {
-                    var fetchedCount = 0
-
+                    // Fetch questionnaire results for each UID
                     questionnaireUids.forEach { questionnaireUid ->
                         db.collection("Questionnaires")
                             .document(questionnaireUid)
@@ -173,17 +184,20 @@ class DriverService {
 
                                 // Convert Timestamp to formatted string
                                 val formattedTimeStamp = timestamp?.let {
-                                    SimpleDateFormat("MMM dd, yyy", Locale.getDefault()).format(it.toDate())
+                                    SimpleDateFormat("MMM dd, yyy - HH:mm", Locale.getDefault()).format(it.toDate())
                                 } ?: ""
 
-                                // Check if the reaction test result is not already in the list
+                                // Check if the questionnaire result is not already in the list
                                 if (!questionnaireResults.any { it.uid == questionnaireUid }) {
-                                    questionnaireResults.add(Questionnaire(questionnaireUid, category, formattedTimeStamp))
+                                    questionnaireResults.add(
+                                        Questionnaire(questionnaireUid, category, formattedTimeStamp, session.sessionUUID)
+                                    )
+                                    Log.d("driverservice", "$questionnaireResults")
+
                                 }
 
-                                // Check if all reactions tests have been fetched
-                                fetchedCount++
-                                if (fetchedCount == questionnaireUids.size) {
+                                // Check if all questionnaire results have been fetched
+                                if (fetchedCount.incrementAndGet() == questionnaireUids.size) {
                                     onSuccess(questionnaireResults)
                                 }
                             }
@@ -191,17 +205,10 @@ class DriverService {
                                 onFailure(exception)
                             }
                     }
-                } else {
-                    // No questionnaires to fetch
-                    onSuccess(questionnaireResults)
                 }
             } ?: onFailure(Exception("Failed to fetch sessions"))
         }
     }
-
-
-
-
 
     fun fetchAllSessionsByCurrentID(callback: (List<Session>?) -> Unit) {
 

@@ -64,7 +64,6 @@ class CombinedResultAdapter(private val combinedResults: List<Any>) :
 
     class ReactionTestViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // ViewHolder for ReactionTest item
-        // ... (similar to the existing ReactionTestAdapter.ViewHolder)
         private val dateTextView: TextView = itemView.findViewById(R.id.dateTextView)
         private val scoreTextView: TextView = itemView.findViewById(R.id.scoreTextView)
 
@@ -77,7 +76,6 @@ class CombinedResultAdapter(private val combinedResults: List<Any>) :
 
     class QuestionnaireResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // ViewHolder for QuestionnaireResult item
-        // ... (similar to the existing ReactionTestAdapter.ViewHolder)
         private val dateTextView: TextView = itemView.findViewById(R.id.dateTextView)
         private val categoryTextView: TextView = itemView.findViewById(R.id.categoryTextView)
 

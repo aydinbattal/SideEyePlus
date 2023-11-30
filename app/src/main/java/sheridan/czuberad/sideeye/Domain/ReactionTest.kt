@@ -10,4 +10,5 @@ data class ReactionTest (
     var uid: String? = null,
     var avgTime: Long? = null,
     var date: String? = null,
+    val sessionId: String? = null
 )
