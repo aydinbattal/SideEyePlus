@@ -2,6 +2,7 @@ package sheridan.czuberad.sideeye.Services
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.ktx.auth
@@ -9,6 +10,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.ktx.Firebase
 import sheridan.czuberad.sideeye.Domain.Company
 import sheridan.czuberad.sideeye.Domain.Driver
+import sheridan.czuberad.sideeye.Domain.Session
 import java.security.acl.Owner
 
 
@@ -24,7 +26,8 @@ class CompanyService() {
     val driversList = MutableLiveData<MutableList<Driver>>()
     private val currentUser = Firebase.auth.currentUser
     val alertTimes = MutableLiveData<MutableList<String>>()
-
+    private val _sessionsLiveData = MutableLiveData<List<Session>>()
+    val sessionsLiveData: LiveData<List<Session>> get() = _sessionsLiveData
 
     init {
         Log.d("ABC", "vm is initializing")
@@ -58,42 +61,32 @@ class CompanyService() {
         }
     }
 
-    fun getDriverSessions(email: String) {
-        val alertsFromDb:ArrayList<String> = arrayListOf()
+    fun getAllSessionsOfSelectedDriver(email: String): LiveData<List<Session>?> {
+        val result = MutableLiveData<List<Session>?>()
 
-        db.collection("Drivers").whereEqualTo("email",email).get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    db.collection("Drivers").document(document.id).collection("Sessions").get().addOnSuccessListener { sessions ->
-                        sessions.query.orderBy("endSession", Query.Direction.DESCENDING).limit(1).get().addOnSuccessListener { session ->
-                            if(session.documents.isNotEmpty())
-                            {
-                                val lastAlert = session.documents[0]?.data?.get("endSession") as com.google.firebase.Timestamp
-
-                                alertsFromDb.add(lastAlert.toDate().toString())
-                                alertTimes.postValue(alertsFromDb)
-                                Log.d("lastAlert", "${lastAlert}")
+        db.collection("Drivers").whereEqualTo("email", email).get()
+            .addOnSuccessListener { driverQuerySnapshot ->
+                if (!driverQuerySnapshot.isEmpty) {
+                    val driverDocument = driverQuerySnapshot.documents.first()
+                    db.collection("Drivers").document(driverDocument.id).collection("Sessions").get()
+                        .addOnSuccessListener { sessionQuerySnapshot ->
+                            val sessionList = sessionQuerySnapshot.mapNotNull { sessionDocument ->
+                                sessionDocument.toObject(Session::class.java)
                             }
-
-//                            db.collection("Drivers").document(document.id).collection("Sessions").document(session.documents[0].id).get().addOnSuccessListener { alerts ->
-//                                Log.d("lastAlert", "${alerts.data["time"]}")
-//
-//                            }
+                            result.postValue(sessionList)
                         }
-
-
-//                        for (session in sessions) {
-//                            session.data["endSession"]
-//                        }
-                    }
+                        .addOnFailureListener {
+                            result.postValue(null)
+                        }
+                } else {
+                    result.postValue(null)
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.w("getDriverSessions", "Error getting documents: ", exception)
+            .addOnFailureListener {
+                result.postValue(null)
             }
 
-        //return alertTimes
-
+        return result
     }
 
     fun removeDriverFromCompany(email: String)
