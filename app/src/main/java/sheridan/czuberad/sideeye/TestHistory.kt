@@ -87,6 +87,16 @@ class TestHistory : AppCompatActivity() {
             }
         }
 
+        //todo: Sort reaction test results within each session by timestamp in descending order
+//        combinedResultsMap.values.forEach { resultList ->
+//            resultList.sortByDescending {
+//                when (it) {
+//                    is ReactionTest -> it.date // Assuming ReactionTest has a 'timestamp' property
+//                    else -> error("Unexpected result type: ${it.javaClass.simpleName}")
+//                }
+//            }
+//        }
+
         // Combine results by session
         val combinedResults = mutableListOf<Any>()
         combinedResultsMap.forEach { (_, resultList) ->

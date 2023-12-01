@@ -4,9 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import sheridan.czuberad.sideeye.Domain.Company
 import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.Services.CompanyService
 import sheridan.czuberad.sideeye.databinding.ActivityHomeCompanyBinding
@@ -33,6 +48,56 @@ class HomeCompanyActivity : AppCompatActivity() {
 //            driversAdapter.notifyDataSetChanged()
 //        })
 //    }
+
+    @Composable
+    fun OwnerInfoCard(companyOwner: Company) {
+        val configuration = LocalConfiguration.current
+        val screenWidth = configuration.screenWidthDp.dp
+        val screenHeight = configuration.screenHeightDp.dp
+
+        Card(modifier = Modifier
+            .width(screenWidth)
+            .height(screenHeight / 4),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFF39AFEA)
+            ),
+            shape = RectangleShape
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = "Hi, ${companyOwner.name}",
+                    color = Color.White,
+                    fontSize = 35.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "${companyOwner.companyName}",
+                    color = Color.White,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp)
+                    .fillMaxWidth()
+            ) {
+
+                Text(
+                    text = "Welcome back to your company dashboard!",
+                    color = Color.White,
+                    fontSize = 16.sp
+                )
+                // Add more details or customization based on your CompanyOwner data model
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -50,6 +115,22 @@ class HomeCompanyActivity : AppCompatActivity() {
         binding.rvDriversList.layoutManager = LinearLayoutManager(this)
         // associate the rv with the adapter we created
         binding.rvDriversList.adapter = driversAdapter
+
+        val companyService = CompanyService()
+        companyService.getCurrentOwner(
+            onCompanyLoaded = { companyOwner ->
+                // Handle the loaded company data
+                Log.d("HomeCompanyActivity", "Received company data: $companyOwner")
+                val composeOwnerInfoCard = findViewById<ComposeView>(R.id.composeOwnerInfoCard)
+                composeOwnerInfoCard.setContent {
+                    OwnerInfoCard(companyOwner = companyOwner)
+                }
+            },
+            onCompanyLoadFailed = { exception ->
+                // Handle the failed company data load
+                Log.e("HomeCompanyActivity", "Failed to load company data: $exception")
+            }
+        )
 
         binding.btnAddNewDriver.setOnClickListener{
             var dialog = AddDriverDialogFragment()

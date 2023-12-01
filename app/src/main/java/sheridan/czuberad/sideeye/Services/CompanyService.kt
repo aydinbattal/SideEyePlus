@@ -31,6 +31,33 @@ class CompanyService() {
         driversList.value = ArrayList()
     }
 
+    fun getCurrentOwner(onCompanyLoaded: (Company) -> Unit, onCompanyLoadFailed: (Exception) -> Unit) {
+        currentUser?.uid?.let { userId ->
+            db.collection("Owners")
+                .document(userId)
+                .get()
+                .addOnSuccessListener { documentSnapshot ->
+                    if (documentSnapshot.exists()) {
+                        val companyData = documentSnapshot.toObject(Company::class.java)
+                        val currentOwner = Company().apply {
+                            companyName = companyData?.companyName
+                            email = companyData?.email
+                            phoneNumber = companyData?.phoneNumber
+                            name = companyData?.name
+                        }
+                        Log.d("CompanyService", "Current owner: $currentOwner")
+                        onCompanyLoaded(currentOwner)
+                    } else {
+                        Log.d("CompanyService", "Company data not found for user: $userId")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("CompanyService", "Error fetching company data: $exception")
+                    onCompanyLoadFailed(exception)
+                }
+        }
+    }
+
     fun getDriverSessions(email: String) {
         val alertsFromDb:ArrayList<String> = arrayListOf()
 
