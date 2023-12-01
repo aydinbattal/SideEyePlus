@@ -28,6 +28,8 @@ class CompanyService() {
     val alertTimes = MutableLiveData<MutableList<String>>()
     private val _sessionsLiveData = MutableLiveData<List<Session>>()
     val sessionsLiveData: LiveData<List<Session>> get() = _sessionsLiveData
+    private var selectedDriver: String? = null
+
 
     init {
         Log.d("ABC", "vm is initializing")
@@ -61,6 +63,50 @@ class CompanyService() {
         }
     }
 
+    fun setSelectedDriverId(email: String, callback: (String?) -> Unit) {
+        db.collection("Drivers").whereEqualTo("email", email).get()
+            .addOnSuccessListener { driverQuerySnapshot ->
+                if (!driverQuerySnapshot.isEmpty) {
+                    val driverDocument = driverQuerySnapshot.documents.first()
+                    val driverId = driverDocument.id
+                    selectedDriver = driverId
+                    callback(driverId)
+                } else {
+                    callback(null)
+                }
+            }
+            .addOnFailureListener {
+                Log.d("CompanyService", "selectedDriver is null")
+                callback(null)
+            }
+    }
+
+
+    fun fetchDriverSessionById(sessionId: String, callback: (Session?) ->Unit) {
+        val result = MutableLiveData<Session?>()
+        Log.d("CompanyService", "$selectedDriver")
+        if (currentUser != null) {
+            selectedDriver?.let {
+                db.collection("Drivers").document(it).collection("Sessions").document(sessionId).get()
+                    .addOnSuccessListener { documentSnapshot ->
+                        Log.d("CompanyService", "CAME")
+
+                        if (documentSnapshot.exists()) {
+                            val session = documentSnapshot.toObject(Session::class.java)
+                            callback(session)
+                        } else {
+                            callback(null)
+                        }
+                    }
+                    .addOnFailureListener {
+                        callback(null)
+                    }
+            }
+        }
+
+    }
+
+
     fun getAllSessionsOfSelectedDriver(email: String): LiveData<List<Session>?> {
         val result = MutableLiveData<List<Session>?>()
 
@@ -68,6 +114,7 @@ class CompanyService() {
             .addOnSuccessListener { driverQuerySnapshot ->
                 if (!driverQuerySnapshot.isEmpty) {
                     val driverDocument = driverQuerySnapshot.documents.first()
+
                     db.collection("Drivers").document(driverDocument.id).collection("Sessions").get()
                         .addOnSuccessListener { sessionQuerySnapshot ->
                             val sessionList = sessionQuerySnapshot.mapNotNull { sessionDocument ->

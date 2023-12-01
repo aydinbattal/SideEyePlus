@@ -52,6 +52,8 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
 
+    implementation "androidx.compose.runtime:runtime-livedata:1.1.0-alpha01"
+
     implementation "androidx.navigation:navigation-compose"
     implementation 'androidx.navigation:navigation-runtime-ktx:2.6.0'
 
