@@ -9,8 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -21,8 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import sheridan.czuberad.sideeye.Domain.Questionnaire
+import sheridan.czuberad.sideeye.Domain.ReactionTest
 import sheridan.czuberad.sideeye.`Application Logic`.IndependentDriverLogic
 import sheridan.czuberad.sideeye.Domain.Session
+import sheridan.czuberad.sideeye.Services.CompanyService
 import sheridan.czuberad.sideeye.`Application Logic`.DriverDetailsLogic
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -87,10 +89,11 @@ fun SessionListForCompany(navController: NavHostController, sessionList: List<Se
 
 @Composable
 fun SessionListForCompanyItem(item: Session, navController: NavHostController) {
-    
+    val companyService = CompanyService()
+
     Card(modifier = Modifier
         .fillMaxWidth()
-        .height(150.dp)
+        .height(180.dp)
         .padding(10.dp).clickable { navController.navigate("sessionDetail/${item.sessionUUID}") },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(
@@ -112,7 +115,7 @@ fun SessionListForCompanyItem(item: Session, navController: NavHostController) {
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(SimpleDateFormat("HH:mm", Locale.getDefault()).format(item.endSession), fontSize = 12.sp)
                 }
-                Spacer(modifier = Modifier.fillMaxHeight(0.4f))
+                Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 
                 Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween){
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -124,6 +127,41 @@ fun SessionListForCompanyItem(item: Session, navController: NavHostController) {
                         Text(text = "Fatigue", fontSize = 12.sp)
                         Text(text = item.fatigueList?.size.toString(), fontWeight = FontWeight.ExtraBold)
                     }
+                }
+
+                Spacer(modifier = Modifier.fillMaxHeight(0.2f))
+
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(text = "Reaction Time: ", fontWeight = FontWeight.Bold)
+
+                    var reactionTestResult by remember { mutableStateOf<ReactionTest?>(null) }
+
+                    LaunchedEffect(item.reactionTestUUID) {
+                        // Fetch ReactionTest asynchronously
+                        companyService.fetchReactionTestById(item.reactionTestUUID ?: "") { result ->
+                            reactionTestResult = result
+                        }
+                    }
+
+                    Text(text = "${reactionTestResult?.avgTime ?: "Not Determined"} ms")
+
+                }
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(text = "Category: ", fontWeight = FontWeight.Bold)
+
+                    var questionnaireResult by remember { mutableStateOf<Questionnaire?>(null) }
+
+                    LaunchedEffect(item.questionnaireUUID) {
+                        // Fetch ReactionTest asynchronously
+                        companyService.fetchQuestionnaireById(item.questionnaireUUID ?: "") { result ->
+                            questionnaireResult = result
+                        }
+                    }
+
+                    Text(text = "${questionnaireResult?.category ?: "Not Determined"}")
+
                 }
 
             }
