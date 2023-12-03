@@ -331,9 +331,28 @@ fun InfoCard(currentDriver: Driver) {
     ),
     shape = RectangleShape) {
         
-        Column(modifier = Modifier.padding(20.dp)) {
-            currentDriver.name?.let { Text(text = "Hi Adam", color = Color.White, fontSize = 35.sp, fontWeight = FontWeight.Bold) }
-            Text(text = "Welcome back", color = Color.White)
+        Column(modifier = Modifier.padding(16.dp)) {
+            currentDriver.name?.let { Text(text = "Hi, ${currentDriver.name}", color = Color.White, fontSize = 35.sp, fontWeight = FontWeight.Bold) }
+            Text(
+                text = "${currentDriver.companyName}",
+                color = Color.White,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 0.dp, bottom = 0.dp)
+                .fillMaxWidth()
+        ) {
+
+            Text(
+                text = "Welcome back to your driver dashboard!",
+                color = Color.White,
+                fontSize = 16.sp
+            )
+            // Add more details or customization based on your CompanyOwner data model
         }
 
 //        Row(verticalAlignment = Alignment.CenterVertically) {
