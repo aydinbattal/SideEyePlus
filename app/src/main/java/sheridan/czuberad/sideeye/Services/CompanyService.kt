@@ -5,13 +5,17 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.ktx.Firebase
-import sheridan.czuberad.sideeye.Domain.Company
-import sheridan.czuberad.sideeye.Domain.Driver
-import sheridan.czuberad.sideeye.Domain.Session
+import sheridan.czuberad.sideeye.Domain.*
 import java.security.acl.Owner
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.collections.ArrayList
 
 
 /**
@@ -80,6 +84,59 @@ class CompanyService() {
                 callback(null)
             }
     }
+
+    fun fetchReactionTestById(reactionTestId: String, callback: (ReactionTest?) -> Unit) {
+        if (reactionTestId.isNullOrBlank()) {
+            Log.e("CompanyService", "Invalid reactionTestId: $reactionTestId")
+            callback(null)
+            return
+        }
+
+        db.collection("ReactionTests").document(reactionTestId).get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val avgTime = documentSnapshot.getLong("averageReactionTime")?.toLong()
+                    val reactionTest = ReactionTest()
+                    reactionTest.avgTime = avgTime
+                    Log.d("CompanyService", "reactionTest: $reactionTest")
+                    callback(reactionTest)
+                } else {
+                    Log.d("CompanyService", "ReactionTest document does not exist for ID: $reactionTestId")
+                    callback(null)
+                }
+            }
+            .addOnFailureListener {
+                Log.e("CompanyService", "Error fetching ReactionTest for ID: $reactionTestId", it)
+                callback(null)
+            }
+    }
+
+    fun fetchQuestionnaireById(questionnaireId: String, callback: (Questionnaire?) -> Unit) {
+        if (questionnaireId.isNullOrBlank()) {
+            Log.e("CompanyService", "Invalid questionnaireId: $questionnaireId")
+            callback(null)
+            return
+        }
+
+        db.collection("Questionnaires").document(questionnaireId).get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val category = documentSnapshot.getString("category").toString()
+                    val questionnaire = Questionnaire()
+                    questionnaire.category = category
+                    Log.d("CompanyService", "questionnaire: $questionnaire")
+                    callback(questionnaire)
+                } else {
+                    Log.d("CompanyService", "questionnaire document does not exist for ID: $questionnaireId")
+                    callback(null)
+                }
+            }
+            .addOnFailureListener {
+                Log.e("CompanyService", "Error fetching questionnaire for ID: $questionnaireId", it)
+                callback(null)
+            }
+    }
+
 
     fun fetchAllSessionsByCurrentID(callback: (List<Session>?) -> Unit) {
 

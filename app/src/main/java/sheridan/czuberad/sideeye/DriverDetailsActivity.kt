@@ -40,6 +40,8 @@ import sheridan.czuberad.sideeye.Services.CompanyService
 import sheridan.czuberad.sideeye.databinding.ActivityDriverDetailsBinding
 import sheridan.czuberad.sideeye.databinding.ActivityHomeCompanyBinding
 import sheridan.czuberad.sideeye.Domain.Driver
+import sheridan.czuberad.sideeye.Domain.Questionnaire
+import sheridan.czuberad.sideeye.Domain.ReactionTest
 import sheridan.czuberad.sideeye.Domain.Session
 import sheridan.czuberad.sideeye.Services.DriverService
 import sheridan.czuberad.sideeye.UI.*
@@ -316,7 +318,7 @@ class DriverDetailsActivity : AppCompatActivity() {
                     items(sessionList) { session ->
                         Card(
                             modifier = Modifier
-                                .height(150.dp)
+                                .height(170.dp)
                                 .width(205.dp)
                                 .padding(8.dp)
                                 .clickable { navController.navigate("sessionDetail/${session.sessionUUID}") },
@@ -378,6 +380,44 @@ class DriverDetailsActivity : AppCompatActivity() {
                                         )
                                     }
 
+
+                                }
+
+                                Column() {
+                                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                        Text(text = "Reaction Time: ", fontWeight = FontWeight.Bold)
+
+                                        var reactionTestResult by remember { mutableStateOf<ReactionTest?>(null) }
+
+                                        LaunchedEffect(session.reactionTestUUID) {
+                                            // Fetch ReactionTest asynchronously
+                                            companyService.fetchReactionTestById(session.reactionTestUUID ?: "") { result ->
+                                                reactionTestResult = result
+                                            }
+                                        }
+
+                                        Text(text = "${reactionTestResult?.avgTime ?: "Not Determined"} ms")
+
+                                    }
+
+                                }
+
+                                Column() {
+                                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                        Text(text = "Category: ", fontWeight = FontWeight.Bold)
+
+                                        var questionnaireResult by remember { mutableStateOf<Questionnaire?>(null) }
+
+                                        LaunchedEffect(session.questionnaireUUID) {
+                                            // Fetch ReactionTest asynchronously
+                                            companyService.fetchQuestionnaireById(session.questionnaireUUID ?: "") { result ->
+                                                questionnaireResult = result
+                                            }
+                                        }
+
+                                        Text(text = "${questionnaireResult?.category ?: "Not Determined"}")
+
+                                    }
 
                                 }
 
