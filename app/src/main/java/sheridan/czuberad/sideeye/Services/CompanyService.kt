@@ -81,6 +81,22 @@ class CompanyService() {
             }
     }
 
+    fun fetchAllSessionsByCurrentID(callback: (List<Session>?) -> Unit) {
+
+        if (currentUser != null) {
+            selectedDriver?.let {
+                db.collection("Drivers").document(it).collection("Sessions").get()
+                    .addOnSuccessListener {
+                        val sessionList = it.mapNotNull { document ->
+                            document.toObject(Session::class.java)
+                        }
+                        callback(sessionList)
+                    }.addOnFailureListener {
+                        callback(null)
+                    }
+            }
+        }
+    }
 
     fun fetchDriverSessionById(sessionId: String, callback: (Session?) ->Unit) {
         val result = MutableLiveData<Session?>()

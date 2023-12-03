@@ -113,7 +113,7 @@ class DriverDetailsActivity : AppCompatActivity() {
                         val dialog = RemoveDriverDialogFragment(email)
                         dialog.show(supportFragmentManager, "removeDriverDialog")
                     }) }
-                composable("sessionListView") { SessionHistory(navController) }
+                composable("sessionListView") { SessionHistoryForCompany(navController, email) }
                 composable("sessionDetail/{sessionID}") { backStackEntry ->
                     val sessionID = backStackEntry.arguments?.getString("sessionID")
                     SessionDetailForCompany(sessionID, email)

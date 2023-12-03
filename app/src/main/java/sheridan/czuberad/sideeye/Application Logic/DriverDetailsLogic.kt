@@ -42,10 +42,26 @@ class DriverDetailsLogic : ViewModel() {
                 // Handle the case where selectedDriver couldn't be set
             }
         }
+    }
 
+    fun getSessionHistory(email:String){
 
+        companyService.setSelectedDriverId(email) { driverId ->
+            if (driverId != null) {
+                companyService.fetchAllSessionsByCurrentID { it ->
+                    if(it != null){
+                        Log.d(TAG, "Sessions: $it")
 
+                        val sortedSessionList = it.sortedByDescending { it.startSession }
 
+                        _sessions.value = sortedSessionList
+                    }
+                    else{
+                        Log.d(TAG, "Sessions else: $it")
+                    }
+                }
+            }
+        }
 
     }
 
