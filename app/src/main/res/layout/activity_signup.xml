@@ -71,7 +71,9 @@
                 android:id="@+id/text_email_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="27dp"
+                android:layout_marginRight="20dp"
                 android:ems="10"
                 android:hint="Enter Email"
                 android:inputType="textEmailAddress" />
