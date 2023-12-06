@@ -1,6 +1,7 @@
 package sheridan.czuberad.sideeye.Camera
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.util.Log
@@ -78,6 +79,7 @@ class EyeDetectionUtils(
     override fun onSuccess(results: List<Face>){
         if (session.reactionTestUUID.isNullOrEmpty() && session.questionnaireUUID.isNullOrEmpty()) {
             startSession.setOnClickListener {
+                startSession.isEnabled = false
                 sessionT.text = "Press End Session to End Session"
                 session.sessionUUID = UUID.randomUUID().toString()
                 alertList.clear()
@@ -130,6 +132,10 @@ class EyeDetectionUtils(
 
                     isSessionStart = false
                     isSessionEnd = true
+
+                    // Close the current activity
+                    contextAct.finish()
+                    startSession.isEnabled = true
                 }
             }
         }
