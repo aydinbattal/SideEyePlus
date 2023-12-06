@@ -127,7 +127,7 @@ class DriverService {
                             .document(reactionTestUid)
                             .get()
                             .addOnSuccessListener { document ->
-                                val timestamp = document["timestamp"] as Timestamp
+                                val timestamp = document["timestamp"] as? Timestamp
                                 val score = document.getLong("averageReactionTime") ?: 0
 
                                 // Convert Timestamp to formatted string
@@ -179,7 +179,7 @@ class DriverService {
                             .document(questionnaireUid)
                             .get()
                             .addOnSuccessListener { document ->
-                                val timestamp = document["timestamp"] as Timestamp
+                                val timestamp = document["timestamp"] as? Timestamp
                                 val category = document.getString("category") ?: ""
 
                                 // Convert Timestamp to formatted string

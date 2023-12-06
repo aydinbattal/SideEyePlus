@@ -135,7 +135,7 @@ class HomeTestsActivity : AppCompatActivity() {
                 }
 
                 SharedPreferencesUtils.saveQuestionnaireId(this)
-                val questionnaireUUID = SharedPreferencesUtils.getReactionTestId(this)
+                val questionnaireUUID = SharedPreferencesUtils.getQuestionnaireId(this)
                 if (questionnaireUUID != null) {
                     driverService.addQuestionnaire(category,questionnaireUUID)
                 }
