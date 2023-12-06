@@ -52,6 +52,10 @@ class SignupActivity : AppCompatActivity() {
 
             var emailText = findViewById<EditText>(R.id.text_email_signup).text.toString().trim()
             var passwordText = findViewById<EditText>(R.id.text_password_signup).text.toString().trim()
+            val nameText = findViewById<EditText>(R.id.text_name_signup).text.toString()
+            val phoneText = findViewById<EditText>(R.id.text_phone_signup).text.toString()
+            val companyNameText = findViewById<EditText>(R.id.text_company_signup).text.toString()
+
             if (isCompany){
                 auth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener{
                     if(it.isSuccessful){
@@ -60,7 +64,7 @@ class SignupActivity : AppCompatActivity() {
                             uid = currentUser.uid
                         }
 
-                        val company = Company("test", emailText)
+                        val company = Company(nameText, emailText, companyNameText, phoneText)
                         db = FirebaseFirestore.getInstance()
                         db.collection("Owners").document(uid).set(company).addOnSuccessListener {
                             Toast.makeText(baseContext, "Data success",Toast.LENGTH_SHORT).show()
@@ -84,7 +88,7 @@ class SignupActivity : AppCompatActivity() {
                         currentUser?.let {
                             uid = currentUser.uid
                         }
-                        val driver = Driver("test", emailText,"99999999",false,"")
+                        val driver = Driver(nameText, emailText,phoneText,false,"")
 
 //                        val prompt = SignupPrompts()
 //                        val name = prompt.signupDriverPrompt(this)

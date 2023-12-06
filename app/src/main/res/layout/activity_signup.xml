@@ -124,7 +124,6 @@
                 android:layout_marginRight="20dp"
                 android:ems="10"
                 android:hint="Enter Company Name"
-                android:inputType="textPassword"
                 android:visibility="invisible"
                 />
 
