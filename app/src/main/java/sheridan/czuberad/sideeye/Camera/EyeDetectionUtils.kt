@@ -79,7 +79,6 @@ class EyeDetectionUtils(
     override fun onSuccess(results: List<Face>){
         if (session.reactionTestUUID.isNullOrEmpty() && session.questionnaireUUID.isNullOrEmpty()) {
             startSession.setOnClickListener {
-                driverService.updateDriverStatus(true)
                 startSession.isEnabled = false
                 sessionT.text = "Press End Session to End Session"
                 session.sessionUUID = UUID.randomUUID().toString()
@@ -122,7 +121,7 @@ class EyeDetectionUtils(
 
                         //TODO: Update Storing Session and AlertList into Firebase, create function that passes Both session and alertList
                         driverService.addSession(session, alertList)
-                        driverService.updateDriverStatus(false)
+                        driverService.updateDriverStatus(alertList.last().alertSeverity)
                         alertText.text = "0"
                         fatigueText.text = "0"
 

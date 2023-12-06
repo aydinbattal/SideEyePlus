@@ -4,7 +4,7 @@ data class Driver(
     var name: String? = null,
     var email: String? = null,
     var phoneNumber: String? = null,
-    var status: Boolean? = false,
+    var status: String? = null,
     var companyName: String? = null,
 
 )

@@ -180,6 +180,65 @@ class CompanyService() {
 
     }
 
+//    fun getLatestAlertSeverity(email: String, callback: (String?) -> Unit) {
+//        db.collection("Drivers").whereEqualTo("email", email).get()
+//            .addOnSuccessListener { documents ->
+//                for (document in documents) {
+//                    val driverUid = document.id
+//                    db.collection("Drivers").document(driverUid).collection("Sessions")
+//                        .orderBy("endSession", Query.Direction.DESCENDING)
+//                        .limit(1)
+//                        .get()
+//                        .addOnSuccessListener { sessions ->
+//                            if (sessions.documents.isNotEmpty()) {
+//                                val latestSessionUid = sessions.documents[0].id
+//                                db.collection("Drivers").document(driverUid)
+//                                    .collection("Sessions").document(latestSessionUid)
+//                                    .get()
+//                                    .addOnSuccessListener { session ->
+//                                        val alertUuidList =
+//                                            session.get("alertUUIDList") as? List<String> ?: emptyList()
+//
+//                                        if (alertUuidList.isNotEmpty()) {
+//                                            val latestAlertUuid = alertUuidList[0]
+//                                            db.collection("Alerts").document(latestAlertUuid)
+//                                                .get()
+//                                                .addOnSuccessListener { alert ->
+//                                                    val alertSeverity =
+//                                                        alert.getString("alertSeverity")
+//                                                    callback(alertSeverity)
+//                                                }
+//                                                .addOnFailureListener { exception ->
+//                                                    Log.e("LatestAlertSeverity", "Error getting latest alert: ", exception)
+//                                                    callback(null)
+//                                                }
+//                                        } else {
+//                                            Log.d("LatestAlertSeverity", "No alerts in the latest session.")
+//                                            callback(null)
+//                                        }
+//                                    }
+//                                    .addOnFailureListener { exception ->
+//                                        Log.e("LatestAlertSeverity", "Error getting latest session: ", exception)
+//                                        callback(null)
+//                                    }
+//                            } else {
+//                                Log.d("LatestAlertSeverity", "No sessions for the driver.")
+//                                callback(null)
+//                            }
+//                        }
+//                        .addOnFailureListener { exception ->
+//                            Log.e("LatestAlertSeverity", "Error getting sessions: ", exception)
+//                            callback(null)
+//                        }
+//                }
+//            }
+//            .addOnFailureListener { exception ->
+//                Log.e("LatestAlertSeverity", "Error getting driver documents: ", exception)
+//                callback(null)
+//            }
+//    }
+
+
 
     fun getAllSessionsOfSelectedDriver(email: String): LiveData<List<Session>?> {
         val result = MutableLiveData<List<Session>?>()

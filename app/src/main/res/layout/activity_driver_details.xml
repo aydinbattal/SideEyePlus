@@ -7,192 +7,192 @@
     android:padding="8dp"
     tools:context=".DriverDetailsActivity">
 
-    <TextView
-        android:id="@+id/tvTitleDriverDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Driver Details"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tvColumnName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Name"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitleDriverDetails" />
-
-    <TextView
-        android:id="@+id/tvColumnStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Status"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvColumnName" />
-
-
-    <TextView
-        android:id="@+id/tvColumnEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Email"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvColumnStatus" />
-
-    <TextView
-        android:id="@+id/tvColumnPhone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Phone"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvColumnEmail" />
-
 <!--    <TextView-->
-<!--        android:id="@+id/tvColumnTestResult"-->
+<!--        android:id="@+id/tvTitleDriverDetails"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="16dp"-->
-<!--        android:layout_marginTop="32dp"-->
-<!--        android:text="Most Recent Alert"-->
-<!--        android:textSize="20sp"-->
+<!--        android:layout_marginStart="8dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:layout_marginEnd="8dp"-->
+<!--        android:text="Driver Details"-->
+<!--        android:textSize="30sp"-->
 <!--        android:textStyle="bold"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/tvColumnPhone" />-->
-
-    <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/composeSessionList"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvColumnPhone"
-    app:layout_constraintBottom_toTopOf="@+id/btnSave" />
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
 <!--    <TextView-->
-<!--        android:id="@+id/tvColumnHeartRate"-->
+<!--        android:id="@+id/tvColumnName"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->
 <!--        android:layout_marginStart="16dp"-->
 <!--        android:layout_marginTop="16dp"-->
-<!--        android:text="Most Recent Heart Rate"-->
+<!--        android:text="Name"-->
 <!--        android:textSize="20sp"-->
 <!--        android:textStyle="bold"-->
 <!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/tvColumnTestResult" />-->
-
-    <Button
-        android:id="@+id/btnRemove"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/holo_red_dark"
-        android:text="Remove Driver"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Save"
-        app:layout_constraintBottom_toTopOf="@+id/btnRemove"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="John Doe"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/tvColumnName"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitleDriverDetails" />
-
-    <TextView
-        android:id="@+id/tvStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Active"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/tvColumnStatus"
-        app:layout_constraintTop_toBottomOf="@+id/tvName" />
+<!--        app:layout_constraintTop_toBottomOf="@id/tvTitleDriverDetails" />-->
 
 <!--    <TextView-->
-<!--        android:id="@+id/tvTest"-->
+<!--        android:id="@+id/tvColumnStatus"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Status"-->
+<!--        android:textSize="20sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tvColumnName" />-->
+
+
+<!--    <TextView-->
+<!--        android:id="@+id/tvColumnEmail"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Email"-->
+<!--        android:textSize="20sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tvColumnStatus" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tvColumnPhone"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->
 <!--        android:layout_marginStart="16dp"-->
 <!--        android:layout_marginTop="24dp"-->
-<!--        android:text="Timestamp"-->
+<!--        android:text="Phone"-->
 <!--        android:textSize="20sp"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/tvColumnTestResult"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/edtPhone"-->
-<!--        />-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tvColumnEmail" />-->
+
+<!--&lt;!&ndash;    <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;        android:id="@+id/tvColumnTestResult"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginStart="16dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginTop="32dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:text="Most Recent Alert"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:textSize="20sp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:textStyle="bold"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintTop_toBottomOf="@+id/tvColumnPhone" />&ndash;&gt;-->
+
+<!--    <androidx.compose.ui.platform.ComposeView-->
+<!--        android:id="@+id/composeSessionList"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tvColumnPhone"-->
+<!--    app:layout_constraintBottom_toTopOf="@+id/btnSave" />-->
+
+<!--&lt;!&ndash;    <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;        android:id="@+id/tvColumnHeartRate"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginStart="16dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginTop="16dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:text="Most Recent Heart Rate"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:textSize="20sp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:textStyle="bold"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintTop_toBottomOf="@+id/tvColumnTestResult" />&ndash;&gt;-->
+
+<!--    <Button-->
+<!--        android:id="@+id/btnRemove"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:backgroundTint="@android:color/holo_red_dark"-->
+<!--        android:text="Remove Driver"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/btnSave"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:text="Save"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/btnRemove"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
 
 <!--    <TextView-->
-<!--        android:id="@+id/tvHeartRate"-->
+<!--        android:id="@+id/tvName"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->
 <!--        android:layout_marginStart="16dp"-->
 <!--        android:layout_marginTop="16dp"-->
-<!--        android:text="NORMAL"-->
+<!--        android:text="John Doe"-->
 <!--        android:textSize="20sp"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/tvColumnHeartRate"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/tvTest" />-->
+<!--        app:layout_constraintStart_toEndOf="@+id/tvColumnName"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tvTitleDriverDetails" />-->
 
-    <EditText
-        android:id="@+id/edtEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/tvColumnEmail"
-        app:layout_constraintTop_toBottomOf="@+id/tvStatus" />
+<!--    <TextView-->
+<!--        android:id="@+id/tvStatus"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Active"-->
+<!--        android:textSize="20sp"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/tvColumnStatus"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tvName" />-->
 
-    <EditText
-        android:id="@+id/edtPhone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="phone"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/tvColumnPhone"
-        app:layout_constraintTop_toBottomOf="@+id/edtEmail" />
+<!--&lt;!&ndash;    <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;        android:id="@+id/tvTest"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginStart="16dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginTop="24dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:text="Timestamp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:textSize="20sp"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintStart_toEndOf="@+id/tvColumnTestResult"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintTop_toBottomOf="@+id/edtPhone"&ndash;&gt;-->
+<!--&lt;!&ndash;        />&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;        android:id="@+id/tvHeartRate"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginStart="16dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginTop="16dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:text="NORMAL"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:textSize="20sp"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintStart_toEndOf="@+id/tvColumnHeartRate"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintTop_toBottomOf="@+id/tvTest" />&ndash;&gt;-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/edtEmail"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="textEmailAddress"-->
+<!--        android:textSize="10sp"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/tvColumnEmail"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tvStatus" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/edtPhone"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="phone"-->
+<!--        android:textSize="10sp"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/tvColumnPhone"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/edtEmail" />-->
 
 
 

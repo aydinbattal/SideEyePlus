@@ -30,14 +30,21 @@ class DriverService {
     private var db = FirebaseFirestore.getInstance()
     private val currentUser = FirebaseAuth.getInstance().currentUser?.uid
 
-    fun updateDriverStatus(isOnline: Boolean){
+    fun updateDriverStatus(alertSeverity: String?){
         if (currentUser != null) {
-            if (isOnline) {
+            when (alertSeverity) {
+                "Low" -> {
 
-                db.collection("Drivers").document(currentUser).update("status", true)
+                    db.collection("Drivers").document(currentUser).update("status", "Low")
 
-            } else {
-                db.collection("Drivers").document(currentUser).update("status", false)
+                }
+                "Mild" -> {
+                    db.collection("Drivers").document(currentUser).update("status", "Mild")
+                }
+                else -> {
+                    db.collection("Drivers").document(currentUser).update("status", "High")
+
+                }
             }
         }
 
@@ -279,7 +286,7 @@ class DriverService {
                                 email = it.getString("email") ?: ""
                                 name = it.getString("name") ?: ""
                                 phoneNumber = it.getString("phoneNumber") ?: ""
-                                status = it.getBoolean("status") ?: false
+                                status = it.getString("status") ?: ""
                             }
                             callback(driver)
                         } else {

@@ -88,7 +88,7 @@ class SignupActivity : AppCompatActivity() {
                         currentUser?.let {
                             uid = currentUser.uid
                         }
-                        val driver = Driver(nameText, emailText,phoneText,false,"")
+                        val driver = Driver(nameText, emailText,phoneText,"Low","")
 
 //                        val prompt = SignupPrompts()
 //                        val name = prompt.signupDriverPrompt(this)

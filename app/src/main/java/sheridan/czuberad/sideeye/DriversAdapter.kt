@@ -64,12 +64,13 @@ class DriversAdapter : ListAdapter<Driver, DriversAdapter.DriversViewHolder>(Dri
         Log.d("adapter", item.name.toString())
 
         holder.binding.tvDriverName.text = item.name.toString()
-
-        if(item.status == true){
-            holder.binding.tvDriverStatus.text = "Online"
+        holder.binding.tvDriverStatus.text = item.status
+        if(item.status == "Low"){
             holder.binding.tvDriverStatus.setTextColor(Color.GREEN)
+        } else if(item.status == "Mild") {
+            holder.binding.tvDriverStatus.setTextColor(Color.rgb(252, 88, 5))
         } else {
-            holder.binding.tvDriverStatus.text = "Offline"
+            holder.binding.tvDriverStatus.setTextColor(Color.RED)
         }
 
 
