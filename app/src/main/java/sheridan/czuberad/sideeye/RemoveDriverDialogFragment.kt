@@ -47,7 +47,12 @@ class RemoveDriverDialogFragment(private val email: String) : DialogFragment() {
                 Log.d("ABCDE", it.toString())
                 driversAdapter.notifyDataSetChanged()
                 dismiss()
-                val intent = Intent(context, HomeCompanyActivity::class.java)
+
+                // Create an intent to navigate to HomeCompanyActivity
+                val intent = Intent(context, HomeCompanyActivity::class.java).apply {
+                    // Set flags to clear the existing task and create a new one
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                }
                 startActivity(intent)
             })
         }
