@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
@@ -233,7 +234,6 @@ class CompanyService() {
             .addOnSuccessListener { documents ->
                 for (document in documents) {
                     db.collection("Drivers").document(document.id).update("email", newEmail, "phoneNumber", newPhone)
-
                     Log.d("updateDriverData", "${document.id} => ${document.data}")
                 }
             }

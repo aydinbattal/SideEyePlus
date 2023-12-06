@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -108,6 +109,7 @@ class DriverDetailsActivity : AppCompatActivity() {
                     onSaveClick = { newEmail, newPhone ->
                         if (newEmail != email || newPhone != phone) {
                             companyService.updateDriverData(email, newEmail, newPhone)
+                            //Toast.makeText(context, "Successfully removed!", Toast.LENGTH_LONG).show()
                         }
                         email = newEmail
                     },
@@ -218,8 +220,9 @@ class DriverDetailsActivity : AppCompatActivity() {
                         .fillMaxWidth()
                         .padding(16.dp)
                         .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
-                        .padding(8.dp)
-                        .background(Color.White)
+                        .background(Color.Gray.copy(alpha = 0.2f))
+                        .padding(8.dp),
+                    enabled = false
 
                 )
             }
