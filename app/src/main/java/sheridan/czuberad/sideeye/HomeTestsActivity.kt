@@ -79,34 +79,50 @@ class HomeTestsActivity : AppCompatActivity() {
                 reactionTestResult1.text = "Average Reaction Time: $averageReactionTime ms"
 
                 val deviceUtils = DeviceUtils()
-                var threshold:Long = 0
 
-                threshold = if(deviceUtils.isEmulator()){
-                    650
-                } else {
-                    475
-                }
+                driverService.getOverallReactionTimeAverage(
+                    onSuccess = { overallAverage ->
+                        // Do something with the overall average, such as displaying it or performing further actions
+                        val threshold = if (overallAverage != 0L) {
+                            overallAverage + 150
+                        } else {
+                            if (deviceUtils.isEmulator()) {
+                                650
+                            } else {
+                                475
+                            }
+                        }
 
-                if (averageReactionTime <= threshold) {
-                    val originalText = "Reaction Tests: PASSED"
-                    val spannable = SpannableString(originalText)
-                    val passedColorSpan = ForegroundColorSpan(resources.getColor(R.color.green))
-                    spannable.setSpan(passedColorSpan, originalText.indexOf("PASSED"), originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    reactionTestStatus.text = spannable
-                } else {
-                    val originalText = "Reaction Tests: FAILED"
-                    val spannable = SpannableString(originalText)
-                    val passedColorSpan = ForegroundColorSpan(resources.getColor(R.color.red))
-                    spannable.setSpan(passedColorSpan, originalText.indexOf("FAILED"), originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    reactionTestStatus.text = spannable
-                }
+                        Log.d("hometestsactivity", "Overall Reaction Time Average: $overallAverage")
+                        Log.d("hometestsactivity", "threshold: $threshold")
 
-                SharedPreferencesUtils.saveReactionTestId(this)
-                val reactionTestUUID = SharedPreferencesUtils.getReactionTestId(this)
-                if (reactionTestUUID != null) {
-                    driverService.addReactionTest(averageReactionTime,reactionTestUUID)
-                }
+                        if (averageReactionTime <= threshold) {
+                            val originalText = "Reaction Tests: PASSED"
+                            val spannable = SpannableString(originalText)
+                            val passedColorSpan = ForegroundColorSpan(resources.getColor(R.color.green))
+                            spannable.setSpan(passedColorSpan, originalText.indexOf("PASSED"), originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            reactionTestStatus.text = spannable
+                        } else {
+                            val originalText = "Reaction Tests: FAILED"
+                            val spannable = SpannableString(originalText)
+                            val passedColorSpan = ForegroundColorSpan(resources.getColor(R.color.red))
+                            spannable.setSpan(passedColorSpan, originalText.indexOf("FAILED"), originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            reactionTestStatus.text = spannable
+                        }
+
+                        SharedPreferencesUtils.saveReactionTestId(this)
+                        val reactionTestUUID = SharedPreferencesUtils.getReactionTestId(this)
+                        if (reactionTestUUID != null) {
+                            driverService.addReactionTest(averageReactionTime, reactionTestUUID)
+                        }
+                    },
+                    onFailure = { exception ->
+                        // Handle the failure, such as logging an error or displaying a message to the user
+                        Log.e("hometestsactivity", "Error fetching overall reaction time average", exception)
+                    }
+                )
             }
+
 
         } else if (requestCode == questionnaireRequestCode && resultCode == Activity.RESULT_OK) {
             // Handle result from QuestionnaireActivity

@@ -106,6 +106,31 @@ class DriverService {
 
     }
 
+    fun getOverallReactionTimeAverage(
+        onSuccess: (Long) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        // Use the previously defined function to fetch individual reaction test results
+        getReactionTestResults(
+            onSuccess = { reactionTestResults ->
+                // Calculate the overall reaction time average
+                val overallAverage = if (reactionTestResults.isNotEmpty() && reactionTestResults.size >= 5) {
+                    val totalScore = reactionTestResults.sumOf { it.avgTime ?: 0 }
+                    totalScore / reactionTestResults.size.toLong()
+                } else {
+                    0L // Default value if there are no reaction test results
+                }
+
+                onSuccess(overallAverage)
+            },
+            onFailure = onFailure
+        )
+    }
+
+
+
+
+
     fun getReactionTestResults(
         onSuccess: (List<ReactionTest>) -> Unit,
         onFailure: (Exception) -> Unit
