@@ -6,15 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".AddDriverDialogFragment">
 
+    <LinearLayout
+        android:id="@+id/addEmailLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:flow_horizontalAlign="center"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
     <TextView
         android:id="@+id/tvColumnEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
         android:text="Email:"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:textStyle="bold"
+        android:layout_marginEnd="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,36 +33,49 @@
         android:id="@+id/edtEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:ems="20"
+
+        android:width="300dp"
+        android:ems="10"
         android:inputType="textEmailAddress"
-        android:minHeight="48dp"
-        android:textSize="10sp"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tvColumnEmail"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnAddDriver"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:text="Add"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtEmail" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/btnCancelAddDriver"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:backgroundTint="#808080"
-        android:text="Cancel"
-        android:textSize="20sp"
+        app:flow_horizontalAlign="center"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/addEmailLayout"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        >
+
+
+
+        <Button
+            android:id="@+id/btnCancelAddDriver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:backgroundTint="#808080"
+            android:text="Cancel"
+            android:textSize="20sp"
+            android:width="120dp"/>
+
+        <Button
+            android:id="@+id/btnAddDriver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:text="Add"
+            android:textSize="20sp"
+            android:width="120dp"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
