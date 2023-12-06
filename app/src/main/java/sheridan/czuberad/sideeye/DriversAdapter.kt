@@ -65,6 +65,14 @@ class DriversAdapter : ListAdapter<Driver, DriversAdapter.DriversViewHolder>(Dri
 
         holder.binding.tvDriverName.text = item.name.toString()
 
+        if(item.status == true){
+            holder.binding.tvDriverStatus.text = "Online"
+            holder.binding.tvDriverStatus.setTextColor(Color.GREEN)
+        } else {
+            holder.binding.tvDriverStatus.text = "Offline"
+        }
+
+
 //        holder.itemView.setOnClickListener{
 //            onItemClick?.invoke(item)
 //        }

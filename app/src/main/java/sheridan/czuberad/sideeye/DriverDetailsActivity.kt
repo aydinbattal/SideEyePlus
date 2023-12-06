@@ -67,7 +67,13 @@ class DriverDetailsActivity : AppCompatActivity() {
         email = intent.getStringExtra("driverEmail")!!
         val name = intent.getStringExtra("driverName")
         phone = intent.getStringExtra("driverPhone")!!
-        val status = intent.getStringExtra("driverStatus")
+        val status = intent.getBooleanExtra("driverStatus", false)
+
+        val statusText = if (status) {
+            "Online"
+        } else {
+            "Offline"
+        }
 
 //        binding.edtEmail.setText(email)
 //        binding.tvName.text = name
@@ -105,7 +111,7 @@ class DriverDetailsActivity : AppCompatActivity() {
                 composable("driverDetails") { DriverDetailsContent(navController, email = email,
                     name = name ?: "",
                     phone = phone,
-                    status = status ?: "",
+                    status = statusText ?: "",
                     onSaveClick = { newEmail, newPhone ->
                         if (newEmail != email || newPhone != phone) {
                             companyService.updateDriverData(email, newEmail, newPhone)

@@ -30,6 +30,19 @@ class DriverService {
     private var db = FirebaseFirestore.getInstance()
     private val currentUser = FirebaseAuth.getInstance().currentUser?.uid
 
+    fun updateDriverStatus(isOnline: Boolean){
+        if (currentUser != null) {
+            if (isOnline) {
+
+                db.collection("Drivers").document(currentUser).update("status", true)
+
+            } else {
+                db.collection("Drivers").document(currentUser).update("status", false)
+            }
+        }
+
+    }
+
     fun addSession(
         session: Session,
         alertList: ArrayList<Alert>
