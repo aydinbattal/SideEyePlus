@@ -50,6 +50,109 @@ class DriverService {
 
     }
 
+    fun addInitialSession(
+        session: Session
+
+    ){
+
+        if(currentUser != null){
+            session.sessionUUID?.let {
+                db.collection("Drivers").document(currentUser).collection("Sessions").document(it).set(session)
+                    .addOnSuccessListener {
+                        Log.d(TAG, "PPP: Initial Session Added" )
+                    }
+            }
+        }
+    }
+
+    fun addAlertToSession(
+        alert: Alert,
+        sessionUUID: String
+    ){
+
+        //TODO:Add to session alertUUIDList, then add to Alerts collection
+
+
+//        if (currentUser != null) {
+//            db.collection("Drivers").document(currentUser).collection("Sessions").document(sessionUUID)
+//                .get().addOnSuccessListener {
+//                    val alertUUIDList = it["alertUUIDList"] as? MutableList<String> ?: mutableListOf()
+//                    alert.alertUUID?.let { it1 -> alertUUIDList.add(it1) }
+//
+//
+//
+//                }
+//        }
+
+        if (currentUser != null) {
+            // Reference to the session document
+            val sessionDocRef = db.collection("Drivers")
+                .document(currentUser)
+                .collection("Sessions")
+                .document(sessionUUID)
+
+            // Fetch the document
+            sessionDocRef.get().addOnSuccessListener { document ->
+                if (document != null) {
+                    // Extract the alertUUIDList array from the document
+                    val alertUUIDList = document["alertUUIDList"] as? MutableList<String> ?: mutableListOf()
+
+                    // Append alert.alertUUID to the array
+                    alert.alertUUID?.let { alertUUIDList.add(it) }
+
+                    // Update the document with the modified array
+                    sessionDocRef.update("alertUUIDList", alertUUIDList)
+                        .addOnSuccessListener {
+                            // Successfully updated the document
+                            alert.alertUUID?.let { it1 -> db.collection("Alerts").document(it1).set(alert) }
+
+                        }
+                        .addOnFailureListener { e ->
+                            // Handle failure
+                        }
+                } else {
+                    // Handle the case where the document does not exist
+                }
+            }.addOnFailureListener {
+                // Handle failure to fetch the document
+            }
+        }
+    }
+
+
+    fun addEndSession(session: Session){
+
+        if(currentUser != null){
+            val sessionDocRef = session.sessionUUID?.let {
+                db.collection("Drivers")
+                    .document(currentUser)
+                    .collection("Sessions")
+                    .document(it)
+            }
+
+            if (sessionDocRef != null) {
+                sessionDocRef.update("fatigueList",session.fatigueList)
+                    .addOnSuccessListener {
+                        Log.d(TAG, "PPP fatigueList updated")
+                    }
+            }
+
+            if (sessionDocRef != null) {
+                sessionDocRef.update("endSession",session.endSession)
+                    .addOnSuccessListener {
+                        Log.d(TAG, "PPP endSession updated")
+                    }
+            }
+
+        }
+
+
+    }
+
+
+
+
+
     fun addSession(
         session: Session,
         alertList: ArrayList<Alert>
@@ -60,13 +163,14 @@ class DriverService {
             session.sessionUUID?.let {
                 db.collection("Drivers").document(currentUser).collection("Sessions").document(it)
                     .set(session).addOnCompleteListener { complete ->
-                        if (complete.isSuccessful) {
-                            alertList.forEach { alert ->
-                                alert.alertUUID?.let { it1 ->
-                                    db.collection("Alerts").document(it1).set(alert)
-                                }
-                            }
-                        }
+
+//                        if (complete.isSuccessful) {
+//                            alertList.forEach { alert ->
+//                                alert.alertUUID?.let { it1 ->
+//                                    db.collection("Alerts").document(it1).set(alert)
+//                                }
+//                            }
+//                        }
                     }
             }
 

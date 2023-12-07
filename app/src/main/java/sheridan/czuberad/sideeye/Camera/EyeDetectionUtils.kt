@@ -88,17 +88,24 @@ class EyeDetectionUtils(
                 isSessionStart = true
                 isSessionEnd = false
 
+
+
                 val timestamp = Timestamp(System.currentTimeMillis())
                 Log.d(TAG, " POP: Start press$timestamp")
+
+                session.questionnaireUUID =
+                    SharedPreferencesUtils.getQuestionnaireId(contextAct)
+                session.reactionTestUUID =
+                    SharedPreferencesUtils.getReactionTestId(contextAct)
+
+                //SEND SESSION TO DATABASE WITH ONLY STARTDATE, SESSION UUID, REACTION TEST AND QUESTIONAIRE UUIDS, ALERTLIST.
+                driverService.addInitialSession(session)
 
                 endSession.setOnClickListener {
                     if (isSessionEnd == false) {
                         session.fatigueList = arrayListOf()
                         session.alertUUIDList = arrayListOf()
-                        session.questionnaireUUID =
-                            SharedPreferencesUtils.getQuestionnaireId(contextAct)
-                        session.reactionTestUUID =
-                            SharedPreferencesUtils.getReactionTestId(contextAct)
+
 
                         sessionT.text = "Press Start To Start Session"
                         session.endSession = Date(System.currentTimeMillis())
@@ -118,10 +125,11 @@ class EyeDetectionUtils(
                         Log.d(TAG, "ALERTEND Session: ${session.fatigueList}")
                         Log.d(TAG, "ALERTEND AlertList: $alertList")
 
+                        //driverService.addSession(session, alertList)
+                        //driverService.updateDriverStatus(alertList.last().alertSeverity)
 
-                        //TODO: Update Storing Session and AlertList into Firebase, create function that passes Both session and alertList
-                        driverService.addSession(session, alertList)
-                        driverService.updateDriverStatus(alertList.last().alertSeverity)
+                        //END SESSION FIREBASE CALL ADD endSessionTime and FatigueTime list
+                        driverService.addEndSession(session)
                         alertText.text = "0"
                         fatigueText.text = "0"
 
@@ -177,20 +185,38 @@ class EyeDetectionUtils(
                     if(counter in 50..100){
                         //LOW SEVERITY
                         val duration = (counter/16)
-                        alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "Low",Date(System.currentTimeMillis()), alertDuration = duration ))
+                        val alert = Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "Low",Date(System.currentTimeMillis()), alertDuration = duration )
+                        alertList.add(alert)
                         alertText.text = alertList.size.toString()
+                        session.sessionUUID?.let { it1 ->
+                            driverService.addAlertToSession(alert,
+                                it1
+                            )
+                        }
                     }
                     else if(counter in 101..150){
                         //MILD SEVERITY
                         val duration = (counter/16)
-                        alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "Mild",Date(System.currentTimeMillis()), alertDuration = duration ))
+                        val alert = Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "Mild",Date(System.currentTimeMillis()), alertDuration = duration )
+                        alertList.add(alert)
                         alertText.text = alertList.size.toString()
+                        session.sessionUUID?.let { it1 ->
+                            driverService.addAlertToSession(alert,
+                                it1
+                            )
+                        }
                     }
                     else if(counter > 150){
                         //HIGH SEVERITY
                         val duration = (counter/16)
-                        alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "High",Date(System.currentTimeMillis()),alertDuration = duration ))
+                        val alert = Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "High",Date(System.currentTimeMillis()),alertDuration = duration )
+                        alertList.add(alert)
                         alertText.text = alertList.size.toString()
+                        session.sessionUUID?.let { it1 ->
+                            driverService.addAlertToSession(alert,
+                                it1
+                            )
+                        }
                     }
                 }
 
