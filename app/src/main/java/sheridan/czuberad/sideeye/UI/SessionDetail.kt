@@ -202,10 +202,7 @@ fun SessionDetail(sessionID: String?) {
                             .fillMaxWidth()
                             .height(2.dp)
                             .background(Color(0xFFC0C0C0)) )
-                        
                     }
-
-
 
                 }
 

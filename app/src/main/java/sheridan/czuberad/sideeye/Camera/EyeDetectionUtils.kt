@@ -188,6 +188,8 @@ class EyeDetectionUtils(
                         val alert = Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "Low",Date(System.currentTimeMillis()), alertDuration = duration )
                         alertList.add(alert)
                         alertText.text = alertList.size.toString()
+                        val alertSize = alertList.size
+                        sendMessage(contextAct, alertSize.toString(), "/SESSION_ALERT")
                         session.sessionUUID?.let { it1 ->
                             driverService.addAlertToSession(alert,
                                 it1
@@ -200,6 +202,8 @@ class EyeDetectionUtils(
                         val alert = Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "Mild",Date(System.currentTimeMillis()), alertDuration = duration )
                         alertList.add(alert)
                         alertText.text = alertList.size.toString()
+                        val alertSize = alertList.size
+                        sendMessage(contextAct, alertSize.toString(), "/SESSION_ALERT")
                         session.sessionUUID?.let { it1 ->
                             driverService.addAlertToSession(alert,
                                 it1
@@ -213,6 +217,8 @@ class EyeDetectionUtils(
                         val alert = Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "High",Date(System.currentTimeMillis()),alertDuration = duration )
                         alertList.add(alert)
                         alertText.text = alertList.size.toString()
+                        val alertSize = alertList.size
+                        sendMessage(contextAct, alertSize.toString(), "/SESSION_ALERT")
                         session.sessionUUID?.let { it1 ->
                             driverService.addAlertToSession(alert,
                                 it1
@@ -241,6 +247,7 @@ class EyeDetectionUtils(
                         fatigueC++
                         fatigueText.text = fatigueC.toString()
                         fatigueTimeStampList.add(Timestamp(System.currentTimeMillis()))
+                        sendMessage(contextAct, fatigueTimeStampList.size.toString(), "/SESSION_FATIGUE")
 
                     }
 
@@ -256,7 +263,7 @@ class EyeDetectionUtils(
                     sendMessage(contextAct,"ALERT_ACTIVE", "/SESSION_CURRENT_ALERT")
                     //alertList.add(Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "low",Date(System.currentTimeMillis()) ))
                     //alertText.text = alertList.size.toString()
-                    sendMessage(contextAct, alertList.size.toString(), "/SESSION_ALERT")
+                    //sendMessage(contextAct, alertList.size.toString(), "/SESSION_ALERT")
                     mediaPlayer.start()
                     //counter = 0
                     Log.d(TAG, "ALERT:$alertList")
