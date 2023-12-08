@@ -99,12 +99,26 @@ fun SessionDetailForCompany(sessionId: String?, email: String?) {
                         Text(text = SimpleDateFormat("MMM dd", Locale.getDefault()).format(session.startSession),color = Color.White,fontSize = 12.sp)
                     }
                     Text(text = "to",color = Color.White)
-
                     if (session != null) {
-                        Text(text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(session.endSession), color = Color.White,fontSize = 20.sp)
+                        Text(
+                            text = session.endSession?.let {
+                                SimpleDateFormat("HH:mm", Locale.getDefault()).format(it)
+                            } ?: "",
+                            color = Color.White,
+                            fontSize = 20.sp
+                        )
                     }
                     if (session != null) {
-                        Text(text = SimpleDateFormat("MMM dd", Locale.getDefault()).format(session.endSession),color = Color.White,fontSize = 12.sp)
+                        Text(
+                            text = session.endSession?.let {
+                                SimpleDateFormat(
+                                    "MMM dd",
+                                    Locale.getDefault()
+                                ).format(it)
+                            } ?: "Session is still running...",
+                            color = Color.White,
+                            fontSize = 12.sp
+                        )
                     }
 
 

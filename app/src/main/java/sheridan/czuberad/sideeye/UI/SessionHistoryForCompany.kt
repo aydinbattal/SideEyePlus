@@ -110,11 +110,26 @@ fun SessionListForCompanyItem(item: Session, navController: NavHostController) {
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(SimpleDateFormat("HH:mm", Locale.getDefault()).format(item.startSession), fontSize = 12.sp )
                 }
-                Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween,verticalAlignment = Alignment.CenterVertically){
-                    Text(text = SimpleDateFormat("MMM dd, yyy", Locale.getDefault()).format(item.endSession), fontWeight = FontWeight.Bold)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = item.endSession?.let {
+                            SimpleDateFormat("MMM dd, yyy", Locale.getDefault()).format(it)
+                        } ?: "Session is still running...",
+                        fontWeight = FontWeight.Bold
+                    )
                     Spacer(modifier = Modifier.width(5.dp))
-                    Text(SimpleDateFormat("HH:mm", Locale.getDefault()).format(item.endSession), fontSize = 12.sp)
+                    Text(
+                        text = item.endSession?.let {
+                            SimpleDateFormat("HH:mm", Locale.getDefault()).format(it)
+                        } ?: "",
+                        fontSize = 12.sp
+                    )
                 }
+
                 Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 
                 Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween){
