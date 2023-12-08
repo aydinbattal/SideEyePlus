@@ -296,9 +296,7 @@ class CompanyService() {
 
 
 
-    fun getAllSessionsOfSelectedDriver(email: String): LiveData<List<Session>?> {
-        val result = MutableLiveData<List<Session>?>()
-
+    fun getAllSessionsOfSelectedDriver(email: String, callback: (List<Session>?) -> Unit) {
         db.collection("Drivers").whereEqualTo("email", email).get()
             .addOnSuccessListener { driverQuerySnapshot ->
                 if (!driverQuerySnapshot.isEmpty) {
@@ -309,21 +307,20 @@ class CompanyService() {
                             val sessionList = sessionQuerySnapshot.mapNotNull { sessionDocument ->
                                 sessionDocument.toObject(Session::class.java)
                             }
-                            result.postValue(sessionList)
+                            callback(sessionList)
                         }
                         .addOnFailureListener {
-                            result.postValue(null)
+                            callback(null)
                         }
                 } else {
-                    result.postValue(null)
+                    callback(null)
                 }
             }
             .addOnFailureListener {
-                result.postValue(null)
+                callback(null)
             }
-
-        return result
     }
+
 
     fun removeDriverFromCompany(email: String)
     {

@@ -46,6 +46,7 @@ import sheridan.czuberad.sideeye.Domain.ReactionTest
 import sheridan.czuberad.sideeye.Domain.Session
 import sheridan.czuberad.sideeye.Services.DriverService
 import sheridan.czuberad.sideeye.UI.*
+import sheridan.czuberad.sideeye.`Application Logic`.DriverDetailsLogic
 import sheridan.czuberad.sideeye.`Application Logic`.IndependentDriverLogic
 import java.text.SimpleDateFormat
 import java.util.*
@@ -55,7 +56,7 @@ class DriverDetailsActivity : AppCompatActivity() {
     private lateinit var companyService: CompanyService
     lateinit var email: String
     lateinit var phone: String
-    private val sessions = mutableListOf<Session>()
+    //private val sessions = mutableListOf<Session>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -270,19 +271,18 @@ class DriverDetailsActivity : AppCompatActivity() {
             }
 
             // Observe sessionsLiveData and set Compose content
-            val sessionsLiveData = companyService.getAllSessionsOfSelectedDriver(email)
-            val sessions by sessionsLiveData.observeAsState(initial = emptyList())
+//            val sessionsLiveData = companyService.getAllSessionsOfSelectedDriver(email)
+//            val sessions by sessionsLiveData.observeAsState(initial = emptyList())
+
+            val viewModel: DriverDetailsLogic = viewModel()
+            val sessionList = viewModel.sessions.value ?: emptyList()
 
             // Update sessions when LiveData changes
-            LaunchedEffect(sessionsLiveData) {
-                if (sessions?.isNotEmpty() == true) {
-                    val sortedSessionList = sessions?.sortedByDescending { it.startSession }
-                    this@DriverDetailsActivity.sessions.clear()
-                    sortedSessionList?.let { this@DriverDetailsActivity.sessions.addAll(it) }
-                }
+            LaunchedEffect(Unit) {
+                viewModel.getSessionCardInfoList(email)
             }
 
-            SessionCardListView(navController = navController, sessionList = sessions)
+            SessionCardListView(navController = navController, sessionList = sessionList)
         }
     }
 

@@ -32,6 +32,22 @@ class DriverDetailsLogic : ViewModel() {
     private val _sessionTimeLine = mutableStateOf<List<Timeline>?>(null)
     val sessionTimeLine: State<List<Timeline>?> = _sessionTimeLine
 
+    fun getSessionCardInfoList(email: String){
+
+        companyService.getAllSessionsOfSelectedDriver(email) { it ->
+            if(it != null){
+                Log.d(TAG, "Sessions: $it")
+
+                val sortedSessionList = it.sortedByDescending { it.startSession }
+
+                _sessions.value = sortedSessionList
+            }
+            else{
+                Log.d(TAG, "Sessions else: $it")
+            }
+        }
+    }
+
     fun getSessionDetail(sessionId: String, email: String){
 
         companyService.setSelectedDriverId(email) { driverId ->
