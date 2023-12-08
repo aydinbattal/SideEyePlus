@@ -86,7 +86,8 @@ class MainActivity : ComponentActivity(){
     }
 @Composable
 fun WearApp(greetingName: String) {
-    val alertText = remember { mutableStateOf("0") }
+    val alertText = remember { mutableStateOf("-") }
+    val fatigueText = remember{ mutableStateOf("-")}
     val durationText = remember { mutableStateOf("00:00:00") }
     var time by remember { mutableStateOf(0) }
     var isSessionRunning by remember { mutableStateOf(false) }
@@ -122,6 +123,10 @@ fun WearApp(greetingName: String) {
                     }
                     "/SESSION_ALERT"->{
                         alertText.value = String(messageEvent.data)
+                    }
+
+                    "/SESSION_FATIGUE"->{
+                        fatigueText.value = String(messageEvent.data)
                     }
 
                     "/SESSION_CURRENT_ALERT"->{
@@ -214,14 +219,14 @@ fun WearApp(greetingName: String) {
                     ) {
 
                         Text(
-                            text = alertText.value,
+                            text = fatigueText.value,
                             color = Color(0xFF39AFEA),
                             style = TextStyle(
                                 fontSize = 30.sp
                             )
                         )
                         Text(
-                            text = "Total Alerts",
+                            text = "Total Fatigues",
                             style = TextStyle(
                                 fontSize = 10.sp
                             )
