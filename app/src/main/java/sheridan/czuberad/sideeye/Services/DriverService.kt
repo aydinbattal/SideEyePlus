@@ -32,25 +32,20 @@ class DriverService {
     private var db = FirebaseFirestore.getInstance()
     private val currentUser = FirebaseAuth.getInstance().currentUser?.uid
 
-    fun updateDriverStatus(alertSeverity: String?){
+    fun updateDriverStatus(alerts: List<Alert>?){
         if (currentUser != null) {
-            when (alertSeverity) {
-                "Low" -> {
-
-                    db.collection("Drivers").document(currentUser).update("status", "Low")
-
-                }
-                "Mild" -> {
-                    db.collection("Drivers").document(currentUser).update("status", "Mild")
-                }
-                else -> {
-                    db.collection("Drivers").document(currentUser).update("status", "High")
-
-                }
+            val status = if (alerts?.any { it.alertSeverity == "High" } == true) {
+                "High"
+            } else if (alerts?.any { it.alertSeverity == "Mild" } == true) {
+                "Mild"
+            } else {
+                "Low"
             }
-        }
 
+            db.collection("Drivers").document(currentUser).update("status", status)
+        }
     }
+
 
     fun addInitialSession(
         session: Session

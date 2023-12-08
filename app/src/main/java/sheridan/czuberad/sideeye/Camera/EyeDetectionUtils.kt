@@ -219,6 +219,7 @@ class EyeDetectionUtils(
                             )
                         }
                     }
+                    driverService.updateDriverStatus(alertList)
                 }
 
                 counter = 0
