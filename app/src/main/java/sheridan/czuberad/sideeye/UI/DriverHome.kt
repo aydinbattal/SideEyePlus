@@ -434,8 +434,17 @@ fun SessionCardListView(navController: NavHostController, sessionList: List<Sess
                                 }
 
                                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                    Text(text = SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault()).format(it.endSession), fontWeight = FontWeight.Bold)
-                                    Text(text = SimpleDateFormat("HH:mm", java.util.Locale.getDefault()).format(it.endSession))
+                                    Text(
+                                        text = it.endSession?.let {
+                                            SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault()).format(it)
+                                        } ?: "Session is still running...",
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = it.endSession?.let {
+                                            SimpleDateFormat("HH:mm", java.util.Locale.getDefault()).format(it)
+                                        } ?: "",
+                                    )
                                 }
                             }
 
