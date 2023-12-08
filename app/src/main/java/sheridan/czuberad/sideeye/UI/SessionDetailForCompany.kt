@@ -1,5 +1,6 @@
 package sheridan.czuberad.sideeye.UI
 
+import android.content.ContentValues
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -39,11 +40,23 @@ fun SessionDetailForCompany(sessionId: String?, email: String?) {
     LaunchedEffect(Unit){
         if (sessionId != null && email != null) {
             viewModel.getSessionDetail(sessionId, email)
+            viewModel.getSessionTimeLine(sessionId, email)
         }
     }
     val session = viewModel.sessionDetail.value
     Log.d("Sessiondetailforcompany", "$session")
 
+
+    val alertObjectList = viewModel.alertSessionlist.value
+    val fatigueTimeStampList = viewModel.fatigueTimeStampList.value
+
+    Log.d(ContentValues.TAG, "SESSIONDETAIL Lists: $alertObjectList fatigueTimeStamps: $fatigueTimeStampList")
+
+    viewModel.setTimeLineList(alertObjectList, fatigueTimeStampList)
+
+    val sessionTimeLine = viewModel.sessionTimeLine.value
+//
+    Log.d(ContentValues.TAG, "SESSIONDETAIL LIST: $sessionTimeLine")
 
     Column(
         modifier = Modifier
@@ -80,18 +93,18 @@ fun SessionDetailForCompany(sessionId: String?, email: String?) {
 
 
                     if (session != null) {
-                        Text(text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(session!!.startSession), color = Color.White,fontSize = 20.sp)
+                        Text(text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(session.startSession), color = Color.White,fontSize = 20.sp)
                     }
                     if (session != null) {
-                        Text(text = SimpleDateFormat("MMM dd", Locale.getDefault()).format(session!!.startSession),color = Color.White,fontSize = 12.sp)
+                        Text(text = SimpleDateFormat("MMM dd", Locale.getDefault()).format(session.startSession),color = Color.White,fontSize = 12.sp)
                     }
                     Text(text = "to",color = Color.White)
 
                     if (session != null) {
-                        Text(text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(session!!.endSession), color = Color.White,fontSize = 20.sp)
+                        Text(text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(session.endSession), color = Color.White,fontSize = 20.sp)
                     }
                     if (session != null) {
-                        Text(text = SimpleDateFormat("MMM dd", Locale.getDefault()).format(session!!.endSession),color = Color.White,fontSize = 12.sp)
+                        Text(text = SimpleDateFormat("MMM dd", Locale.getDefault()).format(session.endSession),color = Color.White,fontSize = 12.sp)
                     }
 
 
@@ -102,7 +115,7 @@ fun SessionDetailForCompany(sessionId: String?, email: String?) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         if (session != null) {
                             Text(
-                                text = session!!.alertUUIDList?.size.toString(),
+                                text = session.alertUUIDList?.size.toString(),
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp
@@ -117,7 +130,7 @@ fun SessionDetailForCompany(sessionId: String?, email: String?) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         if (session != null) {
                             Text(
-                                text = session!!.fatigueList?.size.toString(),
+                                text = session.fatigueList?.size.toString(),
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp
@@ -143,7 +156,9 @@ fun SessionDetailForCompany(sessionId: String?, email: String?) {
             containerColor = Color(0xFFCACACA)
         )) {
 
-            Column(modifier = Modifier.fillMaxSize().padding(5.dp), verticalArrangement = Arrangement.Center) {
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .padding(5.dp), verticalArrangement = Arrangement.Center) {
                 Text(text = "Session Timeline", color = Color(0xFF2B2A2A))
             }
 
@@ -151,7 +166,8 @@ fun SessionDetailForCompany(sessionId: String?, email: String?) {
         }
 
         var sampleTimelineList = listOf(
-            Timeline(null,2,"Low","Alert Detection"),
+            Timeline(null, 2,"Low","Alert Detection")
+//            Timeline("9:23AM",2,"Low","Alert Detection"),
 //            Timeline("9:53AM",4,"Mild","Alert Detection"),
 //            Timeline("10:53AM",10,"High","Alert Detection"),
 //            Timeline("11:32AM",12,"Mild","Fatigue Detection"),
@@ -162,7 +178,7 @@ fun SessionDetailForCompany(sessionId: String?, email: String?) {
 
         )
         LazyColumn{
-            items(sampleTimelineList){
+            items(sessionTimeLine ?: emptyList()){
                 Card(modifier = Modifier.fillMaxWidth(),colors = CardDefaults.cardColors(
                     containerColor = Color.White),shape = RectangleShape){
                     Column {
@@ -171,27 +187,21 @@ fun SessionDetailForCompany(sessionId: String?, email: String?) {
                             .padding(5.dp)) {
 
                             Row(verticalAlignment = Alignment.CenterVertically){
-                                it.timelineTime?.let { it1 -> Text(text = it1.toString()) }
+                                it.timelineTime?.let { it1 -> Text(text = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(it1) )}
                                 Column(modifier = Modifier.padding(15.dp)) {
                                     it.type?.let { it1 -> Text(text = it1,fontSize = 20.sp) }
 
                                     it.severity?.let { it1 -> Text(text = it1,fontSize = 15.sp) }
                                 }
                             }
-
-
-
-
-                            Text(text = it.duration.toString() + "s",fontSize = 18.sp)
+                            //Text(text = it.duration.toString() + "s",fontSize = 18.sp)
+                            it.duration?.let { duration -> Text(text = "${duration}s", fontSize = 18.sp) }
                         }
                         Box(modifier = Modifier
                             .fillMaxWidth()
                             .height(2.dp)
                             .background(Color(0xFFC0C0C0)) )
-                        
                     }
-
-
 
                 }
 
