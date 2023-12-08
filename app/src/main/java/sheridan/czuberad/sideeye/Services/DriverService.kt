@@ -20,8 +20,10 @@ import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import com.google.firebase.Timestamp
+import java.sql.Timestamp
+import com.google.firebase.firestore.DocumentSnapshot
 import sheridan.czuberad.sideeye.Domain.*
+import java.sql.Time
 import java.util.Date
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -69,20 +71,6 @@ class DriverService {
         alert: Alert,
         sessionUUID: String
     ){
-
-        //TODO:Add to session alertUUIDList, then add to Alerts collection
-
-
-//        if (currentUser != null) {
-//            db.collection("Drivers").document(currentUser).collection("Sessions").document(sessionUUID)
-//                .get().addOnSuccessListener {
-//                    val alertUUIDList = it["alertUUIDList"] as? MutableList<String> ?: mutableListOf()
-//                    alert.alertUUID?.let { it1 -> alertUUIDList.add(it1) }
-//
-//
-//
-//                }
-//        }
 
         if (currentUser != null) {
             // Reference to the session document
@@ -148,10 +136,6 @@ class DriverService {
 
 
     }
-
-
-
-
 
     fun addSession(
         session: Session,
@@ -230,6 +214,7 @@ class DriverService {
 
     }
 
+
     fun getOverallReactionTimeAverage(
         onSuccess: (Long) -> Unit,
         onFailure: (Exception) -> Unit
@@ -250,6 +235,84 @@ class DriverService {
             onFailure = onFailure
         )
     }
+
+
+//    fun fetchAlertListBySessionID(sessionUUID: String){
+//        if(currentUser != null){
+//            val sessionDocRef = db.collection("Drivers")
+//                .document(currentUser)
+//                .collection("Sessions")
+//                .document(sessionUUID)
+//
+//            sessionDocRef.get().addOnSuccessListener {document ->
+//
+//                val alertsList: MutableList<Alert> = mutableListOf()
+//
+//                val alertUUIDList = document["alertUUIDList"] as? MutableList<String> ?: mutableListOf()
+//
+//
+//
+//
+//
+//            }
+//        }
+//    }
+
+    fun fetchAlertListBySessionID(sessionUUID: String, callback: (List<Alert>?) -> Unit) {
+        if (currentUser != null) {
+            val sessionDocRef = db.collection("Drivers")
+                .document(currentUser)
+                .collection("Sessions")
+                .document(sessionUUID)
+
+            sessionDocRef.get().addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val alertUUIDList = document["alertUUIDList"] as? List<String> ?: emptyList()
+
+                    if (alertUUIDList.isEmpty()) {
+                        callback(emptyList())
+                    } else {
+                        val tasks = alertUUIDList.map { uuid ->
+                            db.collection("Alerts").document(uuid).get()
+                        }
+
+                        Tasks.whenAllSuccess<DocumentSnapshot>(tasks).addOnSuccessListener { documents ->
+                            val alertsList = documents.mapNotNull { doc ->
+                                if (doc.exists()) doc.toObject(Alert::class.java) else null
+                            }
+                            callback(alertsList)
+                        }.addOnFailureListener {
+                            callback(null)
+                        }
+                    }
+                } else {
+                    callback(null)
+                }
+            }.addOnFailureListener {
+                callback(null)
+            }
+        }
+    }
+
+    fun fetchFatiguesBySessionUUID(sessionUUID: String, callback: (List<com.google.firebase.Timestamp>?) -> Unit) {
+        if (currentUser != null) {
+            val sessionDocRef = db.collection("Drivers")
+                .document(currentUser)
+                .collection("Sessions")
+                .document(sessionUUID)
+
+            sessionDocRef.get().addOnSuccessListener { document ->
+                val fatigueTimeStamps = document["fatigueList"] as? List<com.google.firebase.Timestamp> ?: emptyList()
+                callback(fatigueTimeStamps) // Use the callback to return the data
+            }.addOnFailureListener {
+                callback(null) // Handle the failure case
+            }
+        } else {
+            callback(null) // Handle the case where currentUser is null
+        }
+    }
+
+
 
 
 
@@ -276,7 +339,7 @@ class DriverService {
                             .document(reactionTestUid)
                             .get()
                             .addOnSuccessListener { document ->
-                                val timestamp = document["timestamp"] as? Timestamp
+                                val timestamp = document["timestamp"] as? com.google.firebase.Timestamp
                                 val score = document.getLong("averageReactionTime") ?: 0
 
                                 // Convert Timestamp to formatted string
@@ -328,7 +391,7 @@ class DriverService {
                             .document(questionnaireUid)
                             .get()
                             .addOnSuccessListener { document ->
-                                val timestamp = document["timestamp"] as? Timestamp
+                                val timestamp = document["timestamp"] as? com.google.firebase.Timestamp
                                 val category = document.getString("category") ?: ""
 
                                 // Convert Timestamp to formatted string

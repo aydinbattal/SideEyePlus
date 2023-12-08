@@ -10,10 +10,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import sheridan.czuberad.sideeye.Domain.Alert
 import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.Domain.Session
-import sheridan.czuberad.sideeye.Domain.SessionSummary
+import sheridan.czuberad.sideeye.Domain.Timeline
 import sheridan.czuberad.sideeye.Services.DriverService
+import java.sql.Timestamp
+import java.util.Date
 
 class IndependentDriverLogic : ViewModel() {
     private val driverService = DriverService()
@@ -23,6 +26,18 @@ class IndependentDriverLogic : ViewModel() {
 
     private val _sessionDetail = mutableStateOf<Session?>(null)
     val sessionDetail: State<Session?> = _sessionDetail
+
+    private val _alertSessionList = mutableStateOf<List<Alert>?>(null)
+    val alertSessionlist: State<List<Alert>?> = _alertSessionList
+
+    private val _fatigueTimeStampList = mutableStateOf<List<com.google.firebase.Timestamp>?>(null)
+    val fatigueTimeStampList: State<List<com.google.firebase.Timestamp>?> = _fatigueTimeStampList
+
+
+
+    private var _sessionTimeLine = mutableStateOf<List<Timeline>?>(null)
+    val sessionTimeLine: State<List<Timeline>?> = _sessionTimeLine
+
 
     fun getSessionDetail(sessionId: String){
 
@@ -38,8 +53,73 @@ class IndependentDriverLogic : ViewModel() {
 
     }
 
+    fun getSessionTimeLine(sessionUUID: String){
 
+        var alertObjectList: List<Alert>? = null
+        var fatigueTimeStampList: List<com.google.firebase.Timestamp>? = null
+        val sessionTimeLineList = mutableListOf<Timeline>()
 
+        sessionUUID.let {
+            driverService.fetchAlertListBySessionID(it){alertList ->
+                if(alertList != null){
+                    //set it to Alert Object List
+                    alertObjectList = alertList
+                    _alertSessionList.value = alertList
+                    Log.d(TAG, "TIMELINE FUNCTION: AlertList: $alertObjectList")
+
+                } else{
+                    Log.d(TAG, "TIMELINE FUNCTION: Session Alert Not Found")
+                }
+            }
+
+            driverService.fetchFatiguesBySessionUUID(it){fatigueList ->
+                if(fatigueList != null){
+                    //set to fatigue TimeStamp List
+                    fatigueTimeStampList = fatigueList
+                    _fatigueTimeStampList.value = fatigueList
+                    Log.d(TAG, "TIMELINE FUNCTION: FatigueList: $fatigueTimeStampList")
+                } else{
+                    Log.d(TAG, "TIMELINE FUNCTION: fatigue timestamp List not found")
+
+                }
+
+            }
+        }
+
+//        alertObjectList?.forEach { alert ->
+//            sessionTimeLineList.add(
+//                Timeline(alert.alertTime,alert.alertDuration,alert.alertSeverity, type = "Alert Detection")
+//            )
+//        }
+//
+//        fatigueTimeStampList?.forEach {
+//            sessionTimeLineList.add(
+//                Timeline(timelineTime = it, duration = null,severity = null, type = "Fatigue Detection")
+//            )
+//        }
+    }
+
+    fun setTimeLineList(alertObjectList: List<Alert>?, fatigueTimeStampList: List<com.google.firebase.Timestamp>?) {
+        val sessionTimeLineList = mutableListOf<Timeline>()
+
+        alertObjectList?.forEach { alert ->
+            sessionTimeLineList.add(
+                Timeline(alert.alertTime,alert.alertDuration,alert.alertSeverity, type = "Alert Detection")
+            )
+        }
+
+        fatigueTimeStampList?.forEach {
+
+            val date = it.toDate()
+            sessionTimeLineList.add(
+                Timeline(timelineTime = date, duration = null,severity = null, type = "Fatigue Detection")
+            )
+        }
+
+        val sortedSessionTimeLineList = sessionTimeLineList.sortedBy { it.timelineTime }
+
+        _sessionTimeLine.value = sortedSessionTimeLineList
+    }
     fun getSessionCardInfoList(){
 
         driverService.fetchAllSessionsByCurrentID { it ->
@@ -107,4 +187,5 @@ class IndependentDriverLogic : ViewModel() {
             callback(graphMap)  // Notify that the data is loaded and processed
         }
     }
+
 }

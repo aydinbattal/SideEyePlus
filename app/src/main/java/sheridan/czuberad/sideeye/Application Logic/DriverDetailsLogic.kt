@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel
 import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.Domain.Session
 import sheridan.czuberad.sideeye.Domain.SessionSummary
+import sheridan.czuberad.sideeye.Domain.Timeline
 import sheridan.czuberad.sideeye.Services.CompanyService
 import sheridan.czuberad.sideeye.Services.DriverService
 
@@ -24,6 +25,9 @@ class DriverDetailsLogic : ViewModel() {
 
     private val _sessionDetail = mutableStateOf<Session?>(null)
     val sessionDetail: State<Session?> = _sessionDetail
+
+    private val _sessionTimeLine = mutableStateOf<List<Timeline>?>(null)
+    val sessionTimeLine: State<List<Timeline>?> = _sessionTimeLine
 
     fun getSessionDetail(sessionId: String, email: String){
 
@@ -43,6 +47,7 @@ class DriverDetailsLogic : ViewModel() {
             }
         }
     }
+
 
     fun getSessionHistory(email:String){
 

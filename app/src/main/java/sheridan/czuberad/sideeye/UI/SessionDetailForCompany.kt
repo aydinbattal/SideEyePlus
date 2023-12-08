@@ -1,8 +1,6 @@
 package sheridan.czuberad.sideeye.UI
 
-import android.content.ContentValues
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,24 +15,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import sheridan.czuberad.sideeye.Domain.Session
-import sheridan.czuberad.sideeye.`Application Logic`.IndependentDriverLogic
 import sheridan.czuberad.sideeye.Domain.Timeline
-import sheridan.czuberad.sideeye.Services.CompanyService
 import sheridan.czuberad.sideeye.`Application Logic`.DriverDetailsLogic
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -159,14 +151,14 @@ fun SessionDetailForCompany(sessionId: String?, email: String?) {
         }
 
         var sampleTimelineList = listOf(
-            Timeline("9:23AM",2,"Low","Alert Detection"),
-            Timeline("9:53AM",4,"Mild","Alert Detection"),
-            Timeline("10:53AM",10,"High","Alert Detection"),
-            Timeline("11:32AM",12,"Mild","Fatigue Detection"),
-            Timeline("11:53AM",3,"Low","Alert Detection"),
-            Timeline("12:32PM",12,"Mild","Fatigue Detection"),
-            Timeline("1:09PM",2,"Low","Alert Detection"),
-            Timeline("2:32PM",12,"Mild","Fatigue Detection")
+            Timeline(null,2,"Low","Alert Detection"),
+//            Timeline("9:53AM",4,"Mild","Alert Detection"),
+//            Timeline("10:53AM",10,"High","Alert Detection"),
+//            Timeline("11:32AM",12,"Mild","Fatigue Detection"),
+//            Timeline("11:53AM",3,"Low","Alert Detection"),
+//            Timeline("12:32PM",12,"Mild","Fatigue Detection"),
+//            Timeline("1:09PM",2,"Low","Alert Detection"),
+//            Timeline("2:32PM",12,"Mild","Fatigue Detection")
 
         )
         LazyColumn{
@@ -179,7 +171,7 @@ fun SessionDetailForCompany(sessionId: String?, email: String?) {
                             .padding(5.dp)) {
 
                             Row(verticalAlignment = Alignment.CenterVertically){
-                                it.timelineTime?.let { it1 -> Text(text = it1) }
+                                it.timelineTime?.let { it1 -> Text(text = it1.toString()) }
                                 Column(modifier = Modifier.padding(15.dp)) {
                                     it.type?.let { it1 -> Text(text = it1,fontSize = 20.sp) }
 

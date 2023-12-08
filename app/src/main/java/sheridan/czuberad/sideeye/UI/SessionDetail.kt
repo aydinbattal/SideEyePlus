@@ -1,6 +1,7 @@
 package sheridan.czuberad.sideeye.UI
 
-import androidx.compose.foundation.BorderStroke
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,9 +42,22 @@ fun SessionDetail(sessionID: String?) {
     LaunchedEffect(Unit){
         if (sessionID != null) {
             viewModel.getSessionDetail(sessionID)
+            viewModel.getSessionTimeLine(sessionID)
         }
     }
     val session = viewModel.sessionDetail.value
+
+
+    val alertObjectList = viewModel.alertSessionlist.value
+    val fatigueTimeStampList = viewModel.fatigueTimeStampList.value
+
+   Log.d(TAG, "SESSIONDETAIL Lists: $alertObjectList fatigueTimeStamps: $fatigueTimeStampList")
+
+    viewModel.setTimeLineList(alertObjectList, fatigueTimeStampList)
+
+    val sessionTimeLine = viewModel.sessionTimeLine.value
+//
+    Log.d(TAG, "SESSIONDETAIL LIST: $sessionTimeLine")
 
     Column(
         modifier = Modifier
@@ -145,7 +157,9 @@ fun SessionDetail(sessionID: String?) {
             containerColor = Color(0xFFCACACA)
         )) {
 
-            Column(modifier = Modifier.fillMaxSize().padding(5.dp), verticalArrangement = Arrangement.Center) {
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .padding(5.dp), verticalArrangement = Arrangement.Center) {
                 Text(text = "Session Timeline", color = Color(0xFF2B2A2A))
             }
 
@@ -153,18 +167,19 @@ fun SessionDetail(sessionID: String?) {
         }
 
         var sampleTimelineList = listOf(
-            Timeline("9:23AM",2,"Low","Alert Detection"),
-            Timeline("9:53AM",4,"Mild","Alert Detection"),
-            Timeline("10:53AM",10,"High","Alert Detection"),
-            Timeline("11:32AM",12,"Mild","Fatigue Detection"),
-            Timeline("11:53AM",3,"Low","Alert Detection"),
-            Timeline("12:32PM",12,"Mild","Fatigue Detection"),
-            Timeline("1:09PM",2,"Low","Alert Detection"),
-            Timeline("2:32PM",12,"Mild","Fatigue Detection")
+            Timeline(null, 2,"Low","Alert Detection")
+//            Timeline("9:23AM",2,"Low","Alert Detection"),
+//            Timeline("9:53AM",4,"Mild","Alert Detection"),
+//            Timeline("10:53AM",10,"High","Alert Detection"),
+//            Timeline("11:32AM",12,"Mild","Fatigue Detection"),
+//            Timeline("11:53AM",3,"Low","Alert Detection"),
+//            Timeline("12:32PM",12,"Mild","Fatigue Detection"),
+//            Timeline("1:09PM",2,"Low","Alert Detection"),
+//            Timeline("2:32PM",12,"Mild","Fatigue Detection")
 
         )
         LazyColumn{
-            items(sampleTimelineList){
+            items(sessionTimeLine ?: emptyList()){
                 Card(modifier = Modifier.fillMaxWidth(),colors = CardDefaults.cardColors(
                     containerColor = Color.White),shape = RectangleShape){
                     Column {
@@ -173,18 +188,15 @@ fun SessionDetail(sessionID: String?) {
                             .padding(5.dp)) {
 
                             Row(verticalAlignment = Alignment.CenterVertically){
-                                it.timelineTime?.let { it1 -> Text(text = it1) }
+                                it.timelineTime?.let { it1 -> Text(text = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(it1) )}
                                 Column(modifier = Modifier.padding(15.dp)) {
                                     it.type?.let { it1 -> Text(text = it1,fontSize = 20.sp) }
 
                                     it.severity?.let { it1 -> Text(text = it1,fontSize = 15.sp) }
                                 }
                             }
-
-
-
-
-                            Text(text = it.duration.toString() + "s",fontSize = 18.sp)
+                            //Text(text = it.duration.toString() + "s",fontSize = 18.sp)
+                            it.duration?.let { duration -> Text(text = "${duration}s", fontSize = 18.sp) }
                         }
                         Box(modifier = Modifier
                             .fillMaxWidth()
