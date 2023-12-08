@@ -319,7 +319,6 @@ class DriverDetailsActivity : AppCompatActivity() {
             ){
                 if (sessionList != null) {
                     items(sessionList) { session ->
-                        session.endSession = null
                         Card(
                             modifier = Modifier
                                 .height(170.dp)
