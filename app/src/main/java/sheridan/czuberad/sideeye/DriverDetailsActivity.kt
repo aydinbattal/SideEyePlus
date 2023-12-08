@@ -319,6 +319,7 @@ class DriverDetailsActivity : AppCompatActivity() {
             ){
                 if (sessionList != null) {
                     items(sessionList) { session ->
+                        session.endSession = null
                         Card(
                             modifier = Modifier
                                 .height(170.dp)
@@ -335,17 +336,30 @@ class DriverDetailsActivity : AppCompatActivity() {
                                 .fillMaxSize()
                                 .padding(10.dp), verticalArrangement = Arrangement.SpaceBetween) {
 
-                                Column() {
+                                Column {
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                        Text(text = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(session.startSession), fontWeight = FontWeight.Bold)
+                                        Text(
+                                            text = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(session.startSession),
+                                            fontWeight = FontWeight.Bold
+                                        )
                                         Text(text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(session.startSession))
                                     }
 
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                        Text(text = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(session.endSession), fontWeight = FontWeight.Bold)
-                                        Text(text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(session.endSession))
+                                        Text(
+                                            text = session.endSession?.let {
+                                                SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it)
+                                            } ?: "Session is still running...",
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(
+                                            text = session.endSession?.let {
+                                                SimpleDateFormat("HH:mm", Locale.getDefault()).format(it)
+                                            } ?: "",
+                                        )
                                     }
                                 }
+
 
 
 
