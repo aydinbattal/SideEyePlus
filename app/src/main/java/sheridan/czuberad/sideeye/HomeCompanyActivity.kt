@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import sheridan.czuberad.sideeye.Domain.Company
 import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.Services.CompanyService
@@ -115,6 +116,8 @@ class HomeCompanyActivity : AppCompatActivity() {
         binding.rvDriversList.layoutManager = LinearLayoutManager(this)
         // associate the rv with the adapter we created
         binding.rvDriversList.adapter = driversAdapter
+        val swipeRefreshLayout: SwipeRefreshLayout = binding.swipeRefreshLayout
+
 
         val companyService = CompanyService()
         companyService.getCurrentOwner(
@@ -145,8 +148,13 @@ class HomeCompanyActivity : AppCompatActivity() {
             Log.d("ABC", "Observed a change in the drivers list")
             Log.d("ABCDE", it.toString())
             driversAdapter.submitList(it)
-            driversAdapter.notifyDataSetChanged()
+            //driversAdapter.notifyDataSetChanged()
         })
+
+        swipeRefreshLayout.setOnRefreshListener {
+            companyService.getAllDrivers()
+            swipeRefreshLayout.isRefreshing = false
+        }
 
         driversAdapter.setOnItemClickListener(object : DriversAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {

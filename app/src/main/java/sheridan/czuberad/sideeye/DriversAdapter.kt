@@ -16,77 +16,52 @@ import sheridan.czuberad.sideeye.databinding.CustomRowLayoutBinding
  * SideEye+ created by aydin
  * student ID : 991521740
  * on 2022-11-19 */
-class DriversAdapter : ListAdapter<Driver, DriversAdapter.DriversViewHolder>(DriversAdapter.CompanyDriversAdapter()) {
+class DriversAdapter : ListAdapter<Driver, DriversAdapter.DriversViewHolder>(CompanyDriversAdapter()) {
 
-    //var onItemClick : ((Driver) -> Unit)? = null
     private lateinit var mListener: onItemClickListener
 
-    interface onItemClickListener{
+    interface onItemClickListener {
         fun onItemClick(position: Int)
     }
 
-    fun setOnItemClickListener(clickListener: onItemClickListener){
+    fun setOnItemClickListener(clickListener: onItemClickListener) {
         mListener = clickListener
     }
 
-    inner class DriversViewHolder(val binding: CustomRowLayoutBinding, clickListener: onItemClickListener): RecyclerView.ViewHolder(binding.root) {
+    inner class DriversViewHolder(val binding: CustomRowLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
-            itemView.setOnClickListener{
-                clickListener.onItemClick(adapterPosition)
+            itemView.setOnClickListener {
+                mListener.onItemClick(adapterPosition)
             }
         }
     }
 
-    class CompanyDriversAdapter: DiffUtil.ItemCallback<Driver>() {
+    class CompanyDriversAdapter : DiffUtil.ItemCallback<Driver>() {
         override fun areItemsTheSame(oldItem: Driver, newItem: Driver): Boolean {
-            TODO("Implement this")
-            // return oldItem.id == newItem.id
+            return oldItem.email == newItem.email
         }
 
         override fun areContentsTheSame(oldItem: Driver, newItem: Driver): Boolean {
-            TODO("Implement this")
-            // return oldItem == newItem
+            return oldItem == newItem
         }
     }
 
-    // mandatory functions
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DriversAdapter.DriversViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DriversViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = CustomRowLayoutBinding.inflate(layoutInflater, parent, false)
-        return DriversViewHolder(binding, mListener)
+        return DriversViewHolder(binding)
     }
 
-    // specify what data should be placed in each UI element of the custom row layout
-    override fun onBindViewHolder(holder: DriversAdapter.DriversViewHolder, position: Int) {
-//        val driver : Driver = driversList[position]
-        Log.d("ABC", "onBindViewHolder is called!")
+    override fun onBindViewHolder(holder: DriversViewHolder, position: Int) {
         val item = getItem(position)
-        Log.d("adapter", item.name.toString())
 
         holder.binding.tvDriverName.text = item.name.toString()
         holder.binding.tvDriverStatus.text = item.status
-        if(item.status == "Low"){
-            holder.binding.tvDriverStatus.setTextColor(Color.GREEN)
-        } else if(item.status == "Mild") {
-            holder.binding.tvDriverStatus.setTextColor(Color.rgb(252, 88, 5))
-        } else {
-            holder.binding.tvDriverStatus.setTextColor(Color.RED)
+
+        when (item.status) {
+            "Low" -> holder.binding.tvDriverStatus.setTextColor(Color.GREEN)
+            "Mild" -> holder.binding.tvDriverStatus.setTextColor(Color.rgb(252, 88, 5))
+            else -> holder.binding.tvDriverStatus.setTextColor(Color.RED)
         }
-
-
-//        holder.itemView.setOnClickListener{
-//            onItemClick?.invoke(item)
-//        }
-
     }
-
-//    override fun getItemCount(): Int {
-//        return driversList.size
-//    }
-
-//    class DriversViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-//        val name : TextView = itemView.findViewById(R.id.tvDriverName)
-//    }
-
-
 }
