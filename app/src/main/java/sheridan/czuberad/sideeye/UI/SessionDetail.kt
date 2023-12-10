@@ -28,7 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import sheridan.czuberad.sideeye.`Application Logic`.IndependentDriverLogic
+import sheridan.czuberad.sideeye.ApplicationLogic.IndependentDriverLogic
 import sheridan.czuberad.sideeye.Domain.Timeline
 import java.text.SimpleDateFormat
 import java.util.Locale

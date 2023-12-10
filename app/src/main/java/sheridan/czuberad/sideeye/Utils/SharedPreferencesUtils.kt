@@ -1,4 +1,4 @@
-package sheridan.czuberad.sideeye
+package sheridan.czuberad.sideeye.Utils
 
 import android.content.Context
 import java.util.*

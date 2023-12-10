@@ -1,18 +1,12 @@
-package sheridan.czuberad.sideeye.`Application Logic`
+package sheridan.czuberad.sideeye.ApplicationLogic
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import sheridan.czuberad.sideeye.Domain.*
 import sheridan.czuberad.sideeye.Services.CompanyService
-import sheridan.czuberad.sideeye.Services.DriverService
 
 class DriverDetailsLogic : ViewModel() {
     private val companyService = CompanyService()

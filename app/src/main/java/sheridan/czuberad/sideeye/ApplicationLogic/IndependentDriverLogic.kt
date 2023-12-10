@@ -1,4 +1,4 @@
-package sheridan.czuberad.sideeye.`Application Logic`
+package sheridan.czuberad.sideeye.ApplicationLogic
 
 import android.content.ContentValues.TAG
 import android.util.Log
@@ -15,8 +15,6 @@ import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.Domain.Session
 import sheridan.czuberad.sideeye.Domain.Timeline
 import sheridan.czuberad.sideeye.Services.DriverService
-import java.sql.Timestamp
-import java.util.Date
 
 class IndependentDriverLogic : ViewModel() {
     private val driverService = DriverService()

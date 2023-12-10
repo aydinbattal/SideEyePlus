@@ -1,4 +1,4 @@
-package sheridan.czuberad.sideeye
+package sheridan.czuberad.sideeye.UI
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -9,14 +9,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Switch
 import android.widget.Toast
-import androidx.core.view.isVisible
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import sheridan.czuberad.sideeye.Domain.Company
 import sheridan.czuberad.sideeye.Domain.Driver
-import sheridan.czuberad.sideeye.Prompts.SignupPrompts
+import sheridan.czuberad.sideeye.R
 
 class SignupActivity : AppCompatActivity() {
 

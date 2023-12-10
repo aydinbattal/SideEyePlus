@@ -15,17 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import sheridan.czuberad.sideeye.Domain.Questionnaire
 import sheridan.czuberad.sideeye.Domain.ReactionTest
-import sheridan.czuberad.sideeye.`Application Logic`.IndependentDriverLogic
 import sheridan.czuberad.sideeye.Domain.Session
 import sheridan.czuberad.sideeye.Services.CompanyService
-import sheridan.czuberad.sideeye.`Application Logic`.DriverDetailsLogic
+import sheridan.czuberad.sideeye.ApplicationLogic.DriverDetailsLogic
 import java.text.SimpleDateFormat
 import java.util.Locale
 

@@ -1,22 +1,17 @@
 package sheridan.czuberad.sideeye.UI
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,10 +44,8 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,12 +56,9 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.Wearable
-import sheridan.czuberad.sideeye.`Application Logic`.IndependentDriverLogic
+import sheridan.czuberad.sideeye.ApplicationLogic.IndependentDriverLogic
 import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.Domain.Session
-import sheridan.czuberad.sideeye.EyeDetectionActivity
-import sheridan.czuberad.sideeye.HomeTestsActivity
-import sheridan.czuberad.sideeye.R
 import java.text.SimpleDateFormat
 
 

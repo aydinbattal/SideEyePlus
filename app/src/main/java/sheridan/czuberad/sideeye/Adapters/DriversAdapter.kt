@@ -1,11 +1,8 @@
-package sheridan.czuberad.sideeye
+package sheridan.czuberad.sideeye.Adapters
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ListAdapter

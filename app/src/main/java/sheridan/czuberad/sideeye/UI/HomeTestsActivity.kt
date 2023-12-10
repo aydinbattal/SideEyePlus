@@ -1,8 +1,7 @@
-package sheridan.czuberad.sideeye
+package sheridan.czuberad.sideeye.UI
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -11,8 +10,10 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import org.w3c.dom.Text
+import sheridan.czuberad.sideeye.R
 import sheridan.czuberad.sideeye.Services.DriverService
+import sheridan.czuberad.sideeye.Utils.DeviceUtils
+import sheridan.czuberad.sideeye.Utils.SharedPreferencesUtils
 import sheridan.czuberad.sideeye.databinding.ActivityHomeTestsBinding
 
 
@@ -58,7 +59,7 @@ class HomeTestsActivity : AppCompatActivity() {
         }
 
         historyButton.setOnClickListener {
-            val intent = Intent(this@HomeTestsActivity, TestHistory::class.java)
+            val intent = Intent(this@HomeTestsActivity, TestResultsHistoryActivity::class.java)
             startActivity(intent)
         }
     }

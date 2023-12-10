@@ -1,4 +1,4 @@
-package sheridan.czuberad.sideeye
+package sheridan.czuberad.sideeye.Adapters
 
 /**
  * SideEye+ created by aydin
@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import sheridan.czuberad.sideeye.Domain.Questionnaire
 import sheridan.czuberad.sideeye.Domain.ReactionTest
+import sheridan.czuberad.sideeye.R
 
 class CombinedResultAdapter(private val combinedResults: List<Any>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

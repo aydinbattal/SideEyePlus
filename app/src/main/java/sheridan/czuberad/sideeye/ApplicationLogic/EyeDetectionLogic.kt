@@ -1,4 +1,4 @@
-package sheridan.czuberad.sideeye.`Application Logic`
+package sheridan.czuberad.sideeye.ApplicationLogic
 
 import java.sql.Timestamp
 import java.util.Date

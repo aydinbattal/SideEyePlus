@@ -4,7 +4,7 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.text.InputType
 import android.widget.EditText
-import sheridan.czuberad.sideeye.SignupActivity
+import sheridan.czuberad.sideeye.UI.SignupActivity
 
 
 class SignupPrompts {

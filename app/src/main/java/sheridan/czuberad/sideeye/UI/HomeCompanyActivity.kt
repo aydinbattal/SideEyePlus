@@ -1,11 +1,10 @@
-package sheridan.czuberad.sideeye
+package sheridan.czuberad.sideeye.UI
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -24,6 +23,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import sheridan.czuberad.sideeye.Domain.Company
 import sheridan.czuberad.sideeye.Domain.Driver
+import sheridan.czuberad.sideeye.Adapters.DriversAdapter
+import sheridan.czuberad.sideeye.R
 import sheridan.czuberad.sideeye.Services.CompanyService
 import sheridan.czuberad.sideeye.databinding.ActivityHomeCompanyBinding
 
@@ -156,7 +157,7 @@ class HomeCompanyActivity : AppCompatActivity() {
             swipeRefreshLayout.isRefreshing = false
         }
 
-        driversAdapter.setOnItemClickListener(object : DriversAdapter.onItemClickListener{
+        driversAdapter.setOnItemClickListener(object : DriversAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
                 val intent = Intent(this@HomeCompanyActivity, DriverDetailsActivity::class.java)
                 intent.putExtra("driverName", driversAdapter.currentList[position].name)

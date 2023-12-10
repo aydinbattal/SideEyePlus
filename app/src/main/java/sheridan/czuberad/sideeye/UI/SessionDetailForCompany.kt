@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import sheridan.czuberad.sideeye.Domain.Timeline
-import sheridan.czuberad.sideeye.`Application Logic`.DriverDetailsLogic
+import sheridan.czuberad.sideeye.ApplicationLogic.DriverDetailsLogic
 import java.text.SimpleDateFormat
 import java.util.Locale
 

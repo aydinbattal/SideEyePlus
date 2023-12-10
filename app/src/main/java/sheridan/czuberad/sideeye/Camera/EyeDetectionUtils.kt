@@ -1,7 +1,6 @@
 package sheridan.czuberad.sideeye.Camera
 import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.util.Log
@@ -17,11 +16,11 @@ import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 import com.google.mlkit.vision.face.FaceLandmark
 import sheridan.czuberad.sideeye.Domain.Alert
-import sheridan.czuberad.sideeye.`Application Logic`.EyeDetectionLogic
+import sheridan.czuberad.sideeye.ApplicationLogic.EyeDetectionLogic
 import sheridan.czuberad.sideeye.Domain.Session
-import sheridan.czuberad.sideeye.EyeDetectionActivity
+import sheridan.czuberad.sideeye.UI.EyeDetectionActivity
 import sheridan.czuberad.sideeye.Services.DriverService
-import sheridan.czuberad.sideeye.SharedPreferencesUtils
+import sheridan.czuberad.sideeye.Utils.SharedPreferencesUtils
 import java.util.Date
 import java.sql.Timestamp
 import java.util.LinkedList

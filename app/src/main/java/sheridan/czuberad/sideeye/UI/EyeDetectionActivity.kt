@@ -1,4 +1,4 @@
-package sheridan.czuberad.sideeye
+package sheridan.czuberad.sideeye.UI
 
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
@@ -11,7 +11,8 @@ import androidx.camera.view.PreviewView
 import com.google.firebase.firestore.FirebaseFirestore
 import sheridan.czuberad.sideeye.Camera.CameraXUtils
 import sheridan.czuberad.sideeye.Services.DriverService
-import sheridan.czuberad.sideeye.`Application Logic`.EyeDetectionLogic
+import sheridan.czuberad.sideeye.ApplicationLogic.EyeDetectionLogic
+import sheridan.czuberad.sideeye.R
 
 class EyeDetectionActivity : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
@@ -24,7 +25,7 @@ class EyeDetectionActivity : AppCompatActivity() {
         var eyeDetectionLogic = EyeDetectionLogic()
         var driverService = DriverService()
         var sessionToast = Toast.makeText(baseContext, "Session Has Been Added", Toast.LENGTH_SHORT).show()
-        var media = MediaPlayer.create(this,R.raw.warningsound)
+        var media = MediaPlayer.create(this, R.raw.warningsound)
         val previewCameraX = findViewById<PreviewView>(R.id.cameraXpreview)
         var eyeDetectionText = findViewById<TextView>(R.id.eyedetectionText)
         var sessionText = findViewById<TextView>(R.id.sessionTextView)

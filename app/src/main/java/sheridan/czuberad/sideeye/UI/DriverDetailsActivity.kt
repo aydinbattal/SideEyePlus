@@ -1,13 +1,8 @@
-package sheridan.czuberad.sideeye
+package sheridan.czuberad.sideeye.UI
 
-import android.content.ContentValues
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,44 +13,32 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.fragment.NavHostFragment
+import sheridan.czuberad.sideeye.ApplicationLogic.DriverDetailsLogic
 import sheridan.czuberad.sideeye.Services.CompanyService
 import sheridan.czuberad.sideeye.databinding.ActivityDriverDetailsBinding
-import sheridan.czuberad.sideeye.databinding.ActivityHomeCompanyBinding
-import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.Domain.Questionnaire
 import sheridan.czuberad.sideeye.Domain.ReactionTest
 import sheridan.czuberad.sideeye.Domain.Session
-import sheridan.czuberad.sideeye.Services.DriverService
-import sheridan.czuberad.sideeye.UI.*
-import sheridan.czuberad.sideeye.`Application Logic`.DriverDetailsLogic
-import sheridan.czuberad.sideeye.`Application Logic`.IndependentDriverLogic
 import java.text.SimpleDateFormat
 import java.util.*
 
 class DriverDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDriverDetailsBinding
     private lateinit var companyService: CompanyService
-    lateinit var email: String
-    lateinit var phone: String
+//    lateinit var email: String
+//    lateinit var phone: String
     //private val sessions = mutableListOf<Session>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,9 +48,9 @@ class DriverDetailsActivity : AppCompatActivity() {
         setContentView(view)
 
         companyService = CompanyService()
-        email = intent.getStringExtra("driverEmail")!!
+        var email = intent.getStringExtra("driverEmail")!!
         val name = intent.getStringExtra("driverName")
-        phone = intent.getStringExtra("driverPhone")!!
+        val phone = intent.getStringExtra("driverPhone")!!
         val status = intent.getStringExtra("driverStatus")
 
 //        binding.edtEmail.setText(email)

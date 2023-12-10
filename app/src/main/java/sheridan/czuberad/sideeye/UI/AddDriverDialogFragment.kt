@@ -1,4 +1,4 @@
-package sheridan.czuberad.sideeye
+package sheridan.czuberad.sideeye.UI
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

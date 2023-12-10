@@ -1,23 +1,23 @@
-package sheridan.czuberad.sideeye
+package sheridan.czuberad.sideeye.UI
 
-import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import sheridan.czuberad.sideeye.Adapters.CombinedResultAdapter
 import sheridan.czuberad.sideeye.Domain.Questionnaire
 import sheridan.czuberad.sideeye.Domain.ReactionTest
+import sheridan.czuberad.sideeye.R
 import sheridan.czuberad.sideeye.Services.DriverService
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-
-class TestHistory : AppCompatActivity() {
+class TestResultsHistoryActivity : AppCompatActivity() {
     private val driverService = DriverService()
     val combinedResults = mutableListOf<Any>() // List to hold both reaction test and questionnaire results
     var reactionTestResults: List<ReactionTest>? = null
@@ -26,7 +26,7 @@ class TestHistory : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test_history)
+        setContentView(R.layout.activity_test_results_history)
 
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -131,7 +131,3 @@ suspend fun DriverService.getQuestionnaireResultsAsync(): List<Questionnaire> =
             }
         )
     }
-
-
-
-
