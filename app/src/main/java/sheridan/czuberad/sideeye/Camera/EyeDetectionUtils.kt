@@ -71,6 +71,7 @@ class EyeDetectionUtils(
     private val timeQueue: Queue<Long> = LinkedList()
     private val fatigueTimeStampList = ArrayList<Timestamp>()
     private val timeInterval = 30000
+    private var lastOpenTime: Long = System.currentTimeMillis()
 
     override fun detectFace(image: InputImage): Task<List<Face>> {
         return det.process(image)
@@ -182,9 +183,10 @@ class EyeDetectionUtils(
             else if((it.leftEyeOpenProbability!! > 0.5) && (it.rightEyeOpenProbability!! > 0.5)){
 
                 if(isSessionStart){
-                    if(counter in 50..100){
+                    var checkRange = (counter/16)/2
+                    if(checkRange in 1 .. 2){
                         //LOW SEVERITY
-                        val duration = (counter/16)
+                        val duration = (counter/16)/2
                         val alert = Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "Low",Date(System.currentTimeMillis()), alertDuration = duration )
                         alertList.add(alert)
                         alertText.text = alertList.size.toString()
@@ -196,9 +198,9 @@ class EyeDetectionUtils(
                             )
                         }
                     }
-                    else if(counter in 101..150){
+                    else if(checkRange in 2..3){
                         //MILD SEVERITY
-                        val duration = (counter/16)
+                        val duration = (counter/16)/2
                         val alert = Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "Mild",Date(System.currentTimeMillis()), alertDuration = duration )
                         alertList.add(alert)
                         alertText.text = alertList.size.toString()
@@ -211,9 +213,9 @@ class EyeDetectionUtils(
                         }
 
                     }
-                    else if(counter > 150){
+                    else if(checkRange >3){
                         //HIGH SEVERITY
-                        val duration = (counter/16)
+                        val duration = (counter/16)/2
                         val alert = Alert(alertUUID = UUID.randomUUID().toString(),alertSeverity = "High",Date(System.currentTimeMillis()),alertDuration = duration )
                         alertList.add(alert)
                         alertText.text = alertList.size.toString()
@@ -257,7 +259,7 @@ class EyeDetectionUtils(
                     isAbove = false
                 }
 
-                if(counter>=50){
+                if(counter>=17){
 
                     eyeLogic = EyeDetectionLogic()
                     sendMessage(contextAct,"ALERT_ACTIVE", "/SESSION_CURRENT_ALERT")

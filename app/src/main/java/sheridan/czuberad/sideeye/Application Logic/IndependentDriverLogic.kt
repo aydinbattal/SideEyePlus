@@ -10,6 +10,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import sheridan.czuberad.sideeye.Domain.Alert
 import sheridan.czuberad.sideeye.Domain.Driver
 import sheridan.czuberad.sideeye.Domain.Session
@@ -38,6 +40,8 @@ class IndependentDriverLogic : ViewModel() {
     private var _sessionTimeLine = mutableStateOf<List<Timeline>?>(null)
     val sessionTimeLine: State<List<Timeline>?> = _sessionTimeLine
 
+    private var _sessionHistoryMap = mutableStateOf<MutableMap<Int, Int>?>(null)
+    val sessionHistoryMap: State<MutableMap<Int, Int>?> = _sessionHistoryMap
 
     fun getSessionDetail(sessionId: String){
 
@@ -86,17 +90,6 @@ class IndependentDriverLogic : ViewModel() {
             }
         }
 
-//        alertObjectList?.forEach { alert ->
-//            sessionTimeLineList.add(
-//                Timeline(alert.alertTime,alert.alertDuration,alert.alertSeverity, type = "Alert Detection")
-//            )
-//        }
-//
-//        fatigueTimeStampList?.forEach {
-//            sessionTimeLineList.add(
-//                Timeline(timelineTime = it, duration = null,severity = null, type = "Fatigue Detection")
-//            )
-//        }
     }
 
     fun setTimeLineList(alertObjectList: List<Alert>?, fatigueTimeStampList: List<com.google.firebase.Timestamp>?) {
@@ -153,39 +146,37 @@ class IndependentDriverLogic : ViewModel() {
 
     }
 
-//    fun getSessionHistoryMap(): MutableMap<Int, Int> {
+    fun getSessionHistoryMap() {
+        viewModelScope.launch {
+            val graphMap = mutableMapOf<Int, Int>()
+            var counter = 1
+
+            driverService.fetchSessions { sessionAlertMap ->
+                sessionAlertMap?.forEach { (_, alerts) ->
+                    graphMap[counter] = alerts
+                    counter++
+                }
+
+                _sessionHistoryMap.value = graphMap // Update the state variable
+            }
+        }
+    }
+
+//    fun getSessionHistoryMap(callback: (MutableMap<Int, Int>) -> Unit) {
 //        Log.d("YOO", "Start of Call")
 //        val graphMap = mutableMapOf<Int, Int>()
 //        var counter = 1
 //
 //        driverService.fetchSessions { sessionAlertMap ->
-//
-//            sessionAlertMap?.forEach{(sessionId, alerts) ->
+//            sessionAlertMap?.forEach { (_, alerts) ->
 //                graphMap[counter] = alerts
 //                counter++
-//                Log.d("YOO", "SessionID: $sessionId Number of Alerts:$alerts")
+//                Log.d("YOO", "Number of Alerts:$alerts")
 //            }
+//
+//            Log.d("YOO", "SessionMapGraph: $graphMap")
+//            callback(graphMap)  // Notify that the data is loaded and processed
 //        }
-//        Log.d("YOO", "SessionMapGraph: $graphMap")
-//        return graphMap
-//        Log.d("YOO", "End of Call")
-//    }get
-
-    fun getSessionHistoryMap(callback: (MutableMap<Int, Int>) -> Unit) {
-        Log.d("YOO", "Start of Call")
-        val graphMap = mutableMapOf<Int, Int>()
-        var counter = 1
-
-        driverService.fetchSessions { sessionAlertMap ->
-            sessionAlertMap?.forEach { (_, alerts) ->
-                graphMap[counter] = alerts
-                counter++
-                Log.d("YOO", "Number of Alerts:$alerts")
-            }
-
-            Log.d("YOO", "SessionMapGraph: $graphMap")
-            callback(graphMap)  // Notify that the data is loaded and processed
-        }
-    }
+//    }
 
 }

@@ -76,10 +76,15 @@ import java.text.SimpleDateFormat
 fun DriverHome(navController: NavHostController) {
 
     var needsUpdate by remember { mutableStateOf(false) }
-
+    var graphData: MutableMap<Int, Int>? = null
     val viewModel: IndependentDriverLogic = viewModel()
     LaunchedEffect(Unit){
         viewModel.getSessionCardInfoList()
+        /*viewModel.getSessionHistoryMap {
+            Log.d("YOO", "HOME UI Resulting Map: $it")
+            graphData = it
+        }*/
+        viewModel.getSessionHistoryMap()
     }
 
 
@@ -100,6 +105,10 @@ fun DriverHome(navController: NavHostController) {
     )
     val myMutableMap = mutableMapOf<Int, Int>()
 
+    val graphDataFull = viewModel.sessionHistoryMap.value
+
+    graphData = graphDataFull?.entries?.take(10)?.associate { it.toPair() } as MutableMap<Int, Int>?
+
     for (i in 1..10) {
         myMutableMap[i] = (1..10).random()
     }
@@ -115,7 +124,7 @@ fun DriverHome(navController: NavHostController) {
     Log.d("YOO", "CALLING FROM UI")
     val currentDriver = independentDriverLogic.getCurrentDriverInfo()
 
-//    var graphData: MutableMap<Int, Int>? = null
+
 //    independentDriverLogic.getSessionHistoryMap{
 //
 //        Log.d("YOO", "HOME UI Resulting Map: $it")
@@ -149,13 +158,15 @@ fun DriverHome(navController: NavHostController) {
                         fontWeight = FontWeight.Bold,
                         fontSize = 19.sp  // Adjust the font size as needed
                     ), modifier = Modifier.padding(start = 30.dp, top = 10.dp))
-                    LineChart(
-                        data = myMutableMap,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp)
-                            .align(Alignment.CenterHorizontally)
-                    )
+                    graphData?.let {
+                        LineChart(
+                            data = it,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp)
+                                .align(Alignment.CenterHorizontally)
+                        )
+                    }
                 }
                 
 
@@ -410,7 +421,10 @@ fun SessionCardListView(navController: NavHostController, sessionList: List<Sess
             //modifier = Modifier.padding(bottom = 10.dp)
         ){
             if (sessionList != null) {
-                items(listOf(*sessionList.toTypedArray())){
+                val latestSessions = sessionList.take(10)
+                //items(listOf(*sessionList.toTypedArray())){
+                items(latestSessions){
+
                     Card(
                         modifier = Modifier
                             .height(150.dp)

@@ -22,6 +22,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import java.sql.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Query
 import sheridan.czuberad.sideeye.Domain.*
 import java.sql.Time
 import java.util.Date
@@ -465,11 +466,13 @@ class DriverService {
 
 
         fun fetchSessions(callback: (Map<String, Int>?) -> Unit) {
+
             Log.d("YOO", "FETCHSESSIONS FUNCTION CALL")
             if (currentUser != null) {
                 db.collection("Drivers")
                     .document(currentUser)
                     .collection("Sessions")
+                    .orderBy("endSession", Query.Direction.DESCENDING)
                     .get()
                     .addOnSuccessListener { sessionsSnapshot ->
                         val sessionAlertsCountMap = mutableMapOf<String, Int>()
@@ -480,42 +483,19 @@ class DriverService {
                             return@addOnSuccessListener
                         }
 
-                        // Counter for completed requests
-                        var completedRequests = 0
-
-                        // Iterate over all the session documents
-                        for (sessionId in sessionIds) {
-                            db.collection("Drivers")
-                                .document(currentUser)
-                                .collection("Sessions")
-                                .document(sessionId)
-                                .collection("Alerts")
-                                .get()
-                                .addOnSuccessListener { alertsSnapshot ->
-                                    sessionAlertsCountMap[sessionId] = alertsSnapshot.size()
-                                    completedRequests++
-
-                                    // Check if all requests are done
-                                    if (completedRequests == sessionIds.size) {
-                                        callback(sessionAlertsCountMap)
-                                    }
-                                }
-                                .addOnFailureListener {
-                                    completedRequests++
-                                    sessionAlertsCountMap[sessionId] = 0
-
-                                    // Check if all requests are done
-                                    if (completedRequests == sessionIds.size) {
-                                        callback(sessionAlertsCountMap)
-                                    }
-                                }
+                        for (document in sessionsSnapshot.documents) {
+                            val alertUUIDList = document.get("alertUUIDList") as? List<*>
+                            val sessionId = document.id
+                            val alertsCount = alertUUIDList?.size ?: 0
+                            sessionAlertsCountMap[sessionId] = alertsCount
                         }
+
+                        callback(sessionAlertsCountMap)
                     }
                     .addOnFailureListener {
                         callback(null)
                     }
             }
-
 
         }
     }
