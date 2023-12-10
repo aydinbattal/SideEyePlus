@@ -1,11 +1,10 @@
-package sheridan.czuberad.sideeye
+package sheridan.czuberad.sideeye.UI
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -21,8 +20,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import sheridan.czuberad.sideeye.Domain.Company
 import sheridan.czuberad.sideeye.Domain.Driver
+import sheridan.czuberad.sideeye.Adapters.DriversAdapter
+import sheridan.czuberad.sideeye.R
 import sheridan.czuberad.sideeye.Services.CompanyService
 import sheridan.czuberad.sideeye.databinding.ActivityHomeCompanyBinding
 
@@ -115,6 +117,8 @@ class HomeCompanyActivity : AppCompatActivity() {
         binding.rvDriversList.layoutManager = LinearLayoutManager(this)
         // associate the rv with the adapter we created
         binding.rvDriversList.adapter = driversAdapter
+        val swipeRefreshLayout: SwipeRefreshLayout = binding.swipeRefreshLayout
+
 
         val companyService = CompanyService()
         companyService.getCurrentOwner(
@@ -145,10 +149,15 @@ class HomeCompanyActivity : AppCompatActivity() {
             Log.d("ABC", "Observed a change in the drivers list")
             Log.d("ABCDE", it.toString())
             driversAdapter.submitList(it)
-            driversAdapter.notifyDataSetChanged()
+            //driversAdapter.notifyDataSetChanged()
         })
 
-        driversAdapter.setOnItemClickListener(object : DriversAdapter.onItemClickListener{
+        swipeRefreshLayout.setOnRefreshListener {
+            companyService.getAllDrivers()
+            swipeRefreshLayout.isRefreshing = false
+        }
+
+        driversAdapter.setOnItemClickListener(object : DriversAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
                 val intent = Intent(this@HomeCompanyActivity, DriverDetailsActivity::class.java)
                 intent.putExtra("driverName", driversAdapter.currentList[position].name)

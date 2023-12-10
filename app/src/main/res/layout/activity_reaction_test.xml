@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="top"
-    tools:context=".ReactionTestActivity">
+    tools:context=".UI.ReactionTestActivity">
 
         <TextView
             android:id="@+id/reactionTestTitle"

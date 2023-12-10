@@ -15,7 +15,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import sheridan.czuberad.sideeye.EyeDetectionActivity
+import sheridan.czuberad.sideeye.UI.EyeDetectionActivity
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

@@ -15,17 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import sheridan.czuberad.sideeye.Domain.Questionnaire
 import sheridan.czuberad.sideeye.Domain.ReactionTest
-import sheridan.czuberad.sideeye.`Application Logic`.IndependentDriverLogic
 import sheridan.czuberad.sideeye.Domain.Session
 import sheridan.czuberad.sideeye.Services.CompanyService
-import sheridan.czuberad.sideeye.`Application Logic`.DriverDetailsLogic
+import sheridan.czuberad.sideeye.ApplicationLogic.DriverDetailsLogic
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -110,11 +108,26 @@ fun SessionListForCompanyItem(item: Session, navController: NavHostController) {
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(SimpleDateFormat("HH:mm", Locale.getDefault()).format(item.startSession), fontSize = 12.sp )
                 }
-                Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween,verticalAlignment = Alignment.CenterVertically){
-                    Text(text = SimpleDateFormat("MMM dd, yyy", Locale.getDefault()).format(item.endSession), fontWeight = FontWeight.Bold)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = item.endSession?.let {
+                            SimpleDateFormat("MMM dd, yyy", Locale.getDefault()).format(it)
+                        } ?: "Session is still running...",
+                        fontWeight = FontWeight.Bold
+                    )
                     Spacer(modifier = Modifier.width(5.dp))
-                    Text(SimpleDateFormat("HH:mm", Locale.getDefault()).format(item.endSession), fontSize = 12.sp)
+                    Text(
+                        text = item.endSession?.let {
+                            SimpleDateFormat("HH:mm", Locale.getDefault()).format(it)
+                        } ?: "",
+                        fontSize = 12.sp
+                    )
                 }
+
                 Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 
                 Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween){

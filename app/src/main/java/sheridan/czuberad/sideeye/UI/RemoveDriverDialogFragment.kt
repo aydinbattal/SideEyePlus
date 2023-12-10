@@ -1,17 +1,16 @@
-package sheridan.czuberad.sideeye
+package sheridan.czuberad.sideeye.UI
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
+import sheridan.czuberad.sideeye.Adapters.DriversAdapter
 import sheridan.czuberad.sideeye.Services.CompanyService
-import sheridan.czuberad.sideeye.databinding.FragmentAddDriverDialogBinding
 import sheridan.czuberad.sideeye.databinding.FragmentRemoveDriverDialogBinding
 
 

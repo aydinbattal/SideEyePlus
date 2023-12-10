@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -30,9 +31,7 @@ class CompanyService() {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     val driversList = MutableLiveData<MutableList<Driver>>()
     private val currentUser = Firebase.auth.currentUser
-    val alertTimes = MutableLiveData<MutableList<String>>()
     private val _sessionsLiveData = MutableLiveData<List<Session>>()
-    val sessionsLiveData: LiveData<List<Session>> get() = _sessionsLiveData
     private var selectedDriver: String? = null
 
 
@@ -85,6 +84,63 @@ class CompanyService() {
                 callback(null)
             }
     }
+
+    fun fetchAlertListBySessionID(sessionUUID: String, callback: (List<Alert>?) -> Unit) {
+        if (currentUser != null && selectedDriver != null) {
+            val sessionDocRef = db.collection("Drivers")
+                .document(selectedDriver!!)
+                .collection("Sessions")
+                .document(sessionUUID)
+
+            sessionDocRef.get().addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val alertUUIDList = document["alertUUIDList"] as? List<String> ?: emptyList()
+
+                    if (alertUUIDList.isEmpty()) {
+                        callback(emptyList())
+                    } else {
+                        val tasks = alertUUIDList.map { uuid ->
+                            db.collection("Alerts").document(uuid).get()
+                        }
+
+                        Tasks.whenAllSuccess<DocumentSnapshot>(tasks).addOnSuccessListener { documents ->
+                            val alertsList = documents.mapNotNull { doc ->
+                                if (doc.exists()) doc.toObject(Alert::class.java) else null
+                            }
+                            callback(alertsList)
+                            Log.d("CompanyService", "fetchAlertListBySessionID: $alertsList")
+                        }.addOnFailureListener {
+                            callback(null)
+                        }
+                    }
+                } else {
+                    callback(null)
+                }
+            }.addOnFailureListener {
+                callback(null)
+            }
+        }
+    }
+
+    fun fetchFatiguesBySessionUUID(sessionUUID: String, callback: (List<com.google.firebase.Timestamp>?) -> Unit) {
+        if (currentUser != null && selectedDriver != null) {
+            val sessionDocRef = db.collection("Drivers")
+                .document(selectedDriver!!)
+                .collection("Sessions")
+                .document(sessionUUID)
+
+            sessionDocRef.get().addOnSuccessListener { document ->
+                val fatigueTimeStamps = document["fatigueList"] as? List<com.google.firebase.Timestamp> ?: emptyList()
+                callback(fatigueTimeStamps) // Use the callback to return the data
+                Log.d("CompanyService", "fetchFatiguesBySessionUUID: $fatigueTimeStamps")
+            }.addOnFailureListener {
+                callback(null) // Handle the failure case
+            }
+        } else {
+            callback(null) // Handle the case where currentUser is null
+        }
+    }
+
 
     fun fetchReactionTestById(reactionTestId: String, callback: (ReactionTest?) -> Unit) {
         if (reactionTestId.isNullOrBlank()) {
@@ -240,9 +296,7 @@ class CompanyService() {
 
 
 
-    fun getAllSessionsOfSelectedDriver(email: String): LiveData<List<Session>?> {
-        val result = MutableLiveData<List<Session>?>()
-
+    fun getAllSessionsOfSelectedDriver(email: String, callback: (List<Session>?) -> Unit) {
         db.collection("Drivers").whereEqualTo("email", email).get()
             .addOnSuccessListener { driverQuerySnapshot ->
                 if (!driverQuerySnapshot.isEmpty) {
@@ -253,21 +307,20 @@ class CompanyService() {
                             val sessionList = sessionQuerySnapshot.mapNotNull { sessionDocument ->
                                 sessionDocument.toObject(Session::class.java)
                             }
-                            result.postValue(sessionList)
+                            callback(sessionList)
                         }
                         .addOnFailureListener {
-                            result.postValue(null)
+                            callback(null)
                         }
                 } else {
-                    result.postValue(null)
+                    callback(null)
                 }
             }
             .addOnFailureListener {
-                result.postValue(null)
+                callback(null)
             }
-
-        return result
     }
+
 
     fun removeDriverFromCompany(email: String)
     {

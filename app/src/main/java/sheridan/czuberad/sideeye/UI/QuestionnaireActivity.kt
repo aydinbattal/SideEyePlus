@@ -1,4 +1,4 @@
-package sheridan.czuberad.sideeye
+package sheridan.czuberad.sideeye.UI
 
 import android.app.Activity
 import android.content.Intent
@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import sheridan.czuberad.sideeye.databinding.ActivityQuestionnaireBinding
-import sheridan.czuberad.sideeye.databinding.ActivityReactionTestBinding
 
 class QuestionnaireActivity : AppCompatActivity() {
     private lateinit var questionTextView: TextView

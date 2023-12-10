@@ -1,4 +1,4 @@
-package sheridan.czuberad.sideeye
+package sheridan.czuberad.sideeye.UI
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import sheridan.czuberad.sideeye.R
 import sheridan.czuberad.sideeye.Services.DriverService
 import sheridan.czuberad.sideeye.Services.FirebaseAdministration
 import sheridan.czuberad.sideeye.Services.OwnerService
@@ -84,13 +85,13 @@ class MainActivity : AppCompatActivity() {
     private fun checkPermissions(){
         if(!isPermissionsAllowed()){
             ActivityCompat.requestPermissions(this,
-                MainActivity.REQUIRED_PERMISSIONS,
-                MainActivity.REQUEST_CODE_PERMISSIONS
+                REQUIRED_PERMISSIONS,
+                REQUEST_CODE_PERMISSIONS
             )
         }
     }
 
-    private fun isPermissionsAllowed() = MainActivity.REQUIRED_PERMISSIONS.all {
+    private fun isPermissionsAllowed() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(baseContext,it) == PackageManager.PERMISSION_GRANTED
     }
 

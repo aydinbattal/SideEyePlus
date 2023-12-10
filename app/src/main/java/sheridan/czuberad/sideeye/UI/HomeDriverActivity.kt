@@ -1,4 +1,4 @@
-package sheridan.czuberad.sideeye
+package sheridan.czuberad.sideeye.UI
 
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
@@ -14,9 +14,6 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import sheridan.czuberad.sideeye.Domain.Driver
-import sheridan.czuberad.sideeye.UI.DriverHome
-import sheridan.czuberad.sideeye.UI.SessionDetail
-import sheridan.czuberad.sideeye.UI.SessionHistory
 
 
 class HomeDriverActivity : AppCompatActivity() {
@@ -68,15 +65,15 @@ class HomeDriverActivity : AppCompatActivity() {
     }
 
 
-    private fun isPermissionsAllowed() = HomeDriverActivity.REQUIRED_PERMISSIONS.all {
+    private fun isPermissionsAllowed() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(baseContext,it) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun checkPermissions(){
         if(!isPermissionsAllowed()){
             ActivityCompat.requestPermissions(this,
-                HomeDriverActivity.REQUIRED_PERMISSIONS,
-                HomeDriverActivity.REQUEST_CODE_PERMISSIONS
+                REQUIRED_PERMISSIONS,
+                REQUEST_CODE_PERMISSIONS
             )
         }
     }
