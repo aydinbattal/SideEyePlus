@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import sheridan.czuberad.sideeye.R
 import sheridan.czuberad.sideeye.Services.DriverService
 import sheridan.czuberad.sideeye.Services.FirebaseAdministration
@@ -21,6 +22,10 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val firestore = FirebaseFirestore.getInstance()
+        firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build()
+
         setContentView(R.layout.activity_main)
         checkPermissions()
         auth = FirebaseAuth.getInstance()
