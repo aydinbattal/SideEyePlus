@@ -82,7 +82,16 @@ class EyeDetectionUtils(
     }
 
     override fun onSuccess(results: List<Face>){
-        if (session.reactionTestUUID.isNullOrEmpty() && session.questionnaireUUID.isNullOrEmpty()) {
+        val questionnaireUUID =
+            SharedPreferencesUtils.getQuestionnaireId(contextAct)
+        val questionnaireStatus =
+            SharedPreferencesUtils.getQuestionnaireStatus(contextAct)
+        val reactionTestUUID =
+            SharedPreferencesUtils.getReactionTestId(contextAct)
+        val reactionTestStatus =
+            SharedPreferencesUtils.getReactionTestStatus(contextAct)
+
+        if (!reactionTestUUID.isNullOrEmpty() && !questionnaireUUID.isNullOrEmpty() && (questionnaireStatus || reactionTestStatus)) {
             startSession.setOnClickListener {
                 startSession.isEnabled = false
                 sessionT.text = "Press End Session to End Session"
@@ -99,9 +108,9 @@ class EyeDetectionUtils(
                 Log.d(TAG, " POP: Start press$timestamp")
 
                 session.questionnaireUUID =
-                    SharedPreferencesUtils.getQuestionnaireId(contextAct)
+                    questionnaireUUID
                 session.reactionTestUUID =
-                    SharedPreferencesUtils.getReactionTestId(contextAct)
+                    reactionTestUUID
 
                 //SEND SESSION TO DATABASE WITH ONLY STARTDATE, SESSION UUID, REACTION TEST AND QUESTIONAIRE UUIDS, ALERTLIST.
                 driverService.addInitialSession(session)

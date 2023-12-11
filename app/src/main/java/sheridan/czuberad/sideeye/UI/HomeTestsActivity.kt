@@ -111,6 +111,8 @@ class HomeTestsActivity : AppCompatActivity() {
                             val passedColorSpan = ForegroundColorSpan(resources.getColor(R.color.green))
                             spannable.setSpan(passedColorSpan, originalText.indexOf("PASSED"), originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                             reactionTestStatus.text = spannable
+
+                            SharedPreferencesUtils.saveReactionTestStatus(this, true)
                         } else {
                             val originalText = "Reaction Tests: FAILED"
                             val spannable = SpannableString(originalText)
@@ -121,6 +123,8 @@ class HomeTestsActivity : AppCompatActivity() {
                             warningTextView.visibility = View.VISIBLE
                             warningTextView.setTextColor(Color.RED)
                             warningTextView.text = "Please report to your supervisor immediately"
+
+                            SharedPreferencesUtils.saveReactionTestStatus(this, false)
                         }
 
                         SharedPreferencesUtils.saveReactionTestId(this)
@@ -155,6 +159,8 @@ class HomeTestsActivity : AppCompatActivity() {
                     val passedColorSpan = ForegroundColorSpan(resources.getColor(R.color.green))
                     spannable.setSpan(passedColorSpan, originalText.indexOf("PASSED"), originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     questionnaireStatus.text = spannable
+
+                    SharedPreferencesUtils.saveQuestionnaireStatus(this, true)
                 } else {
                     val originalText = "Questionnaire: FAILED"
                     val spannable = SpannableString(originalText)
@@ -165,6 +171,8 @@ class HomeTestsActivity : AppCompatActivity() {
                     warningTextView.visibility = View.VISIBLE
                     warningTextView.setTextColor(Color.RED)
                     warningTextView.text = "Please report to your supervisor immediately"
+
+                    SharedPreferencesUtils.saveQuestionnaireStatus(this, false)
                 }
 
                 SharedPreferencesUtils.saveQuestionnaireId(this)
