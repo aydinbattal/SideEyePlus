@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:background="#39AFEA"
-        android:text="Fatigue Assessment Tests"
+        android:text="Fatigue Assessment"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
