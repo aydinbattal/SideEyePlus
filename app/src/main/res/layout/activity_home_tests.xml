@@ -18,13 +18,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingStart="8dp"
+        android:textStyle="bold"/>
 
     <LinearLayout
         android:id="@+id/reactionLinearLayout"
         android:layout_width="410dp"
-        android:layout_height="222dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="145dp"
+        android:layout_marginTop="16dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -100,7 +103,7 @@
         android:textStyle="bold"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reactionLinearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/questionnaireResultTextView" />
 
     <TextView
         android:id="@+id/reactionTestStatusTextView"
@@ -108,7 +111,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="8dp"
-        android:text="Not determined"
+        android:text="Reaction Tests: Not determined"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/testStatusTextView" />
@@ -119,10 +122,22 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="8dp"
-        android:text="Not determined"
+        android:text="Questionnaire: Not determined"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reactionTestStatusTextView" />
+
+    <TextView
+        android:id="@+id/warningTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="16dp"
+        android:text="Warning: "
+        android:textColor="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/questionnaireStatusTextView"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/reactionResultsTextView"
@@ -134,7 +149,7 @@
         android:textStyle="bold"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/questionnaireStatusTextView"
+        app:layout_constraintTop_toBottomOf="@+id/reactionLinearLayout"
         />
 
     <TextView
@@ -143,18 +158,18 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="8dp"
-        android:text="Average Reaction Time:"
+        android:text="Average Reaction Time: Not determined"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reactionResultsTextView" />
 
     <TextView
-        android:id="@+id/reactionResult2TextView"
+        android:id="@+id/questionnaireResultTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="8dp"
-        android:text="Fatigue Status:"
+        android:text="Fatigue Category: Not determined"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reactionResult1TextView" />

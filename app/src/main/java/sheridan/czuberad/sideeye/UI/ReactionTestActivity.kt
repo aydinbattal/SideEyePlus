@@ -121,7 +121,7 @@ class ReactionTestActivity : AppCompatActivity() {
             testCount++
             totalReactionTime += reactionTime
             averageReactionTime = totalReactionTime / 5
-            showMessage("DONE\nAverage Reaction Time: $averageReactionTime ms")
+            //showMessage("DONE\nAverage Reaction Time: $averageReactionTime ms")
             startButton.visibility = View.GONE
             testNumberView.visibility = View.GONE
             testRunning = false
@@ -139,6 +139,7 @@ class ReactionTestActivity : AppCompatActivity() {
     private fun stopTest(message: String) {
         isRed = true
         frameLayout.setBackgroundColor(getColor(R.color.white))
+        startButton.text = "Restart Test"
         startButton.visibility = View.VISIBLE
         messageView.text = message
         messageView.visibility = View.VISIBLE

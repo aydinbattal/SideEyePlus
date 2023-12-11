@@ -2,11 +2,14 @@ package sheridan.czuberad.sideeye.UI
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +32,7 @@ class HomeTestsActivity : AppCompatActivity() {
     private lateinit var reactionTestResult2: TextView
     private lateinit var reactionTestStatus: TextView
     private lateinit var questionnaireStatus: TextView
-
+    private lateinit var warningTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,9 +45,10 @@ class HomeTestsActivity : AppCompatActivity() {
         startButton2 = binding.reactionTest2Button
         historyButton = binding.testHistoryButton
         reactionTestResult1 = binding.reactionResult1TextView
-        reactionTestResult2 = binding.reactionResult2TextView
+        reactionTestResult2 = binding.questionnaireResultTextView
         reactionTestStatus = binding.reactionTestStatusTextView
         questionnaireStatus = binding.questionnaireStatusTextView
+        warningTextView = binding.warningTextView
 
         startButton1.setOnClickListener {
             val intent = Intent(this@HomeTestsActivity, ReactionTestActivity::class.java)
@@ -70,28 +74,33 @@ class HomeTestsActivity : AppCompatActivity() {
 
         if (requestCode == reactionTestRequestCode && resultCode == Activity.RESULT_OK) {
             val completedTest = data?.getBooleanExtra("completedTest", false) ?: false
-            val averageReactionTime = data?.getLongExtra("averageReactionTime", 0L) ?: 0L
+            val receivedAverageReactionTime = data?.getLongExtra("averageReactionTime", 0L) ?: 0L
 
             if (completedTest) {
+                val deviceUtils = DeviceUtils()
+
+                val averageReactionTime = if (deviceUtils.isEmulator() && receivedAverageReactionTime != 0L) {
+                    receivedAverageReactionTime - 120 //due to around 120ms delay on emulator compared to real device
+                } else {
+                    receivedAverageReactionTime
+                }
+
                 // Disable the button
                 startButton1.isEnabled = false
                 startButton1.text = "Done"
                 reactionTestResult1.text = "Average Reaction Time: $averageReactionTime ms"
 
-                val deviceUtils = DeviceUtils()
 
                 driverService.getOverallReactionTimeAverage(
                     onSuccess = { overallAverage ->
-                        // Do something with the overall average, such as displaying it or performing further actions
+
                         val threshold = if (overallAverage != 0L) {
-                            overallAverage + 150
+                            (overallAverage * 1.1672).toLong()
                         } else {
-                            if (deviceUtils.isEmulator()) {
-                                650
-                            } else {
-                                475
-                            }
+                            467 //377 + 90
                         }
+
+
 
                         Log.d("hometestsactivity", "Overall Reaction Time Average: $overallAverage")
                         Log.d("hometestsactivity", "threshold: $threshold")
@@ -108,6 +117,10 @@ class HomeTestsActivity : AppCompatActivity() {
                             val passedColorSpan = ForegroundColorSpan(resources.getColor(R.color.red))
                             spannable.setSpan(passedColorSpan, originalText.indexOf("FAILED"), originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                             reactionTestStatus.text = spannable
+
+                            warningTextView.visibility = View.VISIBLE
+                            warningTextView.setTextColor(Color.RED)
+                            warningTextView.text = "Please report to your supervisor immediately"
                         }
 
                         SharedPreferencesUtils.saveReactionTestId(this)
@@ -148,6 +161,10 @@ class HomeTestsActivity : AppCompatActivity() {
                     val passedColorSpan = ForegroundColorSpan(resources.getColor(R.color.red))
                     spannable.setSpan(passedColorSpan, originalText.indexOf("FAILED"), originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     questionnaireStatus.text = spannable
+
+                    warningTextView.visibility = View.VISIBLE
+                    warningTextView.setTextColor(Color.RED)
+                    warningTextView.text = "Please report to your supervisor immediately"
                 }
 
                 SharedPreferencesUtils.saveQuestionnaireId(this)
@@ -157,5 +174,7 @@ class HomeTestsActivity : AppCompatActivity() {
                 }
             }
         }
+
+
     }
 }
