@@ -8,5 +8,6 @@ data class Questionnaire(
     var uid: String? = null,
     var category: String? = null,
     var date: String? = null,
-    val sessionId: String? = null
+    val sessionId: String? = null,
+    var isPassed: Boolean? = null
 )

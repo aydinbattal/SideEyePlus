@@ -2,6 +2,7 @@ package sheridan.czuberad.sideeye.UI
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,8 +17,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -384,7 +388,7 @@ class DriverDetailsActivity : AppCompatActivity() {
 
                                 Column() {
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                        Text(text = "Reaction Time: ", fontWeight = FontWeight.Bold)
+                                        Text(text = "Reaction Tests: ", fontWeight = FontWeight.Bold)
 
                                         var reactionTestResult by remember { mutableStateOf<ReactionTest?>(null) }
 
@@ -395,7 +399,23 @@ class DriverDetailsActivity : AppCompatActivity() {
                                             }
                                         }
 
-                                        Text(text = "${reactionTestResult?.avgTime ?: "Not Determined"} ms")
+                                        Text(
+                                            text = buildAnnotatedString {
+                                                val result = reactionTestResult?.isPassed
+                                                val textColor = when {
+                                                    result == true -> Color.Green
+                                                    result == false -> Color.Red
+                                                    else -> Color.Black
+                                                }
+
+                                                withStyle(
+                                                    style = SpanStyle(color = textColor)
+                                                ) {
+                                                    append(result?.let { if (it) "PASSED" else "FAILED" } ?: "N/A")
+                                                }
+                                            }
+                                        )
+
 
                                     }
 
@@ -403,7 +423,7 @@ class DriverDetailsActivity : AppCompatActivity() {
 
                                 Column() {
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                        Text(text = "Category: ", fontWeight = FontWeight.Bold)
+                                        Text(text = "Questionnaire: ", fontWeight = FontWeight.Bold)
 
                                         var questionnaireResult by remember { mutableStateOf<Questionnaire?>(null) }
 
@@ -414,7 +434,24 @@ class DriverDetailsActivity : AppCompatActivity() {
                                             }
                                         }
 
-                                        Text(text = "${questionnaireResult?.category ?: "Not Determined"}")
+                                        Text(
+                                            text = buildAnnotatedString {
+                                                val result = questionnaireResult?.isPassed
+                                                val textColor = when {
+                                                    result == true -> Color.Green
+                                                    result == false -> Color.Red
+                                                    else -> Color.Black
+                                                }
+
+                                                withStyle(
+                                                    style = SpanStyle(color = textColor)
+                                                ) {
+                                                    append(result?.let { if (it) "PASSED" else "FAILED" } ?: "N/A")
+                                                }
+                                            }
+                                        )
+
+
 
                                     }
 

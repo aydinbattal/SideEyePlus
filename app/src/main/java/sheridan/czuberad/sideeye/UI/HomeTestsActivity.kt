@@ -77,6 +77,7 @@ class HomeTestsActivity : AppCompatActivity() {
             val receivedAverageReactionTime = data?.getLongExtra("averageReactionTime", 0L) ?: 0L
 
             if (completedTest) {
+                var isReactionTestPassed = false
                 val deviceUtils = DeviceUtils()
 
                 val averageReactionTime = if (deviceUtils.isEmulator() && receivedAverageReactionTime != 0L) {
@@ -112,7 +113,8 @@ class HomeTestsActivity : AppCompatActivity() {
                             spannable.setSpan(passedColorSpan, originalText.indexOf("PASSED"), originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                             reactionTestStatus.text = spannable
 
-                            SharedPreferencesUtils.saveReactionTestStatus(this, true)
+                            //SharedPreferencesUtils.saveReactionTestStatus(this, true)
+                            isReactionTestPassed = true
                         } else {
                             val originalText = "Reaction Tests: FAILED"
                             val spannable = SpannableString(originalText)
@@ -124,13 +126,15 @@ class HomeTestsActivity : AppCompatActivity() {
                             warningTextView.setTextColor(Color.RED)
                             warningTextView.text = "Please report to your supervisor immediately"
 
-                            SharedPreferencesUtils.saveReactionTestStatus(this, false)
+                            //SharedPreferencesUtils.saveReactionTestStatus(this, false)
                         }
 
                         SharedPreferencesUtils.saveReactionTestId(this)
                         val reactionTestUUID = SharedPreferencesUtils.getReactionTestId(this)
                         if (reactionTestUUID != null) {
-                            driverService.addReactionTest(averageReactionTime, reactionTestUUID)
+                            driverService.addReactionTest(averageReactionTime, reactionTestUUID, isReactionTestPassed)
+                            SharedPreferencesUtils.saveReactionTestStatus(this, isReactionTestPassed)
+
                         }
                     },
                     onFailure = { exception ->
@@ -147,6 +151,7 @@ class HomeTestsActivity : AppCompatActivity() {
             val category = data?.getStringExtra("category") ?: ""
 
             if (completedTest) {
+                var isQuestionnairePassed = false
                 // Handle the completion of the questionnaire
                 // Disable the button
                 startButton2.isEnabled = false
@@ -160,7 +165,8 @@ class HomeTestsActivity : AppCompatActivity() {
                     spannable.setSpan(passedColorSpan, originalText.indexOf("PASSED"), originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     questionnaireStatus.text = spannable
 
-                    SharedPreferencesUtils.saveQuestionnaireStatus(this, true)
+                    //SharedPreferencesUtils.saveQuestionnaireStatus(this, true)
+                    isQuestionnairePassed = true
                 } else {
                     val originalText = "Questionnaire: FAILED"
                     val spannable = SpannableString(originalText)
@@ -172,13 +178,15 @@ class HomeTestsActivity : AppCompatActivity() {
                     warningTextView.setTextColor(Color.RED)
                     warningTextView.text = "Please report to your supervisor immediately"
 
-                    SharedPreferencesUtils.saveQuestionnaireStatus(this, false)
+                    //SharedPreferencesUtils.saveQuestionnaireStatus(this, false)
                 }
 
                 SharedPreferencesUtils.saveQuestionnaireId(this)
                 val questionnaireUUID = SharedPreferencesUtils.getQuestionnaireId(this)
                 if (questionnaireUUID != null) {
-                    driverService.addQuestionnaire(category,questionnaireUUID)
+                    driverService.addQuestionnaire(category,questionnaireUUID, isQuestionnairePassed)
+                    SharedPreferencesUtils.saveQuestionnaireStatus(this, isQuestionnairePassed)
+
                 }
             }
         }

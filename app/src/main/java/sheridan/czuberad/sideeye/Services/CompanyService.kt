@@ -153,8 +153,10 @@ class CompanyService() {
             .addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot.exists()) {
                     val avgTime = documentSnapshot.getLong("averageReactionTime")?.toLong()
+                    val isPassed = documentSnapshot.getBoolean("isPassed")
                     val reactionTest = ReactionTest()
                     reactionTest.avgTime = avgTime
+                    reactionTest.isPassed = isPassed
                     Log.d("CompanyService", "reactionTest: $reactionTest")
                     callback(reactionTest)
                 } else {
@@ -179,8 +181,10 @@ class CompanyService() {
             .addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot.exists()) {
                     val category = documentSnapshot.getString("category").toString()
+                    val isPassed = documentSnapshot.getBoolean("isPassed")
                     val questionnaire = Questionnaire()
                     questionnaire.category = category
+                    questionnaire.isPassed = isPassed
                     Log.d("CompanyService", "questionnaire: $questionnaire")
                     callback(questionnaire)
                 } else {

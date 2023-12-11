@@ -182,13 +182,14 @@ class DriverService {
 
     }
 
-    fun addReactionTest(averageReactionTime:Long, reactionTestUUID:String) {
+    fun addReactionTest(averageReactionTime:Long, reactionTestUUID:String, isPassed:Boolean) {
         // Save the average reaction time and test completion time to db
             val reactionTestsRef = db.collection("ReactionTests")
             val testRef = reactionTestsRef.document(reactionTestUUID)
             val reactionData = hashMapOf(
                 "averageReactionTime" to averageReactionTime,
-                "timestamp" to FieldValue.serverTimestamp()
+                "timestamp" to FieldValue.serverTimestamp(),
+                "isPassed" to isPassed
             )
         testRef.set(reactionData, SetOptions.merge())
                 .addOnSuccessListener { Log.d(TAG, "Reaction data saved!") }
@@ -196,13 +197,14 @@ class DriverService {
 
     }
 
-    fun addQuestionnaire(category:String, questionnaireUUID:String) {
+    fun addQuestionnaire(category:String, questionnaireUUID:String, isPassed:Boolean) {
         // Save the questionnaire category and test completion time to db
         val questionnairesRef = db.collection("Questionnaires")
         val testRef = questionnairesRef.document(questionnaireUUID)
         val reactionData = hashMapOf(
             "category" to category,
-            "timestamp" to FieldValue.serverTimestamp()
+            "timestamp" to FieldValue.serverTimestamp(),
+            "isPassed" to isPassed
         )
         testRef.set(reactionData, SetOptions.merge())
             .addOnSuccessListener { Log.d(TAG, "Questionnaire data saved!") }

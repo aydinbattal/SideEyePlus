@@ -29,6 +29,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import sheridan.czuberad.sideeye.Domain.Timeline
 import sheridan.czuberad.sideeye.ApplicationLogic.DriverDetailsLogic
+import sheridan.czuberad.sideeye.Domain.Questionnaire
+import sheridan.czuberad.sideeye.Domain.ReactionTest
+import sheridan.czuberad.sideeye.Services.CompanyService
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -72,7 +75,7 @@ fun SessionDetailForCompany(sessionId: String?, email: String?) {
         Card(
             modifier = Modifier
                 .width(screenWidth)
-                .height(screenHeight / 4),
+                .height(screenHeight / 3),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             colors = CardDefaults.cardColors(
                 containerColor = Color(0xFF39AFEA)
@@ -152,6 +155,58 @@ fun SessionDetailForCompany(sessionId: String?, email: String?) {
                         }
                         Text(
                             text = "Fatigue",
+                            color = Color.White,
+                            fontSize = 12.sp
+                        )
+                    }
+
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        if (session != null) {
+                            val companyService = CompanyService()
+                            var reactionTestResult by remember { mutableStateOf<ReactionTest?>(null) }
+
+                            LaunchedEffect(session.reactionTestUUID) {
+                                // Fetch ReactionTest asynchronously
+                                companyService.fetchReactionTestById(session.reactionTestUUID ?: "") { result ->
+                                    reactionTestResult = result
+                                }
+                            }
+
+                            Text(
+                                text = "${reactionTestResult?.avgTime ?: "Not Determined"} ms",
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+                        }
+                        Text(
+                            text = "Reaction Time",
+                            color = Color.White,
+                            fontSize = 12.sp
+                        )
+                    }
+
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        if (session != null) {
+                            val companyService = CompanyService()
+                            var questionnaireResult by remember { mutableStateOf<Questionnaire?>(null) }
+
+                            LaunchedEffect(session.questionnaireUUID) {
+                                // Fetch ReactionTest asynchronously
+                                companyService.fetchQuestionnaireById(session.questionnaireUUID ?: "") { result ->
+                                    questionnaireResult = result
+                                }
+                            }
+
+                            Text(
+                                text = "${questionnaireResult?.category ?: "Not Determined"}",
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+                        }
+                        Text(
+                            text = "Category",
                             color = Color.White,
                             fontSize = 12.sp
                         )

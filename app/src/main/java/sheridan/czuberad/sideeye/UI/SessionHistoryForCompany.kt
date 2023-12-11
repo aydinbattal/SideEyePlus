@@ -1,5 +1,6 @@
 package sheridan.czuberad.sideeye.UI
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,7 +15,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -146,7 +150,7 @@ fun SessionListForCompanyItem(item: Session, navController: NavHostController) {
 
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(text = "Reaction Time: ", fontWeight = FontWeight.Bold)
+                    Text(text = "Reaction Tests: ", fontWeight = FontWeight.Bold)
 
                     var reactionTestResult by remember { mutableStateOf<ReactionTest?>(null) }
 
@@ -157,12 +161,27 @@ fun SessionListForCompanyItem(item: Session, navController: NavHostController) {
                         }
                     }
 
-                    Text(text = "${reactionTestResult?.avgTime ?: "Not Determined"} ms")
+                    Text(
+                        text = buildAnnotatedString {
+                            val result = reactionTestResult?.isPassed
+                            val textColor = when {
+                                result == true -> Color.Green
+                                result == false -> Color.Red
+                                else -> Color.Black
+                            }
+
+                            withStyle(
+                                style = SpanStyle(color = textColor)
+                            ) {
+                                append(result?.let { if (it) "PASSED" else "FAILED" } ?: "N/A")
+                            }
+                        }
+                    )
 
                 }
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(text = "Category: ", fontWeight = FontWeight.Bold)
+                    Text(text = "Questionnaire: ", fontWeight = FontWeight.Bold)
 
                     var questionnaireResult by remember { mutableStateOf<Questionnaire?>(null) }
 
@@ -173,41 +192,56 @@ fun SessionListForCompanyItem(item: Session, navController: NavHostController) {
                         }
                     }
 
-                    Text(text = "${questionnaireResult?.category ?: "Not Determined"}")
+                    Text(
+                        text = buildAnnotatedString {
+                            val result = questionnaireResult?.isPassed
+                            val textColor = when {
+                                result == true -> Color.Green
+                                result == false -> Color.Red
+                                else -> Color.Black
+                            }
+
+                            withStyle(
+                                style = SpanStyle(color = textColor)
+                            ) {
+                                append(result?.let { if (it) "PASSED" else "FAILED" } ?: "N/A")
+                            }
+                        }
+                    )
 
                 }
 
             }
 
-            Card(modifier = Modifier.weight(1f).fillMaxHeight(),colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )) {
-                Canvas(modifier = Modifier.fillMaxSize().padding(top = 35.dp, bottom = 35.dp, start = 15.dp, end = 15.dp)) {
-                    val dataPoints = listOf(10, 100, 30, 70, 40, 10, 20, 34, 50, 10, 15, 50, 60, 100)
-                    val maxDataValue = dataPoints.maxOrNull() ?: 1
-                    val dataPointsOffsets = dataPoints.mapIndexed { index, value ->
-                        // Map data value to canvas coordinate
-                        Offset(
-                            x = size.width * (index / (dataPoints.size - 1).toFloat()),
-                            y = size.height * (1 - (value / maxDataValue.toFloat()))
-                        )
-                    }
-
-                    // Draw trend line by connecting points
-                    for (i in 0 until dataPointsOffsets.size - 1) {
-                        val start = dataPointsOffsets[i]
-                        val end = dataPointsOffsets[i + 1]
-                        drawLine(
-                            color = Color(0xFF39AFEA),
-                            start = start,
-                            end = end,
-                            strokeWidth = 2.dp.toPx()
-                        )
-                    }
-
-                }
-
-            }
+//            Card(modifier = Modifier.weight(1f).fillMaxHeight(),colors = CardDefaults.cardColors(
+//                containerColor = Color.White
+//            )) {
+//                Canvas(modifier = Modifier.fillMaxSize().padding(top = 35.dp, bottom = 35.dp, start = 15.dp, end = 15.dp)) {
+//                    val dataPoints = listOf(10, 100, 30, 70, 40, 10, 20, 34, 50, 10, 15, 50, 60, 100)
+//                    val maxDataValue = dataPoints.maxOrNull() ?: 1
+//                    val dataPointsOffsets = dataPoints.mapIndexed { index, value ->
+//                        // Map data value to canvas coordinate
+//                        Offset(
+//                            x = size.width * (index / (dataPoints.size - 1).toFloat()),
+//                            y = size.height * (1 - (value / maxDataValue.toFloat()))
+//                        )
+//                    }
+//
+//                    // Draw trend line by connecting points
+//                    for (i in 0 until dataPointsOffsets.size - 1) {
+//                        val start = dataPointsOffsets[i]
+//                        val end = dataPointsOffsets[i + 1]
+//                        drawLine(
+//                            color = Color(0xFF39AFEA),
+//                            start = start,
+//                            end = end,
+//                            strokeWidth = 2.dp.toPx()
+//                        )
+//                    }
+//
+//                }
+//
+//            }
 
 //            Column(modifier = Modifier.weight(0.5f)) {
 //                Row(modifier = Modifier.fillMaxWidth(0.45f),horizontalArrangement = Arrangement.SpaceBetween,verticalAlignment = Alignment.CenterVertically){
