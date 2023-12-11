@@ -26,6 +26,7 @@ class EyeDetectionActivity : AppCompatActivity() {
         var driverService = DriverService()
         var sessionToast = Toast.makeText(baseContext, "Session Has Been Added", Toast.LENGTH_SHORT).show()
         var media = MediaPlayer.create(this, R.raw.warningsound)
+        var fatigueBeep = MediaPlayer.create(this, R.raw.beep)
         val previewCameraX = findViewById<PreviewView>(R.id.cameraXpreview)
         var eyeDetectionText = findViewById<TextView>(R.id.eyedetectionText)
         var sessionText = findViewById<TextView>(R.id.sessionTextView)
@@ -37,7 +38,7 @@ class EyeDetectionActivity : AppCompatActivity() {
         var fatigueNotText = findViewById<TextView>(R.id.fatiguedetectionText)
         cameraXUtils = CameraXUtils(this,previewCameraX,this)
         //checkPermissions()
-        cameraXUtils.openCameraPreview(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, this, alertText, fatigueText,fatigueNotText)
+        cameraXUtils.openCameraPreview(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, this, alertText, fatigueText,fatigueNotText, fatigueBeep)
 
 //        detectOnclick.setOnClickListener {
 //
