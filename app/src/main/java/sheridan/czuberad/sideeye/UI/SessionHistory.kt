@@ -1,5 +1,7 @@
 package sheridan.czuberad.sideeye.UI
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,6 +36,7 @@ import sheridan.czuberad.sideeye.ApplicationLogic.IndependentDriverLogic
 import sheridan.czuberad.sideeye.Domain.Session
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.math.log
 
 
 @Composable
@@ -65,7 +68,6 @@ fun SessionHistory(navController: NavHostController) {
 @Composable
 fun SessionList(navController: NavHostController, sessionList: List<Session>) {
 
-    val items = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5","item 6", "item 8")
     
     LazyColumn{
         items(sessionList){item ->
@@ -78,11 +80,23 @@ fun SessionList(navController: NavHostController, sessionList: List<Session>) {
 
 @Composable
 fun SessionListItem(item: Session, navController: NavHostController) {
-    
+//    val viewModel: IndependentDriverLogic = viewModel()
+//
+//    LaunchedEffect(Unit){
+//        item.sessionUUID?.let { viewModel.getSessionTimeLine(it) }
+//    }
+//    val alertObjectList = viewModel.alertSessionlist.value
+//    val fatigueTimeStampList = viewModel.fatigueTimeStampList.value
+//
+//    viewModel.setTimeLineList(alertObjectList, fatigueTimeStampList)
+//
+//    val sessionTimeLine = viewModel.sessionTimeLine.value
+
     Card(modifier = Modifier
         .fillMaxWidth()
         .height(150.dp)
-        .padding(10.dp).clickable { navController.navigate("sessionDetail/${item.sessionUUID}") },
+        .padding(10.dp)
+        .clickable { navController.navigate("sessionDetail/${item.sessionUUID}") },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -129,16 +143,22 @@ fun SessionListItem(item: Session, navController: NavHostController) {
 
             }
 
-            Card(modifier = Modifier.weight(1f).fillMaxHeight(),colors = CardDefaults.cardColors(
+            Card(modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(),colors = CardDefaults.cardColors(
                 containerColor = Color.White
             )) {
-                Canvas(modifier = Modifier.fillMaxSize().padding(top = 35.dp, bottom = 35.dp, start = 15.dp, end = 15.dp)) {
-                    val dataPoints = listOf(10, 100, 30, 70, 40, 10, 20, 34, 50, 10, 15, 50, 60, 100)
-                    val maxDataValue = dataPoints.maxOrNull() ?: 1
-                    val dataPointsOffsets = dataPoints.mapIndexed { index, value ->
-                        // Map data value to canvas coordinate
+                Canvas(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 35.dp, bottom = 35.dp, start = 15.dp, end = 15.dp)) {
+
+                    val dataPoints = listOf(10, 0, 0, 10, 10, 0, 0, 0, 0, 0, 0, 10, 0, 0)
+                    val randomizedDataPoints = dataPoints.shuffled()
+                    val maxDataValue = randomizedDataPoints.maxOrNull() ?: 1
+                    val dataPointsOffsets = randomizedDataPoints.mapIndexed { index, value ->
+
                         Offset(
-                            x = size.width * (index / (dataPoints.size - 1).toFloat()),
+                            x = size.width * (index / (randomizedDataPoints.size - 1).toFloat()),
                             y = size.height * (1 - (value / maxDataValue.toFloat()))
                         )
                     }
@@ -159,32 +179,6 @@ fun SessionListItem(item: Session, navController: NavHostController) {
 
             }
 
-//            Column(modifier = Modifier.weight(0.5f)) {
-//                Row(modifier = Modifier.fillMaxWidth(0.45f),horizontalArrangement = Arrangement.SpaceBetween,verticalAlignment = Alignment.CenterVertically){
-//                    Text(text = "Oct 13, 2023", fontWeight = FontWeight.Bold)
-//                    Spacer(modifier = Modifier.width(5.dp))
-//                    Text("8:52:16 AM", fontSize = 12.sp )
-//                }
-//                Row(modifier = Modifier.fillMaxWidth(0.45f),horizontalArrangement = Arrangement.SpaceBetween,verticalAlignment = Alignment.CenterVertically){
-//                    Text(text = "Oct 13, 2023", fontWeight = FontWeight.Bold)
-//                    Spacer(modifier = Modifier.width(5.dp))
-//                    Text("10:52:16 AM", fontSize = 12.sp)
-//                }
-//                Spacer(modifier = Modifier.fillMaxHeight(0.4f))
-//
-//                Row(modifier = Modifier.fillMaxWidth(0.45f),horizontalArrangement = Arrangement.SpaceBetween){
-//                    Column() {
-//                        Text(text = "Alerts")
-//                        Text(text = "12")
-//
-//                    }
-//                    Column() {
-//                        Text(text = "Fatigue")
-//                        Text(text = "12")
-//                    }
-//                }
-//
-//            }
         }
 
         

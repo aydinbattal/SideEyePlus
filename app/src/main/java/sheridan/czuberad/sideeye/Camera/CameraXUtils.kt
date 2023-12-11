@@ -42,7 +42,8 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
         sessionToast: Unit,
         eyeDetectionActivity: EyeDetectionActivity,
         alertText: TextView,
-        fatigueText: TextView
+        fatigueText: TextView,
+        fatigueNotText: TextView
     ) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
         cameraProviderFuture.addListener(
@@ -53,7 +54,7 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
                 imageAnalysis = ImageAnalysis.Builder().setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                     .build()
                     .also {
-                        it.setAnalyzer(executorService,analyzer(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, eyeDetectionActivity, alertText, fatigueText))
+                        it.setAnalyzer(executorService,analyzer(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, eyeDetectionActivity, alertText, fatigueText, fatigueNotText))
                     }
                 val cameraS = CameraSelector.Builder().requireLensFacing(cameraSelector).build()
                 configCamera(processcameraProvider,cameraS)
@@ -71,9 +72,10 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
         sessionToast: Unit,
         eyeDetectionActivity: EyeDetectionActivity,
         alertText: TextView,
-        fatigueText: TextView
+        fatigueText: TextView,
+        fatigueNotText: TextView
     ): ImageAnalysis.Analyzer {
-        return EyeDetectionUtils(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, eyeDetectionActivity, alertText, fatigueText)
+        return EyeDetectionUtils(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, eyeDetectionActivity, alertText, fatigueText, fatigueNotText)
     }
     private fun configCamera(processCameraProvider: ProcessCameraProvider?,cameraSelector: CameraSelector){
         try{

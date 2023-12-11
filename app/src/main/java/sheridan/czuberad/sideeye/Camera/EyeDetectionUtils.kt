@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import com.google.android.gms.tasks.Task
@@ -36,7 +37,8 @@ class EyeDetectionUtils(
     sessionToast: Unit,
     eyeDetectionActivity: EyeDetectionActivity,
     alertText: TextView,
-    fatigueText: TextView
+    fatigueText: TextView,
+    fatigueNotText: TextView
 ) :ImageAnalyzer<List<Face>>() {
     private var counter = 0
     private var fatigueCounter = 0
@@ -66,6 +68,7 @@ class EyeDetectionUtils(
     private val contextAct = eyeDetectionActivity
     private val alertText = alertText
     private val fatigueText = fatigueText
+    private val fatigueNotification = fatigueNotText
     private var fatigueC = 0
     private val timeQueue: Queue<Long> = LinkedList()
     private val fatigueTimeStampList = ArrayList<Timestamp>()
@@ -243,6 +246,7 @@ class EyeDetectionUtils(
                 }
 
                 if(timeQueue.size >=5){
+                    fatigueNotification.visibility = View.VISIBLE
                     if(!isAbove){
                         isAbove = true
                         fatigueC++
@@ -256,6 +260,7 @@ class EyeDetectionUtils(
                 }
                 else{
                     isAbove = false
+                    fatigueNotification.visibility = View.INVISIBLE
                 }
 
                 if(counter>=17){

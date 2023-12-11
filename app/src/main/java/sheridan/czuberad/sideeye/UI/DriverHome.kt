@@ -313,12 +313,8 @@ fun buttonLayout(context: Context) {
 
 }
 
-
-
 @Composable
 fun InfoCard(currentDriver: Driver) {
-
-
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp

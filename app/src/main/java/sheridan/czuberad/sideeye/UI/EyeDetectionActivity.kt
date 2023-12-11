@@ -33,14 +33,11 @@ class EyeDetectionActivity : AppCompatActivity() {
         var fatigueText = findViewById<TextView>(R.id.fatigueCountTextView)
         val startSessionOnClick = findViewById<Button>(R.id.button_eye_detection)
         val endSessionOnClick = findViewById<Button>(R.id.button_eye_detection_end)
+
+        var fatigueNotText = findViewById<TextView>(R.id.fatiguedetectionText)
         cameraXUtils = CameraXUtils(this,previewCameraX,this)
         //checkPermissions()
-        cameraXUtils.openCameraPreview(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, this, alertText, fatigueText)
-
-
-
-
-
+        cameraXUtils.openCameraPreview(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, this, alertText, fatigueText,fatigueNotText)
 
 //        detectOnclick.setOnClickListener {
 //
