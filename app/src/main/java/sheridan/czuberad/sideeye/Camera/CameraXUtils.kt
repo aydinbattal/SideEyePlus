@@ -43,7 +43,8 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
         eyeDetectionActivity: EyeDetectionActivity,
         alertText: TextView,
         fatigueText: TextView,
-        fatigueNotText: TextView
+        fatigueNotText: TextView,
+        fatigueBeep: MediaPlayer
     ) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
         cameraProviderFuture.addListener(
@@ -54,7 +55,7 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
                 imageAnalysis = ImageAnalysis.Builder().setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                     .build()
                     .also {
-                        it.setAnalyzer(executorService,analyzer(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, eyeDetectionActivity, alertText, fatigueText, fatigueNotText))
+                        it.setAnalyzer(executorService,analyzer(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, eyeDetectionActivity, alertText, fatigueText, fatigueNotText,fatigueBeep))
                     }
                 val cameraS = CameraSelector.Builder().requireLensFacing(cameraSelector).build()
                 configCamera(processcameraProvider,cameraS)
@@ -73,9 +74,10 @@ class CameraXUtils(private val context: Context,private val previewView: Preview
         eyeDetectionActivity: EyeDetectionActivity,
         alertText: TextView,
         fatigueText: TextView,
-        fatigueNotText: TextView
+        fatigueNotText: TextView,
+        fatigueBeep: MediaPlayer
     ): ImageAnalysis.Analyzer {
-        return EyeDetectionUtils(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, eyeDetectionActivity, alertText, fatigueText, fatigueNotText)
+        return EyeDetectionUtils(eyeDetectionText, endSessionOnClick, startSessionOnClick, media, sessionText, sessionToast, eyeDetectionActivity, alertText, fatigueText, fatigueNotText, fatigueBeep)
     }
     private fun configCamera(processCameraProvider: ProcessCameraProvider?,cameraSelector: CameraSelector){
         try{

@@ -38,7 +38,8 @@ class EyeDetectionUtils(
     eyeDetectionActivity: EyeDetectionActivity,
     alertText: TextView,
     fatigueText: TextView,
-    fatigueNotText: TextView
+    fatigueNotText: TextView,
+    fatigueBeep: MediaPlayer
 ) :ImageAnalyzer<List<Face>>() {
     private var counter = 0
     private var fatigueCounter = 0
@@ -60,6 +61,7 @@ class EyeDetectionUtils(
     private var endSession = endSessionOnClick
     private var startSession = startSessionOnClick
     private var mediaPlayer = media
+    private var beepFatigue = fatigueBeep
     private var session = Session()
     private var eyeLogic = EyeDetectionLogic()
     private var driverService = DriverService()
@@ -247,6 +249,7 @@ class EyeDetectionUtils(
 
                 if(timeQueue.size >=5){
                     fatigueNotification.visibility = View.VISIBLE
+                    beepFatigue.start()
                     if(!isAbove){
                         isAbove = true
                         fatigueC++
@@ -262,8 +265,8 @@ class EyeDetectionUtils(
                     isAbove = false
                     fatigueNotification.visibility = View.INVISIBLE
                 }
-
-                if(counter>=17){
+                var checkRange = (counter/16)/2
+                if(checkRange>= 1){
 
                     eyeLogic = EyeDetectionLogic()
                     sendMessage(contextAct,"ALERT_ACTIVE", "/SESSION_CURRENT_ALERT")
