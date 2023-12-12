@@ -97,7 +97,7 @@ fun SessionDetail(sessionID: String?) {
         Card(
             modifier = Modifier
                 .width(screenWidth)
-                .height(screenHeight / 4),
+                .height(screenHeight / 3.5f),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             colors = CardDefaults.cardColors(
                 containerColor = Color(0xFF39AFEA)

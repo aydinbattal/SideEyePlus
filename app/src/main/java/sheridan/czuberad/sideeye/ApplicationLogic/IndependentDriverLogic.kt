@@ -154,8 +154,11 @@ class IndependentDriverLogic : ViewModel() {
                     graphMap[counter] = alerts
                     counter++
                 }
+                val reversedMap = graphMap.entries
+                    .sortedByDescending { it.key }
+                    .associateTo(mutableMapOf()) { it.toPair() }
 
-                _sessionHistoryMap.value = graphMap // Update the state variable
+                _sessionHistoryMap.value = reversedMap // Update the state variable
             }
         }
     }

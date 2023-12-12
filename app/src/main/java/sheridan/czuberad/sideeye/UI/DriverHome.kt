@@ -44,8 +44,11 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,7 +61,10 @@ import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.Wearable
 import sheridan.czuberad.sideeye.ApplicationLogic.IndependentDriverLogic
 import sheridan.czuberad.sideeye.Domain.Driver
+import sheridan.czuberad.sideeye.Domain.Questionnaire
+import sheridan.czuberad.sideeye.Domain.ReactionTest
 import sheridan.czuberad.sideeye.Domain.Session
+import sheridan.czuberad.sideeye.Services.CompanyService
 import java.text.SimpleDateFormat
 
 
@@ -149,16 +155,21 @@ fun DriverHome(navController: NavHostController) {
                         fontSize = 19.sp  // Adjust the font size as needed
                     ), modifier = Modifier.padding(start = 30.dp, top = 10.dp))
                     graphData?.let {
-                        LineChart(
-                            data = it,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(300.dp)
-                                .align(Alignment.CenterHorizontally)
-                        )
+                        if(it.isNotEmpty()){
+                            LineChart(
+                                data = it,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(300.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            )
+                        }
+                        else{
+                            Text(text = "No Sessions Recorded", color = Color(0xFF39AFEA))
+                        }
+                        
                     }
                 }
-                
 
             }
         }
@@ -167,9 +178,6 @@ fun DriverHome(navController: NavHostController) {
             buttonLayout(context)
         }
         }
-
-
-
 }
 
 fun sendMessage(context: Context) {
@@ -381,6 +389,7 @@ fun InfoCard(currentDriver: Driver) {
 
 @Composable
 fun SessionCardListView(navController: NavHostController, sessionList: List<Session>?) {
+    val companyService = CompanyService()
     //Card(modifier = Modifier.offset(y = (-100).dp),colors = CardDefaults.cardColors(
     Card(colors = CardDefaults.cardColors(
         containerColor = Color.White
@@ -413,7 +422,7 @@ fun SessionCardListView(navController: NavHostController, sessionList: List<Sess
 
                     Card(
                         modifier = Modifier
-                            .height(150.dp)
+                            .height(160.dp)
                             .width(205.dp)
                             .padding(8.dp)
                             .clickable { navController.navigate("sessionDetail/${it.sessionUUID}") },
@@ -483,6 +492,78 @@ fun SessionCardListView(navController: NavHostController, sessionList: List<Sess
 
 
                             }
+                            Column() {
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Text(text = "Reaction Tests: ", fontWeight = FontWeight.Bold)
+
+                                    var reactionTestResult by remember { mutableStateOf<ReactionTest?>(null) }
+
+                                    LaunchedEffect(it.reactionTestUUID) {
+                                        // Fetch ReactionTest asynchronously
+                                        companyService.fetchReactionTestById(it.reactionTestUUID ?: "") { result ->
+                                            reactionTestResult = result
+                                        }
+                                    }
+
+                                    Text(
+                                        text = buildAnnotatedString {
+                                            val result = reactionTestResult?.isPassed
+                                            val textColor = when {
+                                                result == true -> Color.Green
+                                                result == false -> Color.Red
+                                                else -> Color.Black
+                                            }
+
+                                            withStyle(
+                                                style = SpanStyle(color = textColor)
+                                            ) {
+                                                append(result?.let { if (it) "PASSED" else "FAILED" } ?: "N/A")
+                                            }
+                                        }
+                                    )
+
+
+                                }
+
+                            }
+
+                            Column() {
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Text(text = "Questionnaire: ", fontWeight = FontWeight.Bold)
+
+                                    var questionnaireResult by remember { mutableStateOf<Questionnaire?>(null) }
+
+                                    LaunchedEffect(it.questionnaireUUID) {
+                                        // Fetch ReactionTest asynchronously
+                                        companyService.fetchQuestionnaireById(it.questionnaireUUID ?: "") { result ->
+                                            questionnaireResult = result
+                                        }
+                                    }
+
+                                    Text(
+                                        text = buildAnnotatedString {
+                                            val result = questionnaireResult?.isPassed
+                                            val textColor = when {
+                                                result == true -> Color.Green
+                                                result == false -> Color.Red
+                                                else -> Color.Black
+                                            }
+
+                                            withStyle(
+                                                style = SpanStyle(color = textColor)
+                                            ) {
+                                                append(result?.let { if (it) "PASSED" else "FAILED" } ?: "N/A")
+                                            }
+                                        }
+                                    )
+
+
+
+                                }
+
+                            }
+
+
 
 
                         }
