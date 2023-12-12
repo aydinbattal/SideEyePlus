@@ -19,6 +19,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,7 +33,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import sheridan.czuberad.sideeye.ApplicationLogic.IndependentDriverLogic
+import sheridan.czuberad.sideeye.Domain.Questionnaire
+import sheridan.czuberad.sideeye.Domain.ReactionTest
 import sheridan.czuberad.sideeye.Domain.Timeline
+import sheridan.czuberad.sideeye.Services.CompanyService
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -43,9 +50,26 @@ fun SessionDetail(sessionID: String?) {
         if (sessionID != null) {
             viewModel.getSessionDetail(sessionID)
             viewModel.getSessionTimeLine(sessionID)
+
+
         }
     }
     val session = viewModel.sessionDetail.value
+
+    val companyService = CompanyService()
+    var reactionTestResult by remember { mutableStateOf<ReactionTest?>(null) }
+    var questionnaireResult by remember { mutableStateOf<Questionnaire?>(null) }
+    if (session != null) {
+        LaunchedEffect(session.reactionTestUUID) {
+            companyService.fetchReactionTestById(session.reactionTestUUID ?: "") { result ->
+                reactionTestResult = result
+            }
+
+            companyService.fetchQuestionnaireById(session.questionnaireUUID ?: "") { result ->
+                questionnaireResult = result
+            }
+        }
+    }
 
 
     val alertObjectList = viewModel.alertSessionlist.value
@@ -87,6 +111,10 @@ fun SessionDetail(sessionID: String?) {
                 fontWeight = FontWeight.Bold,
                 fontSize = 25.sp, modifier = Modifier.padding(start = 10.dp)
             )
+            Column(modifier = Modifier.fillMaxWidth()) {
+
+
+            }
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp), horizontalArrangement = Arrangement.SpaceBetween){
@@ -159,9 +187,44 @@ fun SessionDetail(sessionID: String?) {
                         )
                     }
 
+
+
+
                 }
 
             }
+
+            Row(modifier = Modifier.fillMaxWidth().padding(start = 50.dp, end = 50.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "${reactionTestResult?.avgTime ?: "Not Determined"} ms",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 19.sp
+                    )
+                Text(
+                    text = "Avg. Reaction Time",
+                    color = Color.White,
+                    fontSize = 12.sp
+                )
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = questionnaireResult?.category ?: "Not Determined",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 19.sp
+                    )
+                Text(
+                    text = " Questionnaire Category",
+                    color = Color.White,
+                    fontSize = 12.sp
+                )
+                }
+
+            }
+
 
         }
         ///AFTER CARD

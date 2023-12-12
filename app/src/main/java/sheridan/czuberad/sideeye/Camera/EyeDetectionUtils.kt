@@ -267,7 +267,6 @@ class EyeDetectionUtils(
                         sendMessage(contextAct, fatigueTimeStampList.size.toString(), "/SESSION_FATIGUE")
 
                     }
-
                     Log.d(TAG, "PPP QUEUE REACHED 5")
                 }
                 else{

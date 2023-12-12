@@ -22,6 +22,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -33,7 +37,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import sheridan.czuberad.sideeye.ApplicationLogic.IndependentDriverLogic
+import sheridan.czuberad.sideeye.Domain.Questionnaire
+import sheridan.czuberad.sideeye.Domain.ReactionTest
 import sheridan.czuberad.sideeye.Domain.Session
+import sheridan.czuberad.sideeye.Services.CompanyService
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.math.log
@@ -80,6 +87,22 @@ fun SessionList(navController: NavHostController, sessionList: List<Session>) {
 
 @Composable
 fun SessionListItem(item: Session, navController: NavHostController) {
+
+    val companyService = CompanyService()
+    var reactionTestResult by remember { mutableStateOf<ReactionTest?>(null) }
+    var questionnaireResult by remember { mutableStateOf<Questionnaire?>(null) }
+
+    if (item != null) {
+        LaunchedEffect(item.reactionTestUUID) {
+            companyService.fetchReactionTestById(item.reactionTestUUID ?: "") { result ->
+                reactionTestResult = result
+            }
+
+            companyService.fetchQuestionnaireById(item.questionnaireUUID ?: "") { result ->
+                questionnaireResult = result
+            }
+        }
+    }
 //    val viewModel: IndependentDriverLogic = viewModel()
 //
 //    LaunchedEffect(Unit){
@@ -143,41 +166,110 @@ fun SessionListItem(item: Session, navController: NavHostController) {
 
             }
 
-            Card(modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight(),colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )) {
-                Canvas(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 35.dp, bottom = 35.dp, start = 15.dp, end = 15.dp)) {
+                Card(modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),colors = CardDefaults.cardColors(
+                    containerColor = Color.White
+                )) {
+                    Canvas(modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.5f)
+                        .padding(top = 15.dp, bottom = 15.dp, start = 5.dp, end = 5.dp)
+                    ) {
+                        val dataPoints = listOf(0, 0, 0, 10, 10, 0, 0, 0, 0, 0, 0, 10, 0, 0)
+                        val randomizedDataPoints = dataPoints.shuffled()
+                        val maxDataValue = randomizedDataPoints.maxOrNull() ?: 1
+                        val dataPointsOffsets = randomizedDataPoints.mapIndexed { index, value ->
+                            Offset(
+                                x = size.width * (index / (randomizedDataPoints.size - 1).toFloat()),
+                                y = size.height - (size.height * (value / maxDataValue.toFloat()))
+                            )
+                        }
 
-                    val dataPoints = listOf(10, 0, 0, 10, 10, 0, 0, 0, 0, 0, 0, 10, 0, 0)
-                    val randomizedDataPoints = dataPoints.shuffled()
-                    val maxDataValue = randomizedDataPoints.maxOrNull() ?: 1
-                    val dataPointsOffsets = randomizedDataPoints.mapIndexed { index, value ->
-
-                        Offset(
-                            x = size.width * (index / (randomizedDataPoints.size - 1).toFloat()),
-                            y = size.height * (1 - (value / maxDataValue.toFloat()))
-                        )
+                        // Draw trend line by connecting points
+                        for (i in 0 until dataPointsOffsets.size - 1) {
+                            val start = dataPointsOffsets[i]
+                            val end = dataPointsOffsets[i + 1]
+                            drawLine(
+                                color = Color(0xFF39AFEA),
+                                start = start,
+                                end = end,
+                                strokeWidth = 2.dp.toPx()
+                            )
+                        }
                     }
 
-                    // Draw trend line by connecting points
-                    for (i in 0 until dataPointsOffsets.size - 1) {
-                        val start = dataPointsOffsets[i]
-                        val end = dataPointsOffsets[i + 1]
-                        drawLine(
-                            color = Color(0xFF39AFEA),
-                            start = start,
-                            end = end,
-                            strokeWidth = 2.dp.toPx()
+//                    Canvas(modifier = Modifier
+//                        .fillMaxWidth()
+//                        .fillMaxHeight(0.5f)
+//                        .padding(top = 35.dp, bottom = 35.dp, start = 15.dp, end = 15.dp)) {
+//
+//                        val dataPoints = listOf(10, 0, 0, 10, 10, 0, 0, 0, 0, 0, 0, 10, 0, 0)
+//                        val randomizedDataPoints = dataPoints.shuffled()
+//                        val maxDataValue = randomizedDataPoints.maxOrNull() ?: 1
+//                        val dataPointsOffsets = randomizedDataPoints.mapIndexed { index, value ->
+//
+//                            Offset(
+//                                x = size.width * (index / (randomizedDataPoints.size - 1).toFloat()),
+//                                y = size.height * (1 - (value / maxDataValue.toFloat()))
+//                            )
+//                        }
+//
+//                        // Draw trend line by connecting points
+//                        for (i in 0 until dataPointsOffsets.size - 1) {
+//                            val start = dataPointsOffsets[i]
+//                            val end = dataPointsOffsets[i + 1]
+//                            drawLine(
+//                                color = Color(0xFF39AFEA),
+//                                start = start,
+//                                end = end,
+//                                strokeWidth = 2.dp.toPx()
+//                            )
+//                        }
+//
+//
+//                    }
+                    Row(modifier = Modifier.fillMaxWidth().padding(top = 6.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "${reactionTestResult?.avgTime ?: "N/A"} ms",
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
+                        )
+                        Text(
+                            text = "Avg. Reaction Time",
+                            color = Color.Black,
+                            fontSize = 10.sp
+                        )
+                    }
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = questionnaireResult?.category ?: "N/A",
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
+                        )
+                        Text(
+                            text = " Question. Category",
+                            color = Color.Black,
+                            fontSize = 10.sp
                         )
                     }
 
                 }
 
-            }
+
+
+                }
+
+                //add here
+
+
+
+
+
 
         }
 
