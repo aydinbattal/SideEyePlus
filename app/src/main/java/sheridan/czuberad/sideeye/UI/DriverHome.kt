@@ -459,7 +459,8 @@ fun SessionCardListView(navController: NavHostController, sessionList: List<Sess
                                             fontWeight = FontWeight.Bold,
                                             fontSize = 15.sp  // Adjust the font size as needed
                                         ))
-                                    Text(text = it.alertUUIDList?.size.toString(),color = Color(0xFF39AFEA),
+                                    val size = it.alertUUIDList?.size ?:0
+                                    Text(text = size.toString(),color = Color(0xFF39AFEA),
                                         style = TextStyle(
                                             fontWeight = FontWeight.Bold,
                                             fontSize = 20.sp  // Adjust the font size as needed

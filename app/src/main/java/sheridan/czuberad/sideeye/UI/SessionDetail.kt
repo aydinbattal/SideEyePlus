@@ -158,8 +158,10 @@ fun SessionDetail(sessionID: String?) {
 
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         if (session != null) {
+                            val size = session.alertUUIDList?.size ?:0
                             Text(
-                                text = session.alertUUIDList?.size.toString(),
+
+                                text = size.toString(),
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp

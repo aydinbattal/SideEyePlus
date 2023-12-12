@@ -155,7 +155,8 @@ fun SessionListItem(item: Session, navController: NavHostController) {
                 Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween){
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = "Alerts",fontSize = 12.sp)
-                        Text(text = item.alertUUIDList?.size.toString(), fontWeight = FontWeight.ExtraBold)
+                        val size = item.alertUUIDList?.size ?:0
+                        Text(text = size.toString(), fontWeight = FontWeight.ExtraBold)
 
                     }
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
