@@ -30,7 +30,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -117,7 +120,7 @@ fun SessionListItem(item: Session, navController: NavHostController) {
 
     Card(modifier = Modifier
         .fillMaxWidth()
-        .height(150.dp)
+        .height(175.dp)
         .padding(10.dp)
         .clickable { navController.navigate("sessionDetail/${item.sessionUUID}") },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -150,7 +153,7 @@ fun SessionListItem(item: Session, navController: NavHostController) {
                         fontSize = 12.sp
                     )
                 }
-                Spacer(modifier = Modifier.fillMaxHeight(0.4f))
+                Spacer(modifier = Modifier.fillMaxHeight(0.2f))
 
                 Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween){
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -163,6 +166,53 @@ fun SessionListItem(item: Session, navController: NavHostController) {
                         Text(text = "Fatigue", fontSize = 12.sp)
                         Text(text = item.fatigueList?.size.toString(), fontWeight = FontWeight.ExtraBold)
                     }
+                }
+
+                Spacer(modifier = Modifier.fillMaxHeight(0.2f))
+
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(text = "Reaction Tests: ", fontWeight = FontWeight.Bold)
+
+                    Text(
+                        text = buildAnnotatedString {
+                            val result = reactionTestResult?.isPassed
+                            val textColor = when {
+                                result == true -> Color.Green
+                                result == false -> Color.Red
+                                else -> Color.Black
+                            }
+
+                            withStyle(
+                                style = SpanStyle(color = textColor)
+                            ) {
+                                append(result?.let { if (it) "PASSED" else "FAILED" } ?: "N/A")
+                            }
+                        }
+                    )
+
+                }
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(text = "Questionnaire: ", fontWeight = FontWeight.Bold)
+
+                    Text(
+                        text = buildAnnotatedString {
+                            val result = questionnaireResult?.isPassed
+                            val textColor = when {
+                                result == true -> Color.Green
+                                result == false -> Color.Red
+                                else -> Color.Black
+                            }
+
+                            withStyle(
+                                style = SpanStyle(color = textColor)
+                            ) {
+                                append(result?.let { if (it) "PASSED" else "FAILED" } ?: "N/A")
+                            }
+                        }
+                    )
+
                 }
 
             }
@@ -230,36 +280,6 @@ fun SessionListItem(item: Session, navController: NavHostController) {
 //
 //
 //                    }
-                    Row(modifier = Modifier.fillMaxWidth().padding(top = 6.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = "${reactionTestResult?.avgTime ?: "N/A"} ms",
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp
-                        )
-                        Text(
-                            text = "Avg. Reaction Time",
-                            color = Color.Black,
-                            fontSize = 10.sp
-                        )
-                    }
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = questionnaireResult?.category ?: "N/A",
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp
-                        )
-                        Text(
-                            text = " Question. Category",
-                            color = Color.Black,
-                            fontSize = 10.sp
-                        )
-                    }
-
-                }
 
 
 

@@ -189,6 +189,58 @@ fun SessionDetail(sessionID: String?) {
                         )
                     }
 
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        if (session != null) {
+                            val companyService = CompanyService()
+                            var reactionTestResult by remember { mutableStateOf<ReactionTest?>(null) }
+
+                            LaunchedEffect(session.reactionTestUUID) {
+                                // Fetch ReactionTest asynchronously
+                                companyService.fetchReactionTestById(session.reactionTestUUID ?: "") { result ->
+                                    reactionTestResult = result
+                                }
+                            }
+
+                            Text(
+                                text = "${reactionTestResult?.avgTime ?: "Not Determined"} ms",
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+                        }
+                        Text(
+                            text = "Reaction Time",
+                            color = Color.White,
+                            fontSize = 12.sp
+                        )
+                    }
+
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        if (session != null) {
+                            val companyService = CompanyService()
+                            var questionnaireResult by remember { mutableStateOf<Questionnaire?>(null) }
+
+                            LaunchedEffect(session.questionnaireUUID) {
+                                // Fetch ReactionTest asynchronously
+                                companyService.fetchQuestionnaireById(session.questionnaireUUID ?: "") { result ->
+                                    questionnaireResult = result
+                                }
+                            }
+
+                            Text(
+                                text = "${questionnaireResult?.category ?: "Not Determined"}",
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+                        }
+                        Text(
+                            text = "Category",
+                            color = Color.White,
+                            fontSize = 12.sp
+                        )
+                    }
+
 
 
 
@@ -196,36 +248,6 @@ fun SessionDetail(sessionID: String?) {
 
             }
 
-            Row(modifier = Modifier.fillMaxWidth().padding(start = 50.dp, end = 50.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "${reactionTestResult?.avgTime ?: "Not Determined"} ms",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 19.sp
-                    )
-                Text(
-                    text = "Avg. Reaction Time",
-                    color = Color.White,
-                    fontSize = 12.sp
-                )
-                }
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = questionnaireResult?.category ?: "Not Determined",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 19.sp
-                    )
-                Text(
-                    text = " Questionnaire Category",
-                    color = Color.White,
-                    fontSize = 12.sp
-                )
-                }
-
-            }
 
 
         }

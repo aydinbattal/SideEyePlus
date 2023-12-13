@@ -95,7 +95,7 @@ fun SessionListForCompanyItem(item: Session, navController: NavHostController) {
 
     Card(modifier = Modifier
         .fillMaxWidth()
-        .height(180.dp)
+        .height(175.dp)
         .padding(10.dp).clickable { navController.navigate("sessionDetail/${item.sessionUUID}") },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(
@@ -210,6 +210,74 @@ fun SessionListForCompanyItem(item: Session, navController: NavHostController) {
                     )
 
                 }
+
+            }
+
+            Card(modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(),colors = CardDefaults.cardColors(
+                containerColor = Color.White
+            )) {
+                Canvas(modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.5f)
+                    .padding(top = 15.dp, bottom = 15.dp, start = 5.dp, end = 5.dp)
+                ) {
+                    val dataPoints = listOf(0, 0, 0, 10, 10, 0, 0, 0, 0, 0, 0, 10, 0, 0)
+                    val randomizedDataPoints = dataPoints.shuffled()
+                    val maxDataValue = randomizedDataPoints.maxOrNull() ?: 1
+                    val dataPointsOffsets = randomizedDataPoints.mapIndexed { index, value ->
+                        Offset(
+                            x = size.width * (index / (randomizedDataPoints.size - 1).toFloat()),
+                            y = size.height - (size.height * (value / maxDataValue.toFloat()))
+                        )
+                    }
+
+                    // Draw trend line by connecting points
+                    for (i in 0 until dataPointsOffsets.size - 1) {
+                        val start = dataPointsOffsets[i]
+                        val end = dataPointsOffsets[i + 1]
+                        drawLine(
+                            color = Color(0xFF39AFEA),
+                            start = start,
+                            end = end,
+                            strokeWidth = 2.dp.toPx()
+                        )
+                    }
+                }
+
+//                    Canvas(modifier = Modifier
+//                        .fillMaxWidth()
+//                        .fillMaxHeight(0.5f)
+//                        .padding(top = 35.dp, bottom = 35.dp, start = 15.dp, end = 15.dp)) {
+//
+//                        val dataPoints = listOf(10, 0, 0, 10, 10, 0, 0, 0, 0, 0, 0, 10, 0, 0)
+//                        val randomizedDataPoints = dataPoints.shuffled()
+//                        val maxDataValue = randomizedDataPoints.maxOrNull() ?: 1
+//                        val dataPointsOffsets = randomizedDataPoints.mapIndexed { index, value ->
+//
+//                            Offset(
+//                                x = size.width * (index / (randomizedDataPoints.size - 1).toFloat()),
+//                                y = size.height * (1 - (value / maxDataValue.toFloat()))
+//                            )
+//                        }
+//
+//                        // Draw trend line by connecting points
+//                        for (i in 0 until dataPointsOffsets.size - 1) {
+//                            val start = dataPointsOffsets[i]
+//                            val end = dataPointsOffsets[i + 1]
+//                            drawLine(
+//                                color = Color(0xFF39AFEA),
+//                                start = start,
+//                                end = end,
+//                                strokeWidth = 2.dp.toPx()
+//                            )
+//                        }
+//
+//
+//                    }
+
+
 
             }
 
